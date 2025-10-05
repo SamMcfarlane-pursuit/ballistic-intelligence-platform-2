@@ -1,13 +1,13 @@
 "use client"
 
-import EnhancedDashboard from '@/components/enhanced-dashboard'
+import ConcisePowerfulDashboard from '@/components/concise-powerful-dashboard'
 import { AuthProvider } from '@/components/auth-provider'
 import ProtectedRoute from '@/components/protected-route'
 
 function AppContent() {
   return (
     <ProtectedRoute>
-      <EnhancedDashboard />
+      <ConcisePowerfulDashboard />
     </ProtectedRoute>
   )
 }
