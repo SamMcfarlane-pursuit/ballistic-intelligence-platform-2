@@ -1,0 +1,393 @@
+{
+  "workflows": [
+    {
+      "name": "Cybersecurity News Monitor",
+      "nodes": [
+        {
+          "parameters": {
+            "url": "https://feeds.feedburner.com/techcrunch/cybersecurity",
+            "options": {}
+          },
+          "id": "rss-reader",
+          "name": "RSS Feed Reader",
+          "type": "n8n-nodes-base.readRSS",
+          "typeVersion": 1,
+          "position": [
+            240,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict"
+              },
+              "conditions": [
+                {
+                  "id": "1",
+                  "leftValue": "={{ $json.title }}",
+                  "rightValue": "cybersecurity|funding|investment|venture|series [A-Z]|seed round",
+                  "operator": {
+                    "type": "regex"
+                  }
+                }
+              ],
+              "combinator": "or"
+            }
+          },
+          "id": "filter",
+          "name": "Filter Cybersecurity",
+          "type": "n8n-nodes-base.filter",
+          "typeVersion": 1,
+          "position": [
+            460,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "url": "http://localhost:3000/api/automation",
+            "authentication": "predefinedCredentialType",
+            "nodeCredentialType": "httpHeaderAuth",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            },
+            "sendBody": true,
+            "bodyParameters": {
+              "parameters": [
+                {
+                  "name": "action",
+                  "value": "process-funding-news"
+                },
+                {
+                  "name": "data",
+                  "value": "={{ { title: $json.title, content: $json.content, url: $json.link } }}"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "ai-processing",
+          "name": "AI Processing",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 3,
+          "position": [
+            680,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "conditions": {
+              "options": {
+                "caseSensitive": true,
+                "leftValue": "",
+                "typeValidation": "strict"
+              },
+              "conditions": [
+                {
+                  "id": "1",
+                  "leftValue": "={{ $json.body.success }}",
+                  "rightValue": "true",
+                  "operator": {
+                    "type": "boolean"
+                  }
+                }
+              ],
+              "combinator": "and"
+            }
+          },
+          "id": "success-filter",
+          "name": "Success Filter",
+          "type": "n8n-nodes-base.filter",
+          "typeVersion": 1,
+          "position": [
+            900,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "url": "http://localhost:3000/api/funding-rounds",
+            "authentication": "predefinedCredentialType",
+            "nodeCredentialType": "httpHeaderAuth",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            },
+            "sendBody": true,
+            "bodyParameters": {
+              "parameters": [
+                {
+                  "name": "company_name",
+                  "value": "={{ $json.body.data.company_name }}"
+                },
+                {
+                  "name": "website",
+                  "value": "={{ $json.body.data.website || '' }}"
+                },
+                {
+                  "name": "announced_date",
+                  "value": "={{ $json.body.data.announced_date }}"
+                },
+                {
+                  "name": "round_type",
+                  "value": "={{ $json.body.data.funding_round }}"
+                },
+                {
+                  "name": "amount_usd",
+                  "value": "={{ $json.body.data.funding_amount }}"
+                },
+                {
+                  "name": "lead_investor",
+                  "value": "={{ $json.body.data.lead_investor }}"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "save-to-db",
+          "name": "Save to Database",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 3,
+          "position": [
+            1120,
+            300
+          ]
+        }
+      ],
+      "connections": {
+        "RSS Feed Reader": {
+          "main": [
+            [
+              {
+                "node": "Filter Cybersecurity",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Filter Cybersecurity": {
+          "main": [
+            [
+              {
+                "node": "AI Processing",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "AI Processing": {
+          "main": [
+            [
+              {
+                "node": "Success Filter",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Success Filter": {
+          "main": [
+            [
+              {
+                "node": "Save to Database",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "active": false,
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "versionId": "1",
+      "meta": {
+        "templateCredsSetupCompleted": true
+      },
+      "id": "cybersecurity-news-monitor",
+      "tags": []
+    },
+    {
+      "name": "Daily Analytics Generation",
+      "nodes": [
+        {
+          "parameters": {
+            "rule": {
+              "interval": [
+                {
+                  "field": "hours",
+                  "hoursInterval": 24
+                }
+              ]
+            }
+          },
+          "id": "schedule",
+          "name": "Schedule Trigger",
+          "type": "n8n-nodes-base.scheduleTrigger",
+          "typeVersion": 1.1,
+          "position": [
+            240,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "url": "http://localhost:3000/api/analytics",
+            "authentication": "predefinedCredentialType",
+            "nodeCredentialType": "httpHeaderAuth",
+            "options": {}
+          },
+          "id": "get-analytics",
+          "name": "Get Analytics Data",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 3,
+          "position": [
+            460,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "url": "http://localhost:3000/api/automation",
+            "authentication": "predefinedCredentialType",
+            "nodeCredentialType": "httpHeaderAuth",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            },
+            "sendBody": true,
+            "bodyParameters": {
+              "parameters": [
+                {
+                  "name": "action",
+                  "value": "generate-insights"
+                },
+                {
+                  "name": "data",
+                  "value": "={{ { fundingRounds: $json.body.fundingByRoundType, trends: $json.body.monthlyTrends } }}"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "generate-insights",
+          "name": "Generate AI Insights",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 3,
+          "position": [
+            680,
+            300
+          ]
+        },
+        {
+          "parameters": {
+            "url": "http://localhost:3000/api/automation",
+            "authentication": "predefinedCredentialType",
+            "nodeCredentialType": "httpHeaderAuth",
+            "sendHeaders": true,
+            "headerParameters": {
+              "parameters": [
+                {
+                  "name": "Content-Type",
+                  "value": "application/json"
+                }
+              ]
+            },
+            "sendBody": true,
+            "bodyParameters": {
+              "parameters": [
+                {
+                  "name": "action",
+                  "value": "predict-trends"
+                },
+                {
+                  "name": "data",
+                  "value": "={{ { historicalData: $json.body.monthlyTrends, currentConditions: $json.body.summary } }}"
+                }
+              ]
+            },
+            "options": {}
+          },
+          "id": "predict-trends",
+          "name": "Predict Trends",
+          "type": "n8n-nodes-base.httpRequest",
+          "typeVersion": 3,
+          "position": [
+            900,
+            300
+          ]
+        }
+      ],
+      "connections": {
+        "Schedule Trigger": {
+          "main": [
+            [
+              {
+                "node": "Get Analytics Data",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Get Analytics Data": {
+          "main": [
+            [
+              {
+                "node": "Generate AI Insights",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        },
+        "Generate AI Insights": {
+          "main": [
+            [
+              {
+                "node": "Predict Trends",
+                "type": "main",
+                "index": 0
+              }
+            ]
+          ]
+        }
+      },
+      "active": false,
+      "settings": {
+        "executionOrder": "v1"
+      },
+      "versionId": "1",
+      "meta": {
+        "templateCredsSetupCompleted": true
+      },
+      "id": "daily-analytics-generation",
+      "tags": []
+    }
+  ]
+}

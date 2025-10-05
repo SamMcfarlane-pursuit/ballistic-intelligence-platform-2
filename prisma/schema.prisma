@@ -1,0 +1,398 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  content   String?
+  published Boolean  @default(false)
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model CybersecurityCompany {
+  id              String   @id @default(cuid())
+  company_name    String
+  website         String?
+  country         String?
+  city            String?
+  founded_year    Int?
+  employee_range  String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  funding_rounds  FundingRound[]
+  
+  @@map("cybersecurity_companies")
+}
+
+model FundingRound {
+  id                String            @id @default(cuid())
+  company_id        String
+  announced_date    DateTime
+  round_type        String            // Seed, Series A, Series B, etc.
+  amount_usd        Float?
+  lead_investor     String?
+  lumpsum_investors String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  
+  company           CybersecurityCompany @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  investors         Investor[]
+  
+  @@map("funding_rounds")
+}
+
+model Investor {
+  id            String   @id @default(cuid())
+  name          String
+  investor_type String?  // VC Firm, Angel, Corporate VC, etc.
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  funding_rounds FundingRound[]
+  
+  @@map("investors")
+}
+
+model BallisticPortfolioCompany {
+  id                      String   @id @default(cuid())
+  name                    String
+  description             String
+  founded_year            Int
+  location                String
+  cybersecurity_category  String   // Cloud Security, Threat Detection, Identity Security, etc.
+  funding_stage           String   // pre-seed, seed, series-a
+  funding_amount          Float
+  funding_date            DateTime
+  lead_investor           String
+  employee_range          String
+  website                 String?
+  
+  // Key metrics
+  users                   String?
+  revenue                 String?
+  growth                  String?
+  
+  // Product-Market Fit indicators
+  active_users            Boolean  @default(false)
+  paying_customers        Boolean  @default(false)
+  mssp_integration        Boolean  @default(false)
+  market_traction         Int      @default(0)  // 0-100 percentage
+  
+  // Exit information
+  exit_type               String?  // acquired, ipo, none
+  acquirer                String?
+  exit_date               DateTime?
+  exit_value              Float?
+  
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  
+  // Relations
+  fundingRounds           BallisticFundingRound[]
+  teamMembers             BallisticTeamMember[]
+  exitData                BallisticExitData[]
+  
+  @@map("ballistic_portfolio_companies")
+}
+
+model BallisticFundingRound {
+  id                String   @id @default(cuid())
+  company_id        String
+  round_type        String   // Seed, Series A, Series B, etc.
+  amount_usd        Float
+  announced_date    DateTime
+  lead_investor     String?
+  valuation         Float?
+  pre_money_valuation Float?
+  post_money_valuation Float?
+  
+  // Ballistic specific fields
+  ballistic_participation Boolean  @default(true)
+  investment_thesis     String?  // Why Ballistic invested
+  due_diligence_notes   String?
+  board_seat           Boolean  @default(false)
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  company           BallisticPortfolioCompany @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  
+  @@map("ballistic_funding_rounds")
+}
+
+model BallisticTeamMember {
+  id           String   @id @default(cuid())
+  company_id   String
+  name         String
+  position     String
+  background   String?
+  linkedin_url String?
+  
+  // Founder/investor background
+  is_founder   Boolean  @default(true)
+  is_ceo       Boolean  @default(false)
+  is_cto       Boolean  @default(false)
+  prior_experience String? // Previous companies, exits, etc.
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  company       BallisticPortfolioCompany @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  
+  @@map("ballistic_team_members")
+}
+
+model BallisticInvestmentThesis {
+  id                  String   @id @default(cuid())
+  thesis_name         String
+  category            String   // AI/ML, Cloud Security, Threat Intelligence, etc.
+  description         String
+  market_size         Float?   // TAM in billions
+  growth_rate         Float?   // Annual growth rate percentage
+  investment_criteria String?
+  target_stage        String   // Seed, Series A, etc.
+  
+  // Thesis performance
+  companies_invested  Int      @default(0)
+  total_invested      Float    @default(0)
+  current_valuation   Float    @default(0)
+  moic                Float?   // Multiple on invested capital
+  
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  
+  @@map("ballistic_investment_thesis")
+}
+
+model BallisticExitData {
+  id           String   @id @default(cuid())
+  company_id   String
+  exit_type    String   // acquired, ipo, secondary
+  exit_date    DateTime
+  exit_value   Float
+  acquirer     String?
+  deal_terms   String?
+  
+  // Financial metrics
+  investment_amount   Float
+  return_multiple     Float
+  holding_period      Int      // in months
+  irr                 Float?   // Internal Rate of Return
+  
+  // Strategic impact
+  strategic_importance String?
+  market_validation   Boolean  @default(false)
+  
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  
+  company             BallisticPortfolioCompany @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  
+  @@map("ballistic_exit_data")
+}
+
+model CybersecurityStartup {
+  id                    String   @id @default(cuid())
+  name                  String   @unique
+  description           String
+  founded_year          Int
+  headquarters          String
+  website               String?
+  
+  // Cybersecurity specific
+  primary_category      String   // Network Security, Cloud Security, Application Security, etc.
+  secondary_categories  String?  // JSON array of additional categories
+  target_market         String?  // Enterprise, SMB, Government, etc.
+  
+  // Funding information
+  total_funding         Float    @default(0)
+  funding_rounds_count  Int      @default(0)
+  last_funding_date     DateTime?
+  current_stage         String?  // pre-seed, seed, series-a, etc.
+  
+  // Business metrics
+  employee_count        Int?
+  estimated_revenue      Float?
+  growth_rate           Float?   // YoY growth percentage
+  
+  // Technology
+  core_technology       String?  // AI/ML, Blockchain, Quantum, etc.
+  patents_count         Int      @default(0)
+  
+  // Market position
+  market_cap            Float?
+  competitors           String?  // JSON array of competitors
+  
+  // Ballistic relation
+  is_ballistic_portfolio Boolean  @default(false)
+  ballistic_notes       String?
+  
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  // Relations
+  fundingRounds         CybersecurityStartupFunding[]
+  teamMembers           CybersecurityStartupTeam[]
+  acquisitions          Acquisition[]
+  
+  @@map("cybersecurity_startups")
+}
+
+model CybersecurityStartupFunding {
+  id                String   @id @default(cuid())
+  startup_id        String
+  announced_date    DateTime
+  round_type        String   // Seed, Series A, Series B, etc.
+  amount_usd        Float
+  lead_investor     String?
+  valuation         Float?
+  
+  // Investor details
+  investors         String?  // JSON array of investors
+  investment_thesis String?
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  startup           CybersecurityStartup @relation(fields: [startup_id], references: [id], onDelete: Cascade)
+  
+  @@unique([startup_id, announced_date])
+  @@map("cybersecurity_startup_funding")
+}
+
+model CybersecurityStartupTeam {
+  id           String   @id @default(cuid())
+  startup_id   String
+  name         String
+  position     String
+  background   String?
+  linkedin_url String?
+  
+  // Experience
+  is_founder   Boolean  @default(true)
+  prior_companies String?  // JSON array
+  education    String?
+  expertise    String?  // Security domains, technologies
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  startup       CybersecurityStartup @relation(fields: [startup_id], references: [id], onDelete: Cascade)
+  
+  @@map("cybersecurity_startup_teams")
+}
+
+model Acquisition {
+  id           String   @id @default(cuid())
+  startup_id   String
+  acquirer     String
+  acquisition_date DateTime
+  acquisition_value Float?
+  deal_type    String?  // stock, cash, mixed
+  
+  // Terms
+  premium_percentage Float?  // Acquisition premium over last valuation
+  earnout      Boolean  @default(false)
+  earnout_terms String?
+  
+  // Strategic rationale
+  strategic_rationale String?
+  integration_status String?  // completed, in_progress, planned
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  startup       CybersecurityStartup @relation(fields: [startup_id], references: [id], onDelete: Cascade)
+  
+  @@map("acquisitions")
+}
+
+model InvestmentCriteria {
+  id                String   @id @default(cuid())
+  criteria          String
+  description       String
+  importance        String   // high, medium, low
+  companies_meeting Int
+  total_companies   Int
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  @@map("investment_criteria")
+}
+
+model CybersecurityConvention {
+  id                    String   @id @default(cuid())
+  name                  String
+  location              String
+  start_date            DateTime
+  end_date              DateTime
+  website               String?
+  description           String?
+  is_active             Boolean  @default(true)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  
+  conventionCompanies   ConventionCompany[]
+  
+  @@map("cybersecurity_conventions")
+}
+
+model ConventionCompany {
+  id                      String   @id @default(cuid())
+  convention_id           String
+  company_name            String
+  booth_number            String?
+  description             String?
+  website                 String?
+  cybersecurity_category   String?
+  funding_stage           String?  // pre-seed, seed, series-a
+  contact_email           String?
+  contact_name            String?
+  product_demo            Boolean  @default(false)
+  seeking_investment      Boolean  @default(true)
+  notes                   String?
+  
+  // Ballistic Ventures criteria assessment
+  active_users_score      Int      @default(0)  // 0-100
+  paying_customers_score  Int      @default(0)  // 0-100
+  mssp_integration_score  Int      @default(0)  // 0-100
+  technical_innovation    Int      @default(0)  // 0-100
+  founder_experience     Int      @default(0)  // 0-100
+  market_timing_score     Int      @default(0)  // 0-100
+  overall_fit_score       Int      @default(0)  // 0-100
+  
+  // Status tracking
+  status                  String   @default("prospect") // prospect, contacted, meeting, due_diligence, invested, passed
+  last_contact_date       DateTime?
+  next_follow_up          DateTime?
+  
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+  
+  convention              CybersecurityConvention @relation(fields: [convention_id], references: [id], onDelete: Cascade)
+  
+  @@map("convention_companies")
+}
