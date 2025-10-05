@@ -1,66 +1,115 @@
-# 🚀 Welcome to Z.ai Code Scaffold
+# 🛡️ Ballistic Intelligence Platform
 
-A modern, production-ready web application scaffold powered by cutting-edge technologies, designed to accelerate your development with [Z.ai](https://chat.z.ai)'s AI-powered coding assistance.
+A comprehensive cybersecurity investment intelligence platform that combines AI-powered analytics, real-time monitoring, and advanced data visualization to provide strategic insights for venture capital investment decisions in the cybersecurity sector.
 
-## ✨ Technology Stack
+## 🎯 Overview
 
-This scaffold provides a robust foundation built with:
+The Ballistic Intelligence Platform is designed to be the most powerful and concise dashboard for cybersecurity investment professionals, featuring:
 
-### 🎯 Core Framework
-- **⚡ Next.js 15** - The React framework for production with App Router
-- **📘 TypeScript 5** - Type-safe JavaScript for better developer experience
-- **🎨 Tailwind CSS 4** - Utility-first CSS framework for rapid UI development
+- **📊 Real-time Analytics**: Live portfolio performance metrics and KPI tracking
+- **🤖 AI-Powered Insights**: Intelligent analysis of investment opportunities and threat intelligence
+- **📈 Advanced Visualizations**: Interactive charts and data exploration tools
+- **🎯 Streamlined UI**: Clean, responsive design focused on actionable insights
+- **⚡ Real-time Updates**: Live data feeds and WebSocket integration
+- **🔒 Security Focus**: Comprehensive threat intelligence and vulnerability monitoring
 
-### 🧩 UI Components & Styling
-- **🧩 shadcn/ui** - High-quality, accessible components built on Radix UI
-- **🎯 Lucide React** - Beautiful & consistent icon library
-- **🌈 Framer Motion** - Production-ready motion library for React
-- **🎨 Next Themes** - Perfect dark mode in 2 lines of code
+## ✨ Key Features
 
-### 📋 Forms & Validation
-- **🎣 React Hook Form** - Performant forms with easy validation
-- **✅ Zod** - TypeScript-first schema validation
+### 📊 Intelligence Dashboard
+- **Executive Summary**: High-level overview with key metrics and performance indicators
+- **Advanced KPI Cards**: Interactive metrics with progress bars, trends, and actionable insights
+- **Quick Actions**: One-click access to common tasks and tools
+- **Real-time Updates**: Live data synchronization and notifications
 
-### 🔄 State Management & Data Fetching
-- **🐻 Zustand** - Simple, scalable state management
-- **🔄 TanStack Query** - Powerful data synchronization for React
-- **🌐 Axios** - Promise-based HTTP client
+### 🤖 AI-Powered Analysis
+- **Company Research**: AI-driven company analysis and investment recommendations
+- **Threat Intelligence**: Automated vulnerability detection and risk assessment
+- **Conference Analysis**: Insights from industry events and networking opportunities
+- **Investment Advisor**: AI-powered investment strategy recommendations
 
-### 🗄️ Database & Backend
-- **🗄️ Prisma** - Next-generation Node.js and TypeScript ORM
-- **🔐 NextAuth.js** - Complete open-source authentication solution
+### 📈 Data Visualization
+- **Performance Charts**: Interactive ROI, IRR, and MOIC tracking
+- **Portfolio Health**: Visual representation of investment performance
+- **Funding Trends**: Market analysis and investment pattern recognition
+- **Custom Dashboards**: Tailored views for different user roles
 
-### 🎨 Advanced UI Features
-- **📊 TanStack Table** - Headless UI for building tables and datagrids
-- **🖱️ DND Kit** - Modern drag and drop toolkit for React
-- **📊 Recharts** - Redefined chart library built with React and D3
-- **🖼️ Sharp** - High performance image processing
+### 🎯 Core Tools
+- **Deal Flow Management**: Investment opportunity tracking and pipeline management
+- **Funding Database**: Comprehensive database of cybersecurity funding rounds
+- **VC Network**: Investor ecosystem insights and relationship mapping
+- **Collaboration Hub**: Team communication and document sharing
 
-### 🌍 Internationalization & Utilities
-- **🌍 Next Intl** - Internationalization library for Next.js
-- **📅 Date-fns** - Modern JavaScript date utility library
-- **🪝 ReactUse** - Collection of essential React hooks for modern development
+## 🚀 Technology Stack
 
-## 🎯 Why This Scaffold?
+### Frontend
+- **⚡ Next.js 15** - React framework with App Router
+- **📘 TypeScript 5** - Type-safe development
+- **🎨 Tailwind CSS 4** - Utility-first styling
+- **🧩 shadcn/ui** - High-quality accessible components
+- **📊 Recharts** - Data visualization library
+- **🎭 Framer Motion** - Smooth animations
 
-- **🏎️ Fast Development** - Pre-configured tooling and best practices
-- **🎨 Beautiful UI** - Complete shadcn/ui component library with advanced interactions
-- **🔒 Type Safety** - Full TypeScript configuration with Zod validation
-- **📱 Responsive** - Mobile-first design principles with smooth animations
-- **🗄️ Database Ready** - Prisma ORM configured for rapid backend development
-- **🔐 Auth Included** - NextAuth.js for secure authentication flows
-- **📊 Data Visualization** - Charts, tables, and drag-and-drop functionality
-- **🌍 i18n Ready** - Multi-language support with Next Intl
-- **🚀 Production Ready** - Optimized build and deployment settings
-- **🤖 AI-Friendly** - Structured codebase perfect for AI assistance
+### Backend & Data
+- **🗄️ Prisma** - Next-generation ORM with SQLite
+- **🔐 NextAuth.js** - Authentication solution
+- **⚡ Socket.IO** - Real-time communication
+- **🌐 RESTful APIs** - Structured data endpoints
+
+### AI & Analytics
+- **🤖 z-ai-web-dev-sdk** - AI integration for analysis
+- **📊 TanStack Query** - Data synchronization
+- **🐻 Zustand** - Lightweight state management
+
+## 🏗️ Architecture
+
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── api/               # API routes
+│   ├── globals.css        # Global styles
+│   ├── layout.tsx         # Root layout
+│   └── page.tsx           # Main dashboard
+├── components/            # React components
+│   ├── ui/               # shadcn/ui components
+│   ├── concise-powerful-dashboard.tsx  # Main dashboard
+│   ├── enhanced-*.tsx     # Enhanced components
+│   └── *.tsx             # Feature components
+├── hooks/                 # Custom React hooks
+├── lib/                   # Utilities and configurations
+│   ├── db.ts             # Database client
+│   ├── utils.ts          # Helper functions
+│   └── socket.ts         # WebSocket setup
+└── services/              # External API services
+```
 
 ## 🚀 Quick Start
 
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+- SQLite (included)
+
+### Installation
+
 ```bash
+# Clone the repository
+git clone https://github.com/YOUR_USERNAME/ballistic-intelligence-platform.git
+cd ballistic-intelligence-platform
+
 # Install dependencies
 npm install
 
+# Set up the database
+npm run db:push
+
 # Start development server
+npm run dev
+```
+
+### Development
+
+```bash
+# Development server with hot reload
 npm run dev
 
 # Build for production
@@ -68,74 +117,116 @@ npm run build
 
 # Start production server
 npm start
+
+# Run linting
+npm run lint
+
+# Database operations
+npm run db:push    # Push schema changes
+npm run db:studio  # Open database UI
 ```
 
-Open [http://localhost:3000](http://localhost:3000) to see your application running.
+## 📊 Key Metrics & KPIs
 
-## 🤖 Powered by Z.ai
+The platform tracks essential investment metrics:
 
-This scaffold is optimized for use with [Z.ai](https://chat.z.ai) - your AI assistant for:
+### Financial Performance
+- **ROI**: Return on Investment tracking
+- **IRR**: Internal Rate of Return
+- **MOIC**: Multiple on Invested Capital
+- **AUM**: Assets Under Management
 
-- **💻 Code Generation** - Generate components, pages, and features instantly
-- **🎨 UI Development** - Create beautiful interfaces with AI assistance  
-- **🔧 Bug Fixing** - Identify and resolve issues with intelligent suggestions
-- **📝 Documentation** - Auto-generate comprehensive documentation
-- **🚀 Optimization** - Performance improvements and best practices
+### Portfolio Health
+- **Companies Performing**: Percentage of portfolio meeting targets
+- **At Risk**: Companies requiring attention
+- **Exits**: Successful exit transactions
+- **Pipeline Value**: Potential future investments
 
-Ready to build something amazing? Start chatting with Z.ai at [chat.z.ai](https://chat.z.ai) and experience the future of AI-powered development!
+### Market Intelligence
+- **Funding Trends**: Market analysis and patterns
+- **Threat Landscape**: Security vulnerability tracking
+- **Conference Insights**: Industry event analysis
+- **Competitive Intelligence**: Market positioning data
 
-## 📁 Project Structure
+## 🔧 Configuration
 
+### Environment Variables
+
+Create a `.env.local` file with:
+
+```env
+# Database
+DATABASE_URL="file:./dev.db"
+
+# Authentication
+NEXTAUTH_SECRET="your-secret-here"
+NEXTAUTH_URL="http://localhost:3000"
+
+# AI Services
+Z_AI_API_KEY="your-z-ai-api-key"
+
+# External APIs
+CRUNCHBASE_API_KEY="your-crunchbase-key"
+TECHCRUNCH_API_KEY="your-techcrunch-key"
 ```
-src/
-├── app/                 # Next.js App Router pages
-├── components/          # Reusable React components
-│   └── ui/             # shadcn/ui components
-├── hooks/              # Custom React hooks
-└── lib/                # Utility functions and configurations
-```
 
-## 🎨 Available Features & Components
+### Database Schema
 
-This scaffold includes a comprehensive set of modern web development tools:
+The platform uses Prisma with SQLite. Key entities include:
+- Cybersecurity companies
+- Funding rounds
+- Investors
+- Security vulnerabilities
+- Conference data
+- User analytics
 
-### 🧩 UI Components (shadcn/ui)
-- **Layout**: Card, Separator, Aspect Ratio, Resizable Panels
-- **Forms**: Input, Textarea, Select, Checkbox, Radio Group, Switch
-- **Feedback**: Alert, Toast (Sonner), Progress, Skeleton
-- **Navigation**: Breadcrumb, Menubar, Navigation Menu, Pagination
-- **Overlay**: Dialog, Sheet, Popover, Tooltip, Hover Card
-- **Data Display**: Badge, Avatar, Calendar
+## 🎯 Use Cases
 
-### 📊 Advanced Data Features
-- **Tables**: Powerful data tables with sorting, filtering, pagination (TanStack Table)
-- **Charts**: Beautiful visualizations with Recharts
-- **Forms**: Type-safe forms with React Hook Form + Zod validation
+### For Venture Capitalists
+- Track portfolio company performance
+- Identify new investment opportunities
+- Monitor market trends and competitive landscape
+- Access AI-powered investment recommendations
 
-### 🎨 Interactive Features
-- **Animations**: Smooth micro-interactions with Framer Motion
-- **Drag & Drop**: Modern drag-and-drop functionality with DND Kit
-- **Theme Switching**: Built-in dark/light mode support
+### For Investment Analysts
+- Conduct deep company research
+- Analyze funding patterns and market dynamics
+- Generate comprehensive investment reports
+- Collaborate with team members
 
-### 🔐 Backend Integration
-- **Authentication**: Ready-to-use auth flows with NextAuth.js
-- **Database**: Type-safe database operations with Prisma
-- **API Client**: HTTP requests with Axios + TanStack Query
-- **State Management**: Simple and scalable with Zustand
+### For Security Professionals
+- Monitor threat intelligence and vulnerabilities
+- Assess security risks in portfolio companies
+- Stay updated on industry security trends
+- Integrate security insights into investment decisions
 
-### 🌍 Production Features
-- **Internationalization**: Multi-language support with Next Intl
-- **Image Optimization**: Automatic image processing with Sharp
-- **Type Safety**: End-to-end TypeScript with Zod validation
-- **Essential Hooks**: 100+ useful React hooks with ReactUse for common patterns
+## 🤝 Contributing
 
-## 🤝 Get Started with Z.ai
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-1. **Clone this scaffold** to jumpstart your project
-2. **Visit [chat.z.ai](https://chat.z.ai)** to access your AI coding assistant
-3. **Start building** with intelligent code generation and assistance
-4. **Deploy with confidence** using the production-ready setup
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **shadcn/ui** for the beautiful component library
+- **Next.js** team for the amazing framework
+- **Prisma** for the modern database toolkit
+- **Z.ai** for AI-powered development assistance
+
+## 📞 Support
+
+For support and questions:
+- Create an issue in the GitHub repository
+- Check the documentation in the `docs/` folder
+- Review the setup instructions in `GITHUB_SETUP.md`
 
 ---
 
-Built with ❤️ for the developer community. Supercharged by [Z.ai](https://chat.z.ai) 🚀
+Built with ❤️ for the cybersecurity investment community.  
+Supercharged by AI and designed for intelligence-driven decision making.
