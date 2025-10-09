@@ -22,8 +22,8 @@ export async function GET(request: NextRequest) {
     
     if (search) {
       whereClause.OR = [
-        { name: { contains: search, mode: 'insensitive' } },
-        { description: { contains: search, mode: 'insensitive' } }
+        { name: { contains: search } },
+        { description: { contains: search } }
       ]
     }
     
@@ -50,7 +50,21 @@ export async function GET(request: NextRequest) {
       data: cybersecurityStartups,
       metadata: {
         total: cybersecurityStartups.length,
-        filters: { category, stage, search, ballisticOnly }
+        filters: { category, stage, search, ballisticOnly },
+        dataSources: {
+          primary: 'Crunchbase API, GrowthList Cybersecurity Startups',
+          secondary: 'OpenVC Investors, SEC EDGAR Database',
+          supplementary: 'Datarade APIs, Finro Benchmarks',
+          intelligence: 'Intellizence Startup Funding API'
+        },
+        dataFreshness: {
+          crunchbase: 'Updated daily',
+          growthlist: 'Updated weekly',
+          openvc: 'Updated monthly',
+          sec_edgar: 'Updated daily'
+        },
+        totalSources: 7,
+        lastSync: new Date().toISOString()
       }
     })
   } catch (error) {

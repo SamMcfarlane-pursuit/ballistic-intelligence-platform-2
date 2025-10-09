@@ -18,19 +18,17 @@ export async function GET(request: NextRequest) {
         {
           company: {
             company_name: {
-              contains: search,
-              mode: 'insensitive'
+              contains: search
             }
           }
         },
         {
           lead_investor: {
-            contains: search,
-              mode: 'insensitive'
-            }
+            contains: search
           }
-        ]
-      }
+        }
+      ]
+    }
 
     if (roundType !== 'all') {
       whereClause.round_type = roundType

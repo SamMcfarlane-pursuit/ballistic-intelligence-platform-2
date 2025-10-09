@@ -179,7 +179,14 @@ export async function POST(request: NextRequest) {
     const { topCompanies, fundingTrends, marketAnalysis } = marketData
 
     try {
-      const zai = await ZAI.create()
+      // Check if AI configuration exists
+      let zai
+      try {
+        zai = await ZAI.create()
+      } catch (configError) {
+        console.warn('AI configuration not found, using fallback analysis')
+        throw new Error('AI_CONFIG_MISSING')
+      }
 
       // Build context-rich prompt
       const contextData = {
@@ -350,13 +357,14 @@ Format your response as a concise JSON object:
     } catch (aiError) {
       console.error('AI service error:', aiError)
       
-      // Fallback response when AI service fails
+      // Enhanced fallback response when AI service fails
+      const isConfigMissing = aiError.message === 'AI_CONFIG_MISSING'
       const fallbackResponse = {
         success: true,
         timestamp: new Date().toISOString(),
         query: companyName.trim(),
         analysisType,
-        error: 'AI service unavailable, using fallback analysis',
+        error: isConfigMissing ? 'AI configuration missing, using database analysis' : 'AI service unavailable, using fallback analysis',
         companyName: companyName.trim(),
         found: !!company,
         overview: company ? `${company.name} is a ${company.primary_category} company based in ${company.headquarters}.` : 'Company not found in database.',

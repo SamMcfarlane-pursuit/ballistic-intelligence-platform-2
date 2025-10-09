@@ -1,30 +1,95 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { securityMiddleware } from '@/lib/security'
+import { SecurityManager, defaultSecurityConfig } from './lib/security/security-config'
 
-export async function middleware(request: NextRequest) {
-  // Apply security middleware
-  const securityResponse = await securityMiddleware(request)
-  if (securityResponse) {
-    return securityResponse
+// Initialize security manager
+const securityManager = new SecurityManager(defaultSecurityConfig)
+
+export function middleware(request: NextRequest) {
+  const response = NextResponse.next()
+  
+  // Force HTTPS redirect in production
+  if (process.env.NODE_ENV === 'production' && request.nextUrl.protocol === 'http:') {
+    const httpsUrl = new URL(request.url)
+    httpsUrl.protocol = 'https:'
+    return NextResponse.redirect(httpsUrl, 301)
   }
-
-  // Handle CORS preflight requests
-  if (request.method === 'OPTIONS') {
-    const response = new NextResponse(null, { status: 200 })
-    response.headers.set('Access-Control-Allow-Origin', process.env.NODE_ENV === 'production' ? 'https://yourdomain.com' : 'http://localhost:3000')
-    response.headers.set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
-    response.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
-    response.headers.set('Access-Control-Allow-Credentials', 'true')
-    response.headers.set('Access-Control-Max-Age', '86400')
-    return response
+  
+  // Get client IP
+  const clientIP = request.ip || 
+                   request.headers.get('x-forwarded-for')?.split(',')[0] || 
+                   request.headers.get('x-real-ip') || 
+                   'unknown'
+  
+  // Validate IP address
+  if (!securityManager.validateIP(clientIP)) {
+    securityManager.logSecurityEvent({
+      type: 'network',
+      message: 'Blocked request from unauthorized IP',
+      ip: clientIP,
+      userAgent: request.headers.get('user-agent') || 'unknown',
+      severity: 'medium'
+    })
+    return new NextResponse('Access Denied', { status: 403 })
   }
-
-  // Continue with the request
-  return NextResponse.next()
+  
+  // Rate limiting check (simplified)
+  const userAgent = request.headers.get('user-agent') || ''
+  if (userAgent.includes('bot') && !userAgent.includes('Googlebot')) {
+    // Block suspicious bots
+    return new NextResponse('Access Denied', { status: 403 })
+  }
+  
+  // Apply security headers
+  const securityHeaders = securityManager.getSecurityHeaders()
+  Object.entries(securityHeaders).forEach(([key, value]) => {
+    response.headers.set(key, value)
+  })
+  
+  // Additional security headers for vulnerability intelligence platform
+  response.headers.set('X-Robots-Tag', 'noindex, nofollow, nosnippet, noarchive')
+  response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate')
+  response.headers.set('Pragma', 'no-cache')
+  response.headers.set('Expires', '0')
+  
+  // Log security event for sensitive paths
+  const sensitivePathPatterns = [
+    '/vulnerabilities',
+    '/intelligence-center',
+    '/ai-agents',
+    '/threat-intelligence',
+    '/api/'
+  ]
+  
+  const isSensitivePath = sensitivePathPatterns.some(pattern => 
+    request.nextUrl.pathname.startsWith(pattern)
+  )
+  
+  if (isSensitivePath) {
+    securityManager.logSecurityEvent({
+      type: 'data_access',
+      message: `Access to sensitive path: ${request.nextUrl.pathname}`,
+      ip: clientIP,
+      userAgent: request.headers.get('user-agent') || 'unknown',
+      severity: 'low',
+      details: {
+        path: request.nextUrl.pathname,
+        method: request.method,
+        timestamp: new Date().toISOString()
+      }
+    })
+  }
+  
+  return response
 }
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|public/).*)',
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
 }
