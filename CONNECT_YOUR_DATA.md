@@ -8,14 +8,15 @@ I can see your comprehensive cybersecurity company spreadsheet with companies li
 
 ## 📊 **Your Current Data Structure**
 
-From your spreadsheet, I can see:
-- **150+ Cybersecurity Companies**
-- **Funding Information**: Series A, B, C, F, etc.
-- **Deal Sizes**: Various funding amounts
-- **Valuations**: Company valuations
-- **Locations**: Geographic distribution
-- **Investors**: Lead and participating investors
-- **Company Websites**: Direct company links
+**PitchBook-Style Data Integration** from your cybersecurity companies spreadsheet:
+- **150+ Company Profiles**: Exabeam, Securonix, Vectra, Cybereason, etc.
+- **Funding Timeline**: Series A, B, C, F with dates and amounts
+- **Valuation History**: Pre/post-money valuations across rounds
+- **Investor Networks**: Lead investors, participating VCs, syndicate details
+- **Geographic Intelligence**: HQ locations, market presence, regional analysis
+- **Industry Classification**: Cybersecurity verticals and sub-sectors
+- **Competitive Data**: Similar companies and peer comparison metrics
+- **Financial Estimates**: Revenue projections, growth rates, employee counts
 
 ---
 

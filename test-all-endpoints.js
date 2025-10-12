@@ -21,6 +21,7 @@ const endpoints = [
   { name: 'Data Sources API', url: `${baseUrl}/api/data-sources/sync?action=status`, type: 'api' },
   { name: 'Funding Agent API', url: `${baseUrl}/api/funding-agent?action=demo`, type: 'api' },
   { name: 'Data Import API', url: `${baseUrl}/api/data-import?action=sample-data`, type: 'api' },
+  { name: 'Company Profile API', url: `${baseUrl}/api/company-profile?action=profile&company=Exabeam`, type: 'api' },
   { name: 'Security API', url: `${baseUrl}/api/security?action=status`, type: 'api' },
   
   // Company analysis pages

@@ -196,12 +196,16 @@ Phase 3: Analyze (Sentiment & Timeline)
 - **Real-time Updates**: Live portfolio performance and market data
 
 ### **5. Company Analysis Tools** (`/company-analysis/[id]`)
-- **Interactive Charts**: Revenue growth, market position, risk assessment, funding history
-- **Financial Analysis**: Revenue, growth rates, burn rate, runway, customer metrics
-- **Market Intelligence**: TAM/SAM, competitive positioning, market share analysis
-- **Risk Assessment**: Identified risks with severity levels and mitigation strategies
-- **Growth Opportunities**: Investment opportunities with impact assessment
-- **RAG Insights**: AI-powered analysis with knowledge graph connections
+**PitchBook-style professional company profiles** with comprehensive analytics:
+- **Timeline Visualization**: Interactive funding rounds with employee growth overlay
+- **Financial Dashboard**: Revenue estimates, growth rates, burn analysis, runway projections
+- **Competitive Analysis**: Similar companies comparison with key metrics
+- **Market Intelligence**: TAM/SAM analysis, market share, competitive positioning
+- **Investor Relations**: Lead/participating investors, syndicate analysis, board composition
+- **Risk Assessment**: Comprehensive risk factors with severity levels and mitigation
+- **Industry Classification**: Primary/secondary cybersecurity verticals and keywords
+- **Geographic Analysis**: HQ location, market presence, regional expansion
+- **AI Insights**: RAG-powered analysis with knowledge graph connections and recommendations
 
 ### **6. Funding Intelligence System**
 - **Automated Tracking**: 24/7 cybersecurity funding announcement monitoring
@@ -256,22 +260,30 @@ Phase 3: Analyze (Sentiment & Timeline)
 
 ## 🔗 **Data Integration**
 
-### **Your Cybersecurity Companies Spreadsheet**
-The platform is designed to integrate with your existing cybersecurity companies database:
+### **Your Cybersecurity Companies Database**
+**Professional-grade integration** with PitchBook-style company profiles and analytics:
 
-**Supported Data**:
-- **150+ Companies**: Exabeam, Securonix, Vectra, Cybereason, etc.
-- **Funding Information**: Series A, B, C, F funding stages
-- **Deal Sizes**: Actual funding amounts and valuations
-- **Geographic Data**: Company locations and markets
-- **Investor Networks**: Lead and participating investors
-- **Company Details**: Websites and contact information
+**Supported Data Structure**:
+- **Company Profiles**: Name, industry, HQ location, founded date, employee count
+- **Funding Timeline**: Round types, amounts, dates, pre/post valuations
+- **Investor Networks**: Lead investors, participating VCs, syndicate analysis
+- **Competitive Intelligence**: Similar companies, market positioning, peer metrics
+- **Financial Metrics**: Revenue estimates, growth rates, burn analysis
+- **Geographic Data**: HQ location, market presence, regional analysis
+
+**PitchBook-Style Features**:
+- **Timeline Visualization**: Interactive funding rounds chart with growth metrics
+- **Company Profiles**: Comprehensive profiles with highlights, overview, financials
+- **Similar Companies**: Competitive analysis with key metrics comparison
+- **Industry Classification**: Primary/secondary cybersecurity verticals
+- **Valuation Tracking**: Historical valuations and growth trajectories
+- **Investor Mapping**: VC firm relationships and investment patterns
 
 **Integration Process**:
-1. Export your spreadsheet as CSV
-2. Use Data Import API (`/api/data-import`)
-3. Automatic mapping to platform structure
-4. Enhanced analysis with your real data
+1. **Import**: CSV/Excel with your cybersecurity companies data
+2. **Enrich**: Automatic enhancement from Crunchbase, SEC EDGAR, news sources
+3. **Visualize**: Professional charts and company profiles (PitchBook-style)
+4. **Analyze**: AI-powered insights, recommendations, and competitive intelligence
 
 ### **External Data Sources**
 - **Intellizence**: Cybersecurity market intelligence
