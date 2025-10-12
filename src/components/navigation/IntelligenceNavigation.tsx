@@ -17,7 +17,8 @@ import {
   Command,
   ChevronDown,
   Activity,
-  Zap
+  Zap,
+  Database
 } from 'lucide-react'
 
 const intelligenceModules = [
@@ -68,6 +69,13 @@ const intelligenceModules = [
     href: '/ballistic-portfolio',
     icon: Target,
     description: 'Portfolio intelligence',
+    status: 'operational'
+  },
+  {
+    name: 'Data Sources',
+    href: '/data-sources',
+    icon: Database,
+    description: 'Funding & market data',
     status: 'operational'
   }
 ]
