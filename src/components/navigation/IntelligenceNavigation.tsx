@@ -77,6 +77,13 @@ const intelligenceModules = [
     icon: Database,
     description: 'Funding & market data',
     status: 'operational'
+  },
+  {
+    name: 'Data Management',
+    href: '/data-management',
+    icon: BarChart3,
+    description: 'AI-powered data entry',
+    status: 'operational'
   }
 ]
 

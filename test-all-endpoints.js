@@ -10,6 +10,7 @@ const endpoints = [
   { name: 'Executive Dashboard', url: `${baseUrl}/executive-dashboard`, type: 'page' },
   { name: 'AI Agents', url: `${baseUrl}/ai-agents`, type: 'page' },
   { name: 'Data Sources', url: `${baseUrl}/data-sources`, type: 'page' },
+  { name: 'Data Management', url: `${baseUrl}/data-management`, type: 'page' },
   { name: 'Portfolio', url: `${baseUrl}/ballistic-portfolio`, type: 'page' },
   { name: 'Intelligence Center', url: `${baseUrl}/intelligence-center`, type: 'page' },
   
@@ -22,6 +23,7 @@ const endpoints = [
   { name: 'Funding Agent API', url: `${baseUrl}/api/funding-agent?action=demo`, type: 'api' },
   { name: 'Data Import API', url: `${baseUrl}/api/data-import?action=sample-data`, type: 'api' },
   { name: 'Company Profile API', url: `${baseUrl}/api/company-profile?action=profile&company=Exabeam`, type: 'api' },
+  { name: 'Data Management API', url: `${baseUrl}/api/data-management?action=stats`, type: 'api' },
   { name: 'Security API', url: `${baseUrl}/api/security?action=status`, type: 'api' },
   
   // Company analysis pages
