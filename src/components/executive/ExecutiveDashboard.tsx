@@ -1024,6 +1024,246 @@ export default function ExecutiveDashboard() {
                   </div>
                 </div>
 
+                {/* Company-Specific Portfolio Trend Bar Chart */}
+                <div className="p-6 bg-gradient-to-r from-purple-50 to-indigo-50 rounded-xl border-2 border-purple-100 shadow-sm">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h4 className="font-bold text-xl text-gray-900">Portfolio Companies Performance</h4>
+                      <p className="text-sm text-gray-600 mt-1">Individual company valuations and growth trends</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Badge className="bg-purple-500 text-white px-3 py-1 text-sm">23 Companies</Badge>
+                      <Badge variant="outline" className="px-3 py-1 text-sm">Live Data</Badge>
+                    </div>
+                  </div>
+
+                  {/* Company Bar Chart */}
+                  <div className="bg-white rounded-lg p-6 border shadow-sm">
+                    <div className="relative">
+                      {/* Y-Axis Labels for Company Chart */}
+                      <div className="absolute left-0 top-0 h-80 flex flex-col justify-between text-xs text-gray-500 -ml-16">
+                        <span>$100M</span>
+                        <span>$80M</span>
+                        <span>$60M</span>
+                        <span>$40M</span>
+                        <span>$20M</span>
+                        <span>$0M</span>
+                      </div>
+
+                      {/* Chart Grid for Companies */}
+                      <div className="relative h-80 border-l-2 border-b-2 border-gray-200">
+                        {/* Horizontal Grid Lines */}
+                        {[0, 1, 2, 3, 4, 5].map((line) => (
+                          <div 
+                            key={line}
+                            className="absolute w-full border-t border-gray-100"
+                            style={{ top: `${line * 20}%` }}
+                          />
+                        ))}
+
+                        {/* Company Bars */}
+                        <div className="flex justify-between items-end h-full px-4 gap-2">
+                          {portfolio.map((company, index) => {
+                            const maxValuation = 100000000 // $100M max for scaling
+                            const barHeight = (company.currentValuation / maxValuation) * 100
+                            const roi = ((company.currentValuation - company.investmentAmount) / company.investmentAmount) * 100
+                            
+                            return (
+                              <div key={index} className="flex flex-col items-center group relative flex-1">
+                                {/* Detailed Tooltip on Hover */}
+                                <div className="absolute -top-32 left-1/2 transform -translate-x-1/2 bg-gray-900 text-white p-4 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity z-20 min-w-64 shadow-xl">
+                                  <div className="text-sm font-bold mb-2">{company.name}</div>
+                                  <div className="space-y-1 text-xs">
+                                    <div className="flex justify-between">
+                                      <span>Sector:</span>
+                                      <span className="font-medium">{company.sector}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                      <span>Investment:</span>
+                                      <span className="font-medium">{formatCurrency(company.investmentAmount)}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                      <span>Current Value:</span>
+                                      <span className="font-medium text-green-300">{formatCurrency(company.currentValuation)}</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                      <span>ROI:</span>
+                                      <span className={`font-bold ${roi >= 0 ? 'text-green-300' : 'text-red-300'}`}>
+                                        {roi > 0 ? '+' : ''}{roi.toFixed(1)}%
+                                      </span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                      <span>Momentum:</span>
+                                      <span className="font-medium text-blue-300">{company.momentum}/100</span>
+                                    </div>
+                                    <div className="flex justify-between">
+                                      <span>Status:</span>
+                                      <span className={`font-medium capitalize ${
+                                        company.status === 'thriving' ? 'text-green-300' :
+                                        company.status === 'growing' ? 'text-blue-300' :
+                                        company.status === 'stable' ? 'text-yellow-300' :
+                                        'text-red-300'
+                                      }`}>
+                                        {company.status}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  {/* Tooltip Arrow */}
+                                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                                </div>
+
+                                {/* Company Performance Bar */}
+                                <div 
+                                  className={`w-full rounded-t-lg transition-all duration-500 hover:scale-105 cursor-pointer shadow-lg ${
+                                    company.status === 'thriving' ? 'bg-gradient-to-t from-green-500 to-green-400' :
+                                    company.status === 'growing' ? 'bg-gradient-to-t from-blue-500 to-blue-400' :
+                                    company.status === 'stable' ? 'bg-gradient-to-t from-yellow-500 to-yellow-400' :
+                                    'bg-gradient-to-t from-red-500 to-red-400'
+                                  } relative overflow-hidden`}
+                                  style={{ height: `${Math.max(barHeight, 5)}%` }}
+                                >
+                                  {/* Value Label on Bar */}
+                                  <div className="absolute inset-x-0 top-2 text-center">
+                                    <div className="text-white text-xs font-bold drop-shadow">
+                                      {formatCurrency(company.currentValuation)}
+                                    </div>
+                                  </div>
+                                  
+                                  {/* ROI Badge */}
+                                  <div className="absolute inset-x-0 bottom-2 flex justify-center">
+                                    <div className={`text-xs font-bold px-2 py-1 rounded ${
+                                      roi >= 100 ? 'bg-green-600 text-white' :
+                                      roi >= 50 ? 'bg-blue-600 text-white' :
+                                      roi >= 0 ? 'bg-yellow-600 text-white' :
+                                      'bg-red-600 text-white'
+                                    }`}>
+                                      {roi > 0 ? '+' : ''}{roi.toFixed(0)}%
+                                    </div>
+                                  </div>
+
+                                  {/* Momentum Indicator */}
+                                  <div className="absolute top-0 right-0 w-2 h-full opacity-60">
+                                    <div 
+                                      className={`w-full ${
+                                        company.momentum >= 80 ? 'bg-green-300' :
+                                        company.momentum >= 60 ? 'bg-blue-300' :
+                                        company.momentum >= 40 ? 'bg-yellow-300' :
+                                        'bg-red-300'
+                                      }`}
+                                      style={{ height: `${company.momentum}%` }}
+                                    />
+                                  </div>
+                                </div>
+
+                                {/* Growth Trend Arrow */}
+                                <div className="mt-1 flex justify-center">
+                                  {roi >= 50 ? (
+                                    <TrendingUp className="h-4 w-4 text-green-600" />
+                                  ) : roi >= 0 ? (
+                                    <TrendingUp className="h-4 w-4 text-blue-600" />
+                                  ) : (
+                                    <TrendingDown className="h-4 w-4 text-red-600" />
+                                  )}
+                                </div>
+                              </div>
+                            )
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Company Names at Bottom */}
+                      <div className="flex justify-between items-center mt-4 px-4 gap-2">
+                        {portfolio.map((company, index) => (
+                          <div key={index} className="flex-1 text-center">
+                            <div className="text-sm font-bold text-gray-800 mb-1">
+                              {company.name}
+                            </div>
+                            <div className="text-xs text-gray-600">
+                              {company.sector}
+                            </div>
+                            <div className={`text-xs font-medium mt-1 ${
+                              company.status === 'thriving' ? 'text-green-600' :
+                              company.status === 'growing' ? 'text-blue-600' :
+                              company.status === 'stable' ? 'text-yellow-600' :
+                              'text-red-600'
+                            }`}>
+                              {company.status.toUpperCase()}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Chart Legend and Summary */}
+                    <div className="mt-6 pt-4 border-t border-gray-100">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                        <div className="text-center p-3 bg-green-50 rounded-lg border">
+                          <div className="flex items-center justify-center gap-2 mb-1">
+                            <div className="w-3 h-3 bg-green-500 rounded"></div>
+                            <span className="text-sm font-medium">Thriving</span>
+                          </div>
+                          <div className="text-lg font-bold text-green-700">
+                            {portfolio.filter(c => c.status === 'thriving').length}
+                          </div>
+                          <div className="text-xs text-green-600">Companies</div>
+                        </div>
+                        <div className="text-center p-3 bg-blue-50 rounded-lg border">
+                          <div className="flex items-center justify-center gap-2 mb-1">
+                            <div className="w-3 h-3 bg-blue-500 rounded"></div>
+                            <span className="text-sm font-medium">Growing</span>
+                          </div>
+                          <div className="text-lg font-bold text-blue-700">
+                            {portfolio.filter(c => c.status === 'growing').length}
+                          </div>
+                          <div className="text-xs text-blue-600">Companies</div>
+                        </div>
+                        <div className="text-center p-3 bg-yellow-50 rounded-lg border">
+                          <div className="flex items-center justify-center gap-2 mb-1">
+                            <div className="w-3 h-3 bg-yellow-500 rounded"></div>
+                            <span className="text-sm font-medium">Stable</span>
+                          </div>
+                          <div className="text-lg font-bold text-yellow-700">
+                            {portfolio.filter(c => c.status === 'stable').length}
+                          </div>
+                          <div className="text-xs text-yellow-600">Companies</div>
+                        </div>
+                        <div className="text-center p-3 bg-red-50 rounded-lg border">
+                          <div className="flex items-center justify-center gap-2 mb-1">
+                            <div className="w-3 h-3 bg-red-500 rounded"></div>
+                            <span className="text-sm font-medium">Concerning</span>
+                          </div>
+                          <div className="text-lg font-bold text-red-700">
+                            {portfolio.filter(c => c.status === 'concerning').length}
+                          </div>
+                          <div className="text-xs text-red-600">Companies</div>
+                        </div>
+                      </div>
+
+                      {/* Performance Summary */}
+                      <div className="grid grid-cols-3 gap-4">
+                        <div className="text-center p-3 bg-gray-50 rounded-lg">
+                          <div className="text-lg font-bold text-gray-800">
+                            {formatCurrency(portfolio.reduce((sum, c) => sum + c.currentValuation, 0))}
+                          </div>
+                          <div className="text-xs text-gray-600">Total Portfolio Value</div>
+                        </div>
+                        <div className="text-center p-3 bg-gray-50 rounded-lg">
+                          <div className="text-lg font-bold text-gray-800">
+                            {Math.round(portfolio.reduce((sum, c) => sum + ((c.currentValuation - c.investmentAmount) / c.investmentAmount * 100), 0) / portfolio.length)}%
+                          </div>
+                          <div className="text-xs text-gray-600">Average ROI</div>
+                        </div>
+                        <div className="text-center p-3 bg-gray-50 rounded-lg">
+                          <div className="text-lg font-bold text-gray-800">
+                            {Math.round(portfolio.reduce((sum, c) => sum + c.momentum, 0) / portfolio.length)}
+                          </div>
+                          <div className="text-xs text-gray-600">Average Momentum</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Individual Company Trends */}
                 <div className="space-y-4">
                   <h4 className="font-semibold text-lg">Individual Company Performance</h4>
