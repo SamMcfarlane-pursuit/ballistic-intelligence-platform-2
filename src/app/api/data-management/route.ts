@@ -17,6 +17,7 @@ interface CompanyData {
   website: string
   confidence?: number
   source?: string
+  batchProcessed?: boolean
 }
 
 interface AIExtractionRequest {
@@ -57,9 +58,9 @@ export async function GET(request: NextRequest) {
               'Application Security': 88
             },
             recentActivity: [
-              { action: 'AI Extract', company: 'CyberShield AI', timestamp: new Date().toISOString() },
-              { action: 'Manual Entry', company: 'SecureFlow', timestamp: new Date(Date.now() - 3600000).toISOString() },
-              { action: 'Bulk Upload', company: '15 companies', timestamp: new Date(Date.now() - 7200000).toISOString() }
+              { action: 'AI Extract', company: 'CyberShield AI', timestamp: '2025-10-13T00:18:16.100Z' },
+              { action: 'Manual Entry', company: 'SecureFlow', timestamp: '2025-10-12T23:18:16.100Z' },
+              { action: 'Bulk Upload', company: '15 companies', timestamp: '2025-10-12T22:18:16.100Z' }
             ]
           }
         })
@@ -175,6 +176,19 @@ export async function POST(request: NextRequest) {
           message: 'AI extraction completed successfully'
         })
 
+      case 'ai-extract-enhanced':
+        const enhancedRequest = data as AIExtractionRequest & { 
+          title?: string, 
+          batchMode?: boolean 
+        }
+        const enhancedData = await processEnhancedAIExtraction(enhancedRequest)
+        
+        return NextResponse.json({
+          success: true,
+          data: enhancedData,
+          message: 'Enhanced AI extraction completed successfully'
+        })
+
       case 'manual-entry':
         const companyData = data as CompanyData
         const savedData = await processManualEntry(companyData)
@@ -248,6 +262,32 @@ async function processAIExtraction(request: AIExtractionRequest): Promise<Compan
     website: extractWebsite(request.text),
     confidence: 0.92,
     source: request.source
+  }
+
+  return mockExtractedData
+}
+
+// Enhanced AI Extraction Processing with better prompts and batch optimization
+async function processEnhancedAIExtraction(request: AIExtractionRequest & { 
+  title?: string, 
+  batchMode?: boolean 
+}): Promise<CompanyData> {
+  // Enhanced extraction with better accuracy and speed for batch processing
+  const mockExtractedData: CompanyData = {
+    name: extractCompanyNameEnhanced(request.text, request.title),
+    industry: extractIndustryEnhanced(request.text),
+    stage: extractFundingStageEnhanced(request.text),
+    location: extractLocationEnhanced(request.text),
+    founded: extractFoundedYearEnhanced(request.text),
+    employees: extractEmployeeCountEnhanced(request.text),
+    funding: extractFundingAmountEnhanced(request.text),
+    valuation: extractValuationEnhanced(request.text),
+    investors: extractInvestorsEnhanced(request.text),
+    description: extractDescriptionEnhanced(request.text, request.title),
+    website: extractWebsiteEnhanced(request.text),
+    confidence: calculateEnhancedConfidence(request.text, request.title),
+    source: request.source,
+    batchProcessed: request.batchMode || false
   }
 
   return mockExtractedData
@@ -337,12 +377,13 @@ async function validateCompanyData(data: CompanyData): Promise<any> {
 // Data Export
 async function exportCompanyData(filters: any): Promise<any> {
   // Mock export functionality
+  const exportId = 'export-' + Math.floor(Math.random() * 1000000)
   return {
-    exportId: 'export-' + Date.now(),
+    exportId,
     format: 'csv',
     recordCount: 1247,
-    downloadUrl: '/api/data-management/download/export-' + Date.now() + '.csv',
-    expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+    downloadUrl: `/api/data-management/download/${exportId}.csv`,
+    expiresAt: '2025-10-14T00:00:00.000Z'
   }
 }
 
@@ -384,7 +425,7 @@ function extractFundingStage(text: string): string {
 function extractLocation(text: string): string {
   // Mock location extraction
   const locations = ['San Francisco, CA', 'New York, NY', 'Boston, MA', 'Austin, TX', 'Seattle, WA']
-  return locations[Math.floor(Math.random() * locations.length)]
+  return locations[0] // Default to San Francisco for consistency
 }
 
 function extractFoundedYear(text: string): number {
@@ -394,12 +435,12 @@ function extractFoundedYear(text: string): number {
 
 function extractEmployeeCount(text: string): number {
   const empMatch = text.match(/(\d+)\s*employees/i)
-  return empMatch ? parseInt(empMatch[1]) : Math.floor(Math.random() * 500) + 50
+  return empMatch ? parseInt(empMatch[1]) : 75 // Default to 75 employees for consistency
 }
 
 function extractFundingAmount(text: string): number {
   const fundingMatch = text.match(/\$(\d+(?:\.\d+)?)\s*(?:million|M)/i)
-  return fundingMatch ? parseFloat(fundingMatch[1]) * 1000000 : Math.floor(Math.random() * 50) * 1000000
+  return fundingMatch ? parseFloat(fundingMatch[1]) * 1000000 : 15000000 // Default to $15M for consistency
 }
 
 function extractValuation(text: string): number {
@@ -408,13 +449,13 @@ function extractValuation(text: string): number {
     const multiplier = text.toLowerCase().includes('billion') ? 1000000000 : 1000000
     return parseFloat(valuationMatch[1]) * multiplier
   }
-  return Math.floor(Math.random() * 200) * 1000000
+  return 60000000 // Default to $60M valuation for consistency
 }
 
 function extractInvestors(text: string): string[] {
   // Mock investor extraction
   const commonInvestors = ['Ballistic Ventures', 'Kleiner Perkins', 'GV', 'Andreessen Horowitz', 'Sequoia Capital']
-  return commonInvestors.slice(0, Math.floor(Math.random() * 3) + 1)
+  return commonInvestors.slice(0, 2) // Default to first 2 investors for consistency
 }
 
 function extractDescription(text: string): string {
@@ -430,7 +471,7 @@ function extractWebsite(text: string): string {
 
 // Helper functions
 function generateCompanyId(name: string): string {
-  return name.toLowerCase().replace(/[^a-z0-9]/g, '-') + '-' + Date.now()
+  return name.toLowerCase().replace(/[^a-z0-9]/g, '-') + '-' + Math.floor(Math.random() * 1000000)
 }
 
 function validateRowData(row: any): boolean {
@@ -439,10 +480,252 @@ function validateRowData(row: any): boolean {
 
 async function isDuplicate(companyName: string): Promise<boolean> {
   // Mock duplicate check - in production, query database
-  return Math.random() < 0.1 // 10% chance of duplicate
+  return false // No duplicates for consistency
 }
 
 async function processCompanyRow(row: any): Promise<void> {
   // Mock processing - in production, save to database
   console.log('Processing company row:', row['Company Name'])
+}
+// Enhanced extraction functions with better accuracy and batch optimization
+function extractCompanyNameEnhanced(text: string, title?: string): string {
+  // Use title as primary source if available
+  if (title) {
+    const titleMatch = title.match(/([A-Z][a-zA-Z\s]+(?:Inc|Corp|LLC|Ltd|AI|Tech|Security|Cyber|Systems|Solutions))/g)
+    if (titleMatch) return titleMatch[0]
+  }
+  
+  // Enhanced patterns for company names
+  const patterns = [
+    /([A-Z][a-zA-Z\s]+(?:Inc|Corp|LLC|Ltd|AI|Tech|Security|Cyber|Systems|Solutions))/g,
+    /([A-Z][a-zA-Z]+(?:\s[A-Z][a-zA-Z]+)*)\s*(?:announced|raised|completed|secured)/i,
+    /([A-Z][a-zA-Z]+(?:\s[A-Z][a-zA-Z]+)*),?\s*(?:a|an)\s*(?:cybersecurity|security|AI|tech)/i
+  ]
+  
+  for (const pattern of patterns) {
+    const matches = text.match(pattern)
+    if (matches) return matches[0].replace(/,.*/, '').trim()
+  }
+  
+  return 'Unknown Company'
+}
+
+function extractIndustryEnhanced(text: string): string {
+  const industries = {
+    'AI Threat Detection': ['AI threat', 'machine learning security', 'AI-powered threat', 'intelligent threat'],
+    'Endpoint Security': ['endpoint', 'device security', 'workstation', 'desktop security'],
+    'Network Security': ['network security', 'firewall', 'intrusion', 'network protection'],
+    'Cloud Security': ['cloud security', 'AWS security', 'Azure security', 'multi-cloud'],
+    'Identity & Access Management': ['identity', 'access management', 'authentication', 'IAM'],
+    'Data Protection': ['data protection', 'privacy', 'encryption', 'data security'],
+    'Threat Intelligence': ['threat intelligence', 'IOC', 'threat hunting', 'cyber intelligence'],
+    'Security Analytics': ['security analytics', 'SIEM', 'monitoring', 'security operations'],
+    'Application Security': ['application security', 'code security', 'DevSecOps', 'software security']
+  }
+  
+  const lowerText = text.toLowerCase()
+  
+  for (const [industry, keywords] of Object.entries(industries)) {
+    if (keywords.some(keyword => lowerText.includes(keyword.toLowerCase()))) {
+      return industry
+    }
+  }
+  
+  return 'Cybersecurity'
+}
+
+function extractFundingStageEnhanced(text: string): string {
+  const stages = {
+    'Seed': ['seed round', 'seed funding', 'pre-seed'],
+    'Series A': ['series a', 'series-a', 'a round'],
+    'Series B': ['series b', 'series-b', 'b round'],
+    'Series C': ['series c', 'series-c', 'c round'],
+    'Series D+': ['series d', 'series e', 'series f', 'late stage'],
+    'IPO': ['ipo', 'public offering', 'going public'],
+    'Acquired': ['acquired', 'acquisition', 'bought by']
+  }
+  
+  const lowerText = text.toLowerCase()
+  
+  for (const [stage, keywords] of Object.entries(stages)) {
+    if (keywords.some(keyword => lowerText.includes(keyword))) {
+      return stage
+    }
+  }
+  
+  return 'Series A'
+}
+
+function extractLocationEnhanced(text: string): string {
+  const locationPatterns = [
+    /([A-Z][a-z]+,\s*[A-Z]{2})/g,  // San Francisco, CA
+    /([A-Z][a-z]+,\s*[A-Z][a-z]+)/g,  // London, UK
+    /based in ([A-Z][a-z]+(?:\s[A-Z][a-z]+)*)/i,
+    /headquartered in ([A-Z][a-z]+(?:\s[A-Z][a-z]+)*)/i
+  ]
+  
+  for (const pattern of locationPatterns) {
+    const matches = text.match(pattern)
+    if (matches) {
+      return matches[1] || matches[0]
+    }
+  }
+  
+  const techHubs = ['San Francisco, CA', 'New York, NY', 'Boston, MA', 'Austin, TX', 'Seattle, WA']
+  return techHubs[0] // Default to San Francisco for consistency
+}
+
+function extractFoundedYearEnhanced(text: string): number {
+  const yearPattern = /founded in (\d{4})|established (\d{4})|since (\d{4})/i
+  const match = text.match(yearPattern)
+  if (match) {
+    const year = parseInt(match[1] || match[2] || match[3])
+    if (year >= 2000 && year <= new Date().getFullYear()) {
+      return year
+    }
+  }
+  
+  // Default to recent years for startups
+  return 2021 // Default to 2021 for consistency
+}
+
+function extractEmployeeCountEnhanced(text: string): number {
+  const employeePatterns = [
+    /(\d+)\s*employees/i,
+    /team of (\d+)/i,
+    /(\d+)\s*people/i
+  ]
+  
+  for (const pattern of employeePatterns) {
+    const match = text.match(pattern)
+    if (match) {
+      return parseInt(match[1])
+    }
+  }
+  
+  // Estimate based on funding stage
+  const fundingAmount = extractFundingAmountEnhanced(text)
+  if (fundingAmount > 50000000) return 200
+  if (fundingAmount > 20000000) return 100
+  if (fundingAmount > 5000000) return 50
+  return 25
+}
+
+function extractFundingAmountEnhanced(text: string): number {
+  const fundingPatterns = [
+    /\$(\d+(?:\.\d+)?)\s*(?:million|M)/i,
+    /\$(\d+(?:\.\d+)?)\s*(?:billion|B)/i,
+    /raised (\d+(?:\.\d+)?)\s*(?:million|M)/i,
+    /(\d+(?:\.\d+)?)\s*(?:million|M) in funding/i
+  ]
+  
+  for (const pattern of fundingPatterns) {
+    const match = text.match(pattern)
+    if (match) {
+      const amount = parseFloat(match[1])
+      if (pattern.toString().includes('billion|B')) {
+        return amount * 1000000000
+      }
+      return amount * 1000000
+    }
+  }
+  
+  return 0
+}
+
+function extractValuationEnhanced(text: string): number {
+  const valuationPatterns = [
+    /valued at \$(\d+(?:\.\d+)?)\s*(?:billion|B)/i,
+    /valuation of \$(\d+(?:\.\d+)?)\s*(?:billion|B)/i,
+    /\$(\d+(?:\.\d+)?)\s*(?:billion|B) valuation/i
+  ]
+  
+  for (const pattern of valuationPatterns) {
+    const match = text.match(pattern)
+    if (match) {
+      return parseFloat(match[1]) * 1000000000
+    }
+  }
+  
+  // Estimate valuation based on funding
+  const funding = extractFundingAmountEnhanced(text)
+  return funding * 4 // 4x funding amount for consistency
+}
+
+function extractInvestorsEnhanced(text: string): string[] {
+  const investorPatterns = [
+    /led by ([A-Z][a-zA-Z\s]+(?:Ventures|Capital|Partners|Fund))/gi,
+    /investors include ([A-Z][a-zA-Z\s,]+)/i,
+    /funding from ([A-Z][a-zA-Z\s]+(?:Ventures|Capital|Partners|Fund))/gi,
+    /([A-Z][a-zA-Z\s]+(?:Ventures|Capital|Partners|Fund)) led/gi
+  ]
+  
+  const investors = new Set<string>()
+  
+  for (const pattern of investorPatterns) {
+    const matches = text.matchAll(pattern)
+    for (const match of matches) {
+      const investor = match[1].trim()
+      if (investor.length > 3) {
+        investors.add(investor)
+      }
+    }
+  }
+  
+  if (investors.size === 0) {
+    const defaultInvestors = ['Ballistic Ventures', 'Andreessen Horowitz', 'Kleiner Perkins', 'GV', 'Sequoia Capital']
+    investors.add(defaultInvestors[0]) // Default to Ballistic Ventures for consistency
+  }
+  
+  return Array.from(investors)
+}
+
+function extractDescriptionEnhanced(text: string, title?: string): string {
+  // Use title to enhance description
+  const titleContext = title ? `${title}: ` : ''
+  
+  // Extract key sentences about the company
+  const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 20)
+  const relevantSentences = sentences.filter(sentence => 
+    sentence.toLowerCase().includes('company') ||
+    sentence.toLowerCase().includes('platform') ||
+    sentence.toLowerCase().includes('solution') ||
+    sentence.toLowerCase().includes('technology')
+  )
+  
+  if (relevantSentences.length > 0) {
+    return titleContext + relevantSentences[0].trim()
+  }
+  
+  return titleContext + (sentences[0]?.trim() || 'Cybersecurity company focused on innovative security solutions')
+}
+
+function extractWebsiteEnhanced(text: string): string {
+  const urlPattern = /https?:\/\/[^\s]+/g
+  const matches = text.match(urlPattern)
+  if (matches) {
+    return matches[0]
+  }
+  
+  // Generate likely website from company name
+  const companyName = extractCompanyNameEnhanced(text)
+  const domain = companyName.toLowerCase()
+    .replace(/[^a-z0-9\s]/g, '')
+    .replace(/\s+/g, '')
+    .replace(/(inc|corp|llc|ltd)$/, '')
+  
+  return `www.${domain}.com`
+}
+
+function calculateEnhancedConfidence(text: string, title?: string): number {
+  let confidence = 0.7 // Base confidence
+  
+  // Boost confidence based on available information
+  if (title) confidence += 0.1
+  if (text.includes('$')) confidence += 0.1 // Has funding info
+  if (text.toLowerCase().includes('series')) confidence += 0.1 // Has stage info
+  if (text.match(/[A-Z][a-z]+,\s*[A-Z]{2}/)) confidence += 0.05 // Has location
+  if (text.toLowerCase().includes('founded')) confidence += 0.05 // Has founding info
+  
+  return Math.min(confidence, 0.98) // Cap at 98%
 }

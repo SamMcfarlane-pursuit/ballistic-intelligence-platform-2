@@ -15,21 +15,21 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Z.ai Code Scaffold - AI-Powered Development",
-  description: "Modern Next.js scaffold optimized for AI-powered development with Z.ai. Built with TypeScript, Tailwind CSS, and shadcn/ui.",
-  keywords: ["Z.ai", "Next.js", "TypeScript", "Tailwind CSS", "shadcn/ui", "AI development", "React"],
-  authors: [{ name: "Z.ai Team" }],
+  title: "CS Intelligence Platform - Cybersecurity Investment Intelligence",
+  description: "Advanced cybersecurity investment intelligence platform with AI-powered analysis, startup detection, and comprehensive data management.",
+  keywords: ["cybersecurity", "investment intelligence", "AI analysis", "startup detection", "venture capital", "threat intelligence", "portfolio management"],
+  authors: [{ name: "Ballistic Ventures" }],
   openGraph: {
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
-    url: "https://chat.z.ai",
-    siteName: "Z.ai",
+    title: "CS Intelligence Platform",
+    description: "Cybersecurity investment intelligence with AI-powered analysis",
+    url: "http://localhost:3000",
+    siteName: "CS Intelligence Platform",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Z.ai Code Scaffold",
-    description: "AI-powered development with modern React stack",
+    title: "CS Intelligence Platform",
+    description: "Cybersecurity investment intelligence with AI-powered analysis",
   },
 };
 

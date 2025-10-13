@@ -37,8 +37,10 @@ import {
   Activity,
   Star,
   Award,
-  Lightbulb
+  Lightbulb,
+  Layers
 } from 'lucide-react'
+import BatchProcessor from '@/components/data-management/BatchProcessor'
 
 interface CompanyData {
   name: string
@@ -198,7 +200,7 @@ export default function DataManagement() {
       }
     ]
     
-    return companies[Math.floor(Math.random() * companies.length)]
+    return companies[0] // Use first company for consistency
   }
 
   // Generate AI Insights
@@ -332,7 +334,7 @@ export default function DataManagement() {
               </CardHeader>
               <CardContent>
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-                  <TabsList className="grid w-full grid-cols-3 bg-slate-700/50">
+                  <TabsList className="grid w-full grid-cols-4 bg-slate-700/50">
                     <TabsTrigger 
                       value="ai-extract" 
                       className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
@@ -341,15 +343,22 @@ export default function DataManagement() {
                       AI Extract
                     </TabsTrigger>
                     <TabsTrigger 
+                      value="batch-process" 
+                      className="data-[state=active]:bg-orange-600 data-[state=active]:text-white"
+                    >
+                      <Layers className="w-4 h-4 mr-2" />
+                      Batch Process
+                    </TabsTrigger>
+                    <TabsTrigger 
                       value="manual" 
-                      className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+                      className="data-[state=active]:bg-green-600 data-[state=active]:text-white"
                     >
                       <FileText className="w-4 h-4 mr-2" />
                       Manual Entry
                     </TabsTrigger>
                     <TabsTrigger 
                       value="bulk" 
-                      className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+                      className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
                     >
                       <Upload className="w-4 h-4 mr-2" />
                       Bulk Upload
@@ -359,6 +368,14 @@ export default function DataManagement() {
                   {/* AI Extraction Tab */}
                   <TabsContent value="ai-extract" className="mt-6 space-y-4">
                     <AIExtractionForm onExtract={handleAIExtraction} />
+                  </TabsContent>
+
+                  {/* Batch Processing Tab */}
+                  <TabsContent value="batch-process" className="mt-6 space-y-4">
+                    <BatchProcessor onBatchComplete={(results) => {
+                      console.log('Batch processing completed:', results)
+                      // Handle batch results - could update stats, show summary, etc.
+                    }} />
                   </TabsContent>
 
                   {/* Manual Entry Tab */}
