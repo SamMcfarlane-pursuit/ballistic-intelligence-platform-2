@@ -59,9 +59,9 @@ export class CompanyProfilingAgent {
     }
   }
 
-  // Tier 1: Structured Databases (Automated)
+  // Tier 1: Structured Databases (Automated) - Prioritizes most reliable sources
   private async tier1StructuredDatabases(companyName: string): Promise<CompanyProfile> {
-    console.log(`📊 Tier 1: Searching structured databases for ${companyName}`)
+    console.log(`📊 Tier 1: Searching specialized startup databases for ${companyName}`)
     
     const profile: CompanyProfile = {
       name: companyName,
@@ -74,8 +74,9 @@ export class CompanyProfilingAgent {
     }
 
     try {
-      // Search Crunchbase public company page
-      const crunchbaseData = await this.searchCrunchbase(companyName)
+      // Step 1: Automated Crunchbase Search (Primary Source)
+      console.log(`🔍 Searching Crunchbase public pages for ${companyName}`)
+      const crunchbaseData = await this.searchCrunchbasePublic(companyName)
       if (crunchbaseData) {
         profile.website = crunchbaseData.website || ''
         profile.foundedYear = crunchbaseData.foundedYear || 0
@@ -84,34 +85,51 @@ export class CompanyProfilingAgent {
         profile.description = crunchbaseData.description || ''
         profile.crunchbaseUrl = crunchbaseData.url
         
-        // Parse team members from "People" section
-        if (crunchbaseData.teamMembers) {
+        // Extract team members from Crunchbase "People" section
+        if (crunchbaseData.teamMembers && crunchbaseData.teamMembers.length > 0) {
           profile.teamMembers.push(...crunchbaseData.teamMembers.map(member => ({
             ...member,
             source: 'crunchbase' as const
           })))
+          console.log(`✅ Found ${crunchbaseData.teamMembers.length} team members on Crunchbase`)
         }
       }
 
-      // Search AngelList public profile
-      const angelListData = await this.searchAngelList(companyName)
+      // Step 2: Automated AngelList Search (Secondary Source)
+      console.log(`🔍 Searching AngelList public profiles for ${companyName}`)
+      const angelListData = await this.searchAngelListPublic(companyName)
       if (angelListData) {
         // Cross-verify and enrich data from Crunchbase
-        if (!profile.description && angelListData.description) {
-          profile.description = angelListData.description
-        }
+        if (!profile.website && angelListData.website) profile.website = angelListData.website
+        if (!profile.foundedYear && angelListData.foundedYear) profile.foundedYear = angelListData.foundedYear
+        if (!profile.employeeRange && angelListData.employeeRange) profile.employeeRange = angelListData.employeeRange
+        if (!profile.location && angelListData.location) profile.location = angelListData.location
+        if (!profile.description && angelListData.description) profile.description = angelListData.description
         profile.angelListUrl = angelListData.url
         
-        // Add team members from AngelList
-        if (angelListData.teamMembers) {
-          profile.teamMembers.push(...angelListData.teamMembers.map(member => ({
+        // Add unique team members from AngelList (avoid duplicates)
+        if (angelListData.teamMembers && angelListData.teamMembers.length > 0) {
+          const existingNames = new Set(profile.teamMembers.map(m => m.name.toLowerCase()))
+          const newMembers = angelListData.teamMembers.filter(member => 
+            !existingNames.has(member.name.toLowerCase())
+          )
+          
+          profile.teamMembers.push(...newMembers.map(member => ({
             ...member,
             source: 'angellist' as const
           })))
+          console.log(`✅ Added ${newMembers.length} additional team members from AngelList`)
         }
       }
 
-      console.log(`✅ Tier 1 completed: Found ${profile.teamMembers.length} team members`)
+      // Step 3: Check if manual LinkedIn verification is needed
+      const missingCriticalData = this.identifyMissingCriticalData(profile)
+      if (missingCriticalData.length > 0) {
+        console.log(`⚠️ Missing critical data: ${missingCriticalData.join(', ')}`)
+        console.log(`📝 Will create LinkedIn verification task for manual review`)
+      }
+
+      console.log(`✅ Tier 1 completed: Found ${profile.teamMembers.length} team members from structured databases`)
       return profile
       
     } catch (error) {
@@ -120,49 +138,123 @@ export class CompanyProfilingAgent {
     }
   }
 
-  // Tier 2: Broader Web Search (Automated)
+  // Tier 2: Broader Web Intelligence (Detective Phase)
   private async tier2WebSearch(companyName: string, profile: CompanyProfile): Promise<CompanyProfile> {
-    console.log(`🔍 Tier 2: Broader web search for ${companyName}`)
+    console.log(`🕵️ Tier 2: Broader web intelligence for ${companyName}`)
     
     try {
-      // Strategic searches if Tier 1 is incomplete
+      // Strategic founder searches if team info is missing
       if (profile.teamMembers.length === 0) {
-        const founderSearch = await this.searchFounders(companyName)
-        if (founderSearch.length > 0) {
-          profile.teamMembers.push(...founderSearch)
+        console.log(`🔍 No team members found in Tier 1, starting strategic founder search`)
+        
+        // Precise founder search queries
+        const founderQueries = [
+          `"${companyName}" founder OR co-founder`,
+          `"${companyName}" CEO OR "chief executive"`,
+          `site:techcrunch.com "${companyName}" founder`,
+          `site:venturebeat.com "${companyName}" CEO`,
+          `"${companyName}" leadership team`
+        ]
+        
+        for (const query of founderQueries) {
+          const founderResults = await this.performStrategicSearch(query)
+          if (founderResults.length > 0) {
+            const extractedFounders = await this.extractFoundersFromResults(founderResults, companyName)
+            if (extractedFounders.length > 0) {
+              profile.teamMembers.push(...extractedFounders)
+              console.log(`✅ Found ${extractedFounders.length} founders via strategic search: "${query}"`)
+              break // Stop after first successful search
+            }
+          }
+          
+          // Rate limiting between searches
+          await new Promise(resolve => setTimeout(resolve, 500))
         }
       }
 
-      // Search for funding announcement articles
-      const fundingArticles = await this.searchFundingArticles(companyName)
-      if (fundingArticles.length > 0) {
-        // Extract additional company info from articles
-        const articleData = await this.extractCompanyInfoFromArticles(fundingArticles)
-        if (articleData.description && !profile.description) {
-          profile.description = articleData.description
+      // Search funding announcement articles for founder mentions
+      if (profile.teamMembers.length === 0) {
+        console.log(`🔍 Searching funding announcements for founder mentions`)
+        
+        const fundingQueries = [
+          `site:techcrunch.com "${companyName}" funding`,
+          `site:venturebeat.com "${companyName}" raises`,
+          `"${companyName}" Series A OR "Series B" OR "seed funding"`,
+          `"${companyName}" investment announcement`
+        ]
+        
+        for (const query of fundingQueries) {
+          const articles = await this.performStrategicSearch(query)
+          if (articles.length > 0) {
+            const foundersFromArticles = await this.extractFoundersFromFundingArticles(articles, companyName)
+            if (foundersFromArticles.length > 0) {
+              profile.teamMembers.push(...foundersFromArticles)
+              console.log(`✅ Found ${foundersFromArticles.length} founders from funding articles`)
+              break
+            }
+          }
+          
+          await new Promise(resolve => setTimeout(resolve, 500))
         }
       }
 
-      // Parse company website if available
+      // Parse company website for team information
       if (profile.website) {
-        const websiteData = await this.parseCompanyWebsite(profile.website)
+        console.log(`🔍 Parsing company website: ${profile.website}`)
+        const websiteData = await this.parseCompanyWebsiteAdvanced(profile.website)
         if (websiteData) {
-          // Extract team members from "Team" or "Leadership" sections
+          // Extract team members from "Team", "Leadership", "About Us" sections
           if (websiteData.teamMembers && websiteData.teamMembers.length > 0) {
-            profile.teamMembers.push(...websiteData.teamMembers.map(member => ({
+            const existingNames = new Set(profile.teamMembers.map(m => m.name.toLowerCase()))
+            const newMembers = websiteData.teamMembers.filter(member => 
+              !existingNames.has(member.name.toLowerCase())
+            )
+            
+            profile.teamMembers.push(...newMembers.map(member => ({
               ...member,
               source: 'website' as const
             })))
+            console.log(`✅ Added ${newMembers.length} team members from company website`)
           }
           
-          // Enrich description if missing
+          // Enrich missing profile data
           if (!profile.description && websiteData.description) {
             profile.description = websiteData.description
+          }
+          if (!profile.foundedYear && websiteData.foundedYear) {
+            profile.foundedYear = websiteData.foundedYear
           }
         }
       }
 
-      console.log(`✅ Tier 2 completed: Total ${profile.teamMembers.length} team members`)
+      // Search for press releases and company announcements
+      const pressReleaseQueries = [
+        `"${companyName}" press release team`,
+        `"${companyName}" announces new CEO OR CTO`,
+        `site:businesswire.com "${companyName}"`,
+        `site:prnewswire.com "${companyName}"`
+      ]
+      
+      for (const query of pressReleaseQueries) {
+        const pressResults = await this.performStrategicSearch(query)
+        if (pressResults.length > 0) {
+          const teamFromPress = await this.extractTeamFromPressReleases(pressResults, companyName)
+          if (teamFromPress.length > 0) {
+            const existingNames = new Set(profile.teamMembers.map(m => m.name.toLowerCase()))
+            const newMembers = teamFromPress.filter(member => 
+              !existingNames.has(member.name.toLowerCase())
+            )
+            
+            profile.teamMembers.push(...newMembers)
+            console.log(`✅ Added ${newMembers.length} team members from press releases`)
+            break
+          }
+        }
+        
+        await new Promise(resolve => setTimeout(resolve, 500))
+      }
+
+      console.log(`✅ Tier 2 completed: Total ${profile.teamMembers.length} team members found`)
       return profile
       
     } catch (error) {
@@ -171,68 +263,220 @@ export class CompanyProfilingAgent {
     }
   }
 
-  // Tier 3: Manual Fallback (Human-in-the-Loop)
+  // Tier 3: Manual Fallback (Human-in-the-Loop) - LinkedIn as Ultimate Source of Truth
   private async tier3ManualFallback(companyName: string, profile: CompanyProfile): Promise<void> {
-    console.log(`👤 Tier 3: Creating manual verification tasks for ${companyName}`)
+    console.log(`👤 Tier 3: Creating LinkedIn verification tasks for ${companyName}`)
     
-    // Check what critical data is still missing
-    if (profile.teamMembers.length === 0) {
+    // Generate LinkedIn company URL
+    const linkedinCompanyUrl = `https://linkedin.com/company/${companyName.toLowerCase().replace(/\s+/g, '-')}`
+    
+    // Check what critical data is still missing and create specific tasks
+    const missingData = this.identifyMissingCriticalData(profile)
+    
+    if (missingData.includes('team')) {
       this.createVerificationTask({
         taskType: 'missing_founders',
         companyName: companyName,
-        description: `Please verify founders on LinkedIn: https://linkedin.com/company/${companyName.toLowerCase().replace(/\s+/g, '-')}`,
-        linkedinUrl: `https://linkedin.com/company/${companyName.toLowerCase().replace(/\s+/g, '-')}`,
+        description: `🎯 PRIORITY: Find complete team list on LinkedIn. Click the "People" tab to see all employees and identify founders/leadership.`,
+        linkedinUrl: linkedinCompanyUrl,
         priority: 'high'
       })
     }
 
-    if (!profile.employeeRange) {
+    if (missingData.includes('employeeCount')) {
       this.createVerificationTask({
         taskType: 'verify_employee_count',
         companyName: companyName,
-        description: `Please verify employee count from LinkedIn or company website`,
+        description: `📊 Verify exact employee count from LinkedIn company page (shown in company overview section).`,
+        linkedinUrl: linkedinCompanyUrl,
         priority: 'medium'
       })
     }
 
-    if (!profile.location) {
+    if (missingData.includes('location')) {
       this.createVerificationTask({
         taskType: 'verify_location',
         companyName: companyName,
-        description: `Please verify company headquarters location`,
+        description: `📍 Confirm headquarters location from LinkedIn company page or About section.`,
+        linkedinUrl: linkedinCompanyUrl,
         priority: 'medium'
       })
     }
 
-    console.log(`✅ Created ${this.verificationTasks.length} verification tasks`)
+    // Create a comprehensive verification task if multiple items are missing
+    if (missingData.length > 1) {
+      this.createVerificationTask({
+        taskType: 'missing_founders',
+        companyName: companyName,
+        description: `🔍 COMPREHENSIVE REVIEW: Multiple data points missing. Please review LinkedIn company page and update: ${missingData.join(', ')}. This should take 30-60 seconds.`,
+        linkedinUrl: linkedinCompanyUrl,
+        priority: 'high'
+      })
+    }
+
+    console.log(`✅ Created ${this.verificationTasks.filter(t => t.companyName === companyName).length} LinkedIn verification tasks for ${companyName}`)
+    console.log(`📋 Tasks created for missing data: ${missingData.join(', ')}`)
   }
 
-  // Helper methods (mock implementations for demo)
-  private async searchCrunchbase(companyName: string): Promise<any> {
-    // Mock Crunchbase search - in production, use Crunchbase API
-    return {
-      website: `www.${companyName.toLowerCase().replace(/\s+/g, '')}.com`,
-      foundedYear: 2018,
-      employeeRange: '51-100',
-      location: 'San Francisco, CA',
-      description: `${companyName} is a cybersecurity company focused on innovative security solutions.`,
-      url: `https://crunchbase.com/organization/${companyName.toLowerCase().replace(/\s+/g, '-')}`,
-      teamMembers: [
-        { name: 'John Doe', title: 'CEO & Co-Founder' },
-        { name: 'Jane Smith', title: 'CTO & Co-Founder' }
-      ]
+  // Tier 1 Helper Methods - Specialized Startup Database Searches
+  private async searchCrunchbasePublic(companyName: string): Promise<any> {
+    try {
+      // In production: Use Crunchbase API or scrape public company pages
+      // For demo: Return realistic mock data
+      console.log(`📊 Accessing Crunchbase public page for ${companyName}`)
+      
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      return {
+        website: `www.${companyName.toLowerCase().replace(/\s+/g, '')}.com`,
+        foundedYear: 2019,
+        employeeRange: '11-50',
+        location: 'San Francisco, CA',
+        description: `${companyName} is a cybersecurity startup focused on cloud security and threat detection.`,
+        url: `https://crunchbase.com/organization/${companyName.toLowerCase().replace(/\s+/g, '-')}`,
+        teamMembers: [
+          { name: 'Sarah Chen', title: 'CEO & Co-Founder', linkedinUrl: 'https://linkedin.com/in/sarah-chen' },
+          { name: 'Michael Rodriguez', title: 'CTO & Co-Founder', linkedinUrl: 'https://linkedin.com/in/michael-rodriguez' },
+          { name: 'Emily Johnson', title: 'VP Engineering', linkedinUrl: 'https://linkedin.com/in/emily-johnson' }
+        ]
+      }
+    } catch (error) {
+      console.error('Crunchbase search failed:', error)
+      return null
     }
   }
 
-  private async searchAngelList(companyName: string): Promise<any> {
-    // Mock AngelList search - in production, use AngelList API
-    return {
-      description: `Enhanced description from AngelList for ${companyName}`,
-      url: `https://angel.co/company/${companyName.toLowerCase().replace(/\s+/g, '-')}`,
-      teamMembers: [
-        { name: 'Mike Johnson', title: 'VP Engineering' }
-      ]
+  private async searchAngelListPublic(companyName: string): Promise<any> {
+    try {
+      // In production: Use AngelList API or scrape public profiles
+      console.log(`📊 Accessing AngelList public profile for ${companyName}`)
+      
+      await new Promise(resolve => setTimeout(resolve, 800))
+      
+      return {
+        website: `www.${companyName.toLowerCase().replace(/\s+/g, '')}.com`,
+        foundedYear: 2019,
+        employeeRange: '11-50',
+        location: 'San Francisco, CA',
+        description: `${companyName} provides next-generation cybersecurity solutions for enterprise clients.`,
+        url: `https://angel.co/company/${companyName.toLowerCase().replace(/\s+/g, '-')}`,
+        teamMembers: [
+          { name: 'David Kim', title: 'VP Sales', linkedinUrl: 'https://linkedin.com/in/david-kim' },
+          { name: 'Lisa Wang', title: 'Head of Product', linkedinUrl: 'https://linkedin.com/in/lisa-wang' }
+        ]
+      }
+    } catch (error) {
+      console.error('AngelList search failed:', error)
+      return null
     }
+  }
+
+  // Tier 2 Helper Methods - Strategic Web Intelligence
+  private async performStrategicSearch(query: string): Promise<any[]> {
+    try {
+      // In production: Use Google Custom Search API or similar
+      console.log(`🔍 Strategic search: "${query}"`)
+      
+      await new Promise(resolve => setTimeout(resolve, 600))
+      
+      // Mock search results
+      return [
+        {
+          title: `${query} - TechCrunch Article`,
+          url: 'https://techcrunch.com/example-article',
+          snippet: 'Founder information and company details...'
+        },
+        {
+          title: `${query} - Company Press Release`,
+          url: 'https://businesswire.com/example-press',
+          snippet: 'Leadership team announcement...'
+        }
+      ]
+    } catch (error) {
+      console.error('Strategic search failed:', error)
+      return []
+    }
+  }
+
+  private async extractFoundersFromResults(searchResults: any[], companyName: string): Promise<TeamMember[]> {
+    try {
+      // In production: Use NLP/LLM to extract founder names and titles from search results
+      console.log(`🧠 Extracting founder information from ${searchResults.length} search results`)
+      
+      // Mock extraction
+      return [
+        { name: 'Alex Thompson', title: 'Founder & CEO', source: 'manual' },
+        { name: 'Jordan Lee', title: 'Co-Founder & CTO', source: 'manual' }
+      ]
+    } catch (error) {
+      console.error('Founder extraction failed:', error)
+      return []
+    }
+  }
+
+  private async extractFoundersFromFundingArticles(articles: any[], companyName: string): Promise<TeamMember[]> {
+    try {
+      console.log(`📰 Extracting founders from funding articles`)
+      
+      // Mock extraction from funding announcements
+      return [
+        { name: 'Rachel Martinez', title: 'CEO', source: 'manual' },
+        { name: 'Kevin Park', title: 'Co-Founder', source: 'manual' }
+      ]
+    } catch (error) {
+      console.error('Article extraction failed:', error)
+      return []
+    }
+  }
+
+  private async parseCompanyWebsiteAdvanced(website: string): Promise<any> {
+    try {
+      console.log(`🌐 Advanced website parsing: ${website}`)
+      
+      // In production: Scrape About Us, Team, Leadership pages
+      await new Promise(resolve => setTimeout(resolve, 1200))
+      
+      return {
+        description: 'Advanced cybersecurity solutions for modern enterprises',
+        foundedYear: 2019,
+        teamMembers: [
+          { name: 'Amanda Foster', title: 'VP Marketing', linkedinUrl: 'https://linkedin.com/in/amanda-foster' },
+          { name: 'Robert Chen', title: 'Head of Security', linkedinUrl: 'https://linkedin.com/in/robert-chen' }
+        ]
+      }
+    } catch (error) {
+      console.error('Website parsing failed:', error)
+      return null
+    }
+  }
+
+  private async extractTeamFromPressReleases(pressResults: any[], companyName: string): Promise<TeamMember[]> {
+    try {
+      console.log(`📢 Extracting team info from press releases`)
+      
+      // Mock extraction from press releases
+      return [
+        { name: 'Jennifer Liu', title: 'CFO', source: 'manual' }
+      ]
+    } catch (error) {
+      console.error('Press release extraction failed:', error)
+      return []
+    }
+  }
+
+  // Helper method to identify missing critical data
+  private identifyMissingCriticalData(profile: CompanyProfile): string[] {
+    const missing: string[] = []
+    
+    if (!profile.website) missing.push('website')
+    if (!profile.foundedYear) missing.push('foundedYear')
+    if (!profile.employeeRange) missing.push('employeeCount')
+    if (!profile.location) missing.push('location')
+    if (!profile.description) missing.push('description')
+    if (profile.teamMembers.length === 0) missing.push('team')
+    
+    return missing
   }
 
   private async searchFounders(companyName: string): Promise<TeamMember[]> {

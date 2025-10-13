@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { validateCompanyData, sanitizeText, checkRateLimit } from '@/lib/security'
+import { validateCompanyData as validateCompanyDataSecurity, sanitizeText, checkRateLimit } from '@/lib/security'
 
 // Data Management API for CS Intelligence Platform
 // Handles AI extraction, manual entry, and bulk upload operations
@@ -165,7 +165,9 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     // Rate limiting check
-    const clientIP = request.ip || request.headers.get('x-forwarded-for') || 'unknown'
+    const clientIP = request.headers.get('x-forwarded-for') || 
+                     request.headers.get('x-real-ip') || 
+                     'unknown'
     const rateLimit = checkRateLimit(clientIP, 30, 60000) // 30 requests per minute
     
     if (!rateLimit.allowed) {
