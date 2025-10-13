@@ -37,7 +37,8 @@ import {
   Lightbulb,
   Shield,
   Rocket,
-  Brain
+  Brain,
+  Database
 } from 'lucide-react'
 
 interface ExecutiveMetrics {
@@ -1121,16 +1122,243 @@ export default function ExecutiveDashboard() {
             </CardContent>
           </Card>
 
-          {/* Portfolio Growth Trend - Detailed */}
+          {/* Enhanced Portfolio Trends with Detailed Information & Stats */}
           <Card className="border-2 border-blue-100">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <TrendingUp className="h-5 w-5 text-blue-600" />
-                Portfolio Growth Trend Analysis
+                Portfolio Growth Trend Analysis & Statistics
               </CardTitle>
-              <CardDescription>Detailed company-by-company growth trajectory with AI-powered insights</CardDescription>
+              <CardDescription>Interactive portfolio analysis with detailed information input and comprehensive statistics</CardDescription>
             </CardHeader>
             <CardContent>
+              {/* Portfolio Information Input & Management */}
+              <div className="mb-8 p-6 bg-gradient-to-r from-gray-50 to-slate-50 rounded-xl border">
+                <div className="flex items-center justify-between mb-6">
+                  <div>
+                    <h4 className="font-bold text-lg text-gray-900">Portfolio Data Management</h4>
+                    <p className="text-sm text-gray-600 mt-1">Input and manage detailed portfolio information for comprehensive analysis</p>
+                  </div>
+                  <div className="flex gap-2">
+                    <SecureActionButton
+                      onClick={() => executeAction('Import Portfolio Data', 'All Companies')}
+                      debounceMs={1000}
+                      maxClicksPerMinute={5}
+                      size="sm"
+                    >
+                      <Database className="h-4 w-4" />
+                      Import Data
+                    </SecureActionButton>
+                    <SecureActionButton
+                      onClick={() => executeAction('Export Portfolio Stats', 'All Companies')}
+                      debounceMs={1000}
+                      maxClicksPerMinute={5}
+                      size="sm"
+                    >
+                      <Download className="h-4 w-4" />
+                      Export Stats
+                    </SecureActionButton>
+                  </div>
+                </div>
+
+                {/* Quick Stats Input Form */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                  <div className="bg-white p-4 rounded-lg border shadow-sm">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Total Portfolio Value</label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        placeholder="$1,200,000,000"
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
+                        defaultValue="$1,200,000,000"
+                      />
+                      <SecureActionButton
+                        onClick={() => executeAction('Update Portfolio Value', 'Portfolio')}
+                        debounceMs={500}
+                        maxClicksPerMinute={10}
+                        size="sm"
+                      >
+                        Update
+                      </SecureActionButton>
+                    </div>
+                  </div>
+
+                  <div className="bg-white p-4 rounded-lg border shadow-sm">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Target Growth Rate</label>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        placeholder="25%"
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
+                        defaultValue="25%"
+                      />
+                      <SecureActionButton
+                        onClick={() => executeAction('Update Growth Target', 'Portfolio')}
+                        debounceMs={500}
+                        maxClicksPerMinute={10}
+                        size="sm"
+                      >
+                        Set
+                      </SecureActionButton>
+                    </div>
+                  </div>
+
+                  <div className="bg-white p-4 rounded-lg border shadow-sm">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Risk Tolerance</label>
+                    <div className="flex items-center gap-2">
+                      <select className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm">
+                        <option>Moderate</option>
+                        <option>Conservative</option>
+                        <option>Aggressive</option>
+                      </select>
+                      <SecureActionButton
+                        onClick={() => executeAction('Update Risk Profile', 'Portfolio')}
+                        debounceMs={500}
+                        maxClicksPerMinute={10}
+                        size="sm"
+                      >
+                        Apply
+                      </SecureActionButton>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Real-time Portfolio Statistics */}
+                <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+                  <div className="bg-white p-4 rounded-lg border text-center">
+                    <div className="text-2xl font-bold text-blue-600">23</div>
+                    <div className="text-xs text-gray-600">Total Companies</div>
+                    <div className="text-xs text-green-600 mt-1">+2 this quarter</div>
+                  </div>
+                  <div className="bg-white p-4 rounded-lg border text-center">
+                    <div className="text-2xl font-bold text-green-600">$1.2B</div>
+                    <div className="text-xs text-gray-600">Current Value</div>
+                    <div className="text-xs text-green-600 mt-1">+24.3% YTD</div>
+                  </div>
+                  <div className="bg-white p-4 rounded-lg border text-center">
+                    <div className="text-2xl font-bold text-purple-600">247%</div>
+                    <div className="text-xs text-gray-600">Avg ROI</div>
+                    <div className="text-xs text-green-600 mt-1">vs 185% industry</div>
+                  </div>
+                  <div className="bg-white p-4 rounded-lg border text-center">
+                    <div className="text-2xl font-bold text-orange-600">78%</div>
+                    <div className="text-xs text-gray-600">Success Rate</div>
+                    <div className="text-xs text-green-600 mt-1">vs 65% industry</div>
+                  </div>
+                  <div className="bg-white p-4 rounded-lg border text-center">
+                    <div className="text-2xl font-bold text-red-600">32%</div>
+                    <div className="text-xs text-gray-600">Portfolio IRR</div>
+                    <div className="text-xs text-green-600 mt-1">vs 24% industry</div>
+                  </div>
+                  <div className="bg-white p-4 rounded-lg border text-center">
+                    <div className="text-2xl font-bold text-indigo-600">4.2y</div>
+                    <div className="text-xs text-gray-600">Avg Exit Time</div>
+                    <div className="text-xs text-green-600 mt-1">vs 5.1y industry</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Detailed Portfolio Analytics Dashboard */}
+              <div className="mb-8 p-6 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl border">
+                <h4 className="font-bold text-lg text-gray-900 mb-6">Comprehensive Portfolio Analytics</h4>
+                
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                  {/* Performance Breakdown Chart */}
+                  <div className="bg-white p-6 rounded-lg border shadow-sm">
+                    <h5 className="font-semibold mb-4">Performance Breakdown by Sector</h5>
+                    <div className="space-y-4">
+                      {[
+                        { sector: 'Cloud Security', companies: 8, value: 450000000, growth: 32, color: 'bg-blue-500' },
+                        { sector: 'AI Security', companies: 6, value: 380000000, growth: 45, color: 'bg-green-500' },
+                        { sector: 'Zero Trust', companies: 4, value: 220000000, growth: 28, color: 'bg-purple-500' },
+                        { sector: 'Identity & Access', companies: 3, value: 100000000, growth: 18, color: 'bg-orange-500' },
+                        { sector: 'Threat Intelligence', companies: 2, value: 50000000, growth: -5, color: 'bg-red-500' }
+                      ].map((sector, index) => (
+                        <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                          <div className="flex items-center gap-3">
+                            <div className={`w-4 h-4 ${sector.color} rounded`}></div>
+                            <div>
+                              <div className="font-medium text-sm">{sector.sector}</div>
+                              <div className="text-xs text-gray-600">{sector.companies} companies</div>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <div className="font-semibold text-sm">{formatCurrency(sector.value)}</div>
+                            <div className={`text-xs ${sector.growth >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                              {sector.growth > 0 ? '+' : ''}{sector.growth}%
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Risk Analysis Matrix */}
+                  <div className="bg-white p-6 rounded-lg border shadow-sm">
+                    <h5 className="font-semibold mb-4">Risk Analysis Matrix</h5>
+                    <div className="grid grid-cols-3 gap-2 mb-4">
+                      {/* Risk Matrix Grid */}
+                      <div className="text-center text-xs font-medium p-2">High Impact</div>
+                      <div className="bg-yellow-200 p-4 rounded text-center text-xs">
+                        <div className="font-bold">Medium Risk</div>
+                        <div>2 companies</div>
+                      </div>
+                      <div className="bg-red-200 p-4 rounded text-center text-xs">
+                        <div className="font-bold">High Risk</div>
+                        <div>1 company</div>
+                      </div>
+                      
+                      <div className="text-center text-xs font-medium p-2">Med Impact</div>
+                      <div className="bg-green-200 p-4 rounded text-center text-xs">
+                        <div className="font-bold">Low Risk</div>
+                        <div>15 companies</div>
+                      </div>
+                      <div className="bg-yellow-200 p-4 rounded text-center text-xs">
+                        <div className="font-bold">Medium Risk</div>
+                        <div>3 companies</div>
+                      </div>
+                      
+                      <div className="text-center text-xs font-medium p-2">Low Impact</div>
+                      <div className="bg-green-200 p-4 rounded text-center text-xs">
+                        <div className="font-bold">Low Risk</div>
+                        <div>2 companies</div>
+                      </div>
+                      <div className="bg-green-200 p-4 rounded text-center text-xs">
+                        <div className="font-bold">Low Risk</div>
+                        <div>0 companies</div>
+                      </div>
+                    </div>
+                    <div className="text-center text-xs text-gray-600">
+                      <div>← Low Probability | High Probability →</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Advanced Statistics */}
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="bg-white p-4 rounded-lg border text-center">
+                    <div className="text-lg font-bold text-blue-600">$52.2M</div>
+                    <div className="text-xs text-gray-600">Average Investment</div>
+                    <div className="text-xs text-blue-600 mt-1">Per Company</div>
+                  </div>
+                  <div className="bg-white p-4 rounded-lg border text-center">
+                    <div className="text-lg font-bold text-green-600">18.5M</div>
+                    <div className="text-xs text-gray-600">Median Exit Multiple</div>
+                    <div className="text-xs text-green-600 mt-1">3.2x return</div>
+                  </div>
+                  <div className="bg-white p-4 rounded-lg border text-center">
+                    <div className="text-lg font-bold text-purple-600">$450M</div>
+                    <div className="text-xs text-gray-600">Pipeline Value</div>
+                    <div className="text-xs text-purple-600 mt-1">8 active deals</div>
+                  </div>
+                  <div className="bg-white p-4 rounded-lg border text-center">
+                    <div className="text-lg font-bold text-orange-600">85%</div>
+                    <div className="text-xs text-gray-600">Portfolio Health</div>
+                    <div className="text-xs text-orange-600 mt-1">Above target</div>
+                  </div>
+                </div>
+              </div>
+
               <div className="space-y-6">
                 {/* Overall Portfolio Trend - Enhanced Chart */}
                 <div className="p-6 bg-gradient-to-r from-slate-50 to-blue-50 rounded-xl border-2 border-blue-100 shadow-sm">
