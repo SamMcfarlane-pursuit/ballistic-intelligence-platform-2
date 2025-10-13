@@ -308,7 +308,7 @@ async function getInvestmentOpportunities(sector: string) {
 }
 
 /**
- * Get portfolio performance data
+ * Get portfolio performance data with detailed trend analysis
  */
 async function getPortfolioPerformance(timeframe: string) {
   await new Promise(resolve => setTimeout(resolve, 700))
@@ -332,6 +332,21 @@ async function getPortfolioPerformance(timeframe: string) {
         growth: 150,
         customers: 245,
         nps: 72
+      },
+      monthlyTrend: [
+        { month: 'Jan', valuation: 12000000, revenue: 1200000, growth: 15 },
+        { month: 'Feb', valuation: 15000000, revenue: 1500000, growth: 25 },
+        { month: 'Mar', valuation: 18000000, revenue: 1800000, growth: 20 },
+        { month: 'Apr', valuation: 22000000, revenue: 2200000, growth: 22 },
+        { month: 'May', valuation: 28000000, revenue: 2800000, growth: 27 },
+        { month: 'Jun', valuation: 35000000, revenue: 3500000, growth: 25 }
+      ],
+      aiInsights: {
+        prediction: "Strong momentum driven by AWS partnership and enterprise client acquisition. Projected to reach $50M valuation by Q4 2024.",
+        confidence: 94,
+        riskFactors: ["Market saturation", "Competitive pressure"],
+        opportunities: ["Government contracts", "International expansion"],
+        recommendation: "Increase investment allocation"
       }
     },
     {
@@ -352,6 +367,21 @@ async function getPortfolioPerformance(timeframe: string) {
         growth: 125,
         customers: 128,
         nps: 68
+      },
+      monthlyTrend: [
+        { month: 'Jan', valuation: 8000000, revenue: 800000, growth: 12 },
+        { month: 'Feb', valuation: 9000000, revenue: 900000, growth: 12.5 },
+        { month: 'Mar', valuation: 11000000, revenue: 1100000, growth: 22 },
+        { month: 'Apr', valuation: 14000000, revenue: 1400000, growth: 27 },
+        { month: 'May', valuation: 18000000, revenue: 1800000, growth: 29 },
+        { month: 'Jun', valuation: 22000000, revenue: 2200000, growth: 22 }
+      ],
+      aiInsights: {
+        prediction: "Steady growth with government contract providing stability. Zero-trust market expansion creating new opportunities.",
+        confidence: 87,
+        riskFactors: ["Slow enterprise adoption", "Technical complexity"],
+        opportunities: ["Federal contracts", "SMB market entry"],
+        recommendation: "Maintain current position"
       }
     },
     {
@@ -372,6 +402,21 @@ async function getPortfolioPerformance(timeframe: string) {
         growth: 45,
         customers: 89,
         nps: 52
+      },
+      monthlyTrend: [
+        { month: 'Jan', valuation: 15000000, revenue: 1500000, growth: 18 },
+        { month: 'Feb', valuation: 16000000, revenue: 1600000, growth: 7 },
+        { month: 'Mar', valuation: 14000000, revenue: 1400000, growth: -12 },
+        { month: 'Apr', valuation: 12000000, revenue: 1200000, growth: -14 },
+        { month: 'May', valuation: 10000000, revenue: 1000000, growth: -17 },
+        { month: 'Jun', valuation: 8000000, revenue: 800000, growth: -20 }
+      ],
+      aiInsights: {
+        prediction: "Declining trend due to customer churn. Recommend immediate intervention and product pivot strategy review.",
+        confidence: 91,
+        riskFactors: ["Customer churn", "Product-market fit", "Competitive pressure"],
+        opportunities: ["Product pivot", "New market segments", "Strategic partnership"],
+        recommendation: "Urgent intervention required"
       }
     }
   ]

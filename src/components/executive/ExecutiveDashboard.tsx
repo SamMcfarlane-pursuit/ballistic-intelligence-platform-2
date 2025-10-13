@@ -586,16 +586,14 @@ export default function ExecutiveDashboard() {
                       <Calendar className="h-3 w-3" />
                       Due Diligence
                     </SecureActionButton>
-                    <SecureActionButton
+                    <Button
                       onClick={() => executeAction('View Details', opportunity.companyName)}
-                      debounceMs={300}
-                      maxClicksPerMinute={20}
                       size="sm"
                       variant="outline"
                     >
                       <Eye className="h-3 w-3" />
                       Details
-                    </SecureActionButton>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -687,16 +685,14 @@ export default function ExecutiveDashboard() {
                       <Users className="h-3 w-3" />
                       Board Meeting
                     </SecureActionButton>
-                    <SecureActionButton
+                    <Button
                       onClick={() => executeAction('Performance Review', company.name)}
-                      debounceMs={500}
-                      maxClicksPerMinute={10}
                       size="sm"
                       variant="outline"
                     >
                       <BarChart3 className="h-3 w-3" />
                       Review
-                    </SecureActionButton>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -814,103 +810,359 @@ export default function ExecutiveDashboard() {
         {/* Advanced Analytics */}
         <TabsContent value="analytics" className="space-y-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-bold">Advanced Analytics</h2>
-            <SecureActionButton 
-              onClick={() => generateReport('Advanced Analytics')}
-              debounceMs={1000}
-              maxClicksPerMinute={5}
-            >
-              <LineChart className="h-4 w-4" />
-              Analytics Report
-            </SecureActionButton>
+            <h2 className="text-2xl font-bold">Advanced Analytics & AI Insights</h2>
+            <div className="flex gap-2">
+              <SecureActionButton 
+                onClick={() => generateReport('AI Insights Report')}
+                debounceMs={1000}
+                maxClicksPerMinute={5}
+              >
+                <Brain className="h-4 w-4" />
+                AI Insights
+              </SecureActionButton>
+              <SecureActionButton 
+                onClick={() => generateReport('Advanced Analytics')}
+                debounceMs={1000}
+                maxClicksPerMinute={5}
+              >
+                <LineChart className="h-4 w-4" />
+                Analytics Report
+              </SecureActionButton>
+            </div>
           </div>
 
+          {/* AI Processing Status */}
+          <Card className="bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Brain className="h-5 w-5 text-blue-600 animate-pulse" />
+                AI Intelligence Processing
+              </CardTitle>
+              <CardDescription>Real-time AI analysis of portfolio and market data</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="text-center p-4 bg-white rounded-lg border">
+                  <div className="flex items-center justify-center mb-2">
+                    <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse mr-2"></div>
+                    <span className="text-sm font-medium">Portfolio Analysis</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground">Processing 23 companies</div>
+                  <Progress value={95} className="w-full mt-2" />
+                </div>
+                <div className="text-center p-4 bg-white rounded-lg border">
+                  <div className="flex items-center justify-center mb-2">
+                    <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse mr-2"></div>
+                    <span className="text-sm font-medium">Market Intelligence</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground">Analyzing 156 companies</div>
+                  <Progress value={78} className="w-full mt-2" />
+                </div>
+                <div className="text-center p-4 bg-white rounded-lg border">
+                  <div className="flex items-center justify-center mb-2">
+                    <div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse mr-2"></div>
+                    <span className="text-sm font-medium">Risk Assessment</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground">Evaluating risk factors</div>
+                  <Progress value={62} className="w-full mt-2" />
+                </div>
+                <div className="text-center p-4 bg-white rounded-lg border">
+                  <div className="flex items-center justify-center mb-2">
+                    <div className="w-3 h-3 bg-purple-500 rounded-full animate-pulse mr-2"></div>
+                    <span className="text-sm font-medium">Predictive Modeling</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground">Forecasting trends</div>
+                  <Progress value={84} className="w-full mt-2" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Portfolio Growth Trend - Detailed */}
+          <Card className="border-2 border-blue-100">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-blue-600" />
+                Portfolio Growth Trend Analysis
+              </CardTitle>
+              <CardDescription>Detailed company-by-company growth trajectory with AI-powered insights</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                {/* Overall Portfolio Trend */}
+                <div className="p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border">
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="font-semibold text-lg">Overall Portfolio Performance</h4>
+                    <Badge className="bg-green-500 text-white">+24.3% YTD</Badge>
+                  </div>
+                  <div className="grid grid-cols-6 gap-4 mb-4">
+                    {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map((month, index) => {
+                      const values = [850, 920, 1050, 1180, 1220, 1200]
+                      const growth = index > 0 ? ((values[index] - values[index-1]) / values[index-1] * 100) : 0
+                      return (
+                        <div key={month} className="text-center">
+                          <div className="text-sm font-medium text-gray-600">{month}</div>
+                          <div className="text-lg font-bold text-blue-900">{formatCurrency(values[index] * 1000000)}</div>
+                          <div className={`text-xs ${growth >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                            {growth > 0 ? '+' : ''}{growth.toFixed(1)}%
+                          </div>
+                          <div className="mt-2">
+                            <div className={`h-16 w-full rounded ${
+                              index === 0 ? 'bg-blue-200' :
+                              index === 1 ? 'bg-blue-300' :
+                              index === 2 ? 'bg-green-300' :
+                              index === 3 ? 'bg-green-400' :
+                              index === 4 ? 'bg-green-500' :
+                              'bg-green-400'
+                            }`} style={{height: `${(values[index] / 1400) * 64}px`}}></div>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </div>
+
+                {/* Individual Company Trends */}
+                <div className="space-y-4">
+                  <h4 className="font-semibold text-lg">Individual Company Performance</h4>
+                  {portfolio.map((company, index) => {
+                    const monthlyValues = [
+                      [12, 15, 18, 22, 28, 35], // CyberSecure growth
+                      [8, 9, 11, 14, 18, 22],   // ZeroTrust Pro growth  
+                      [15, 16, 14, 12, 10, 8]   // ThreatIntel Corp decline
+                    ]
+                    const companyGrowth = monthlyValues[index] || [10, 12, 14, 16, 18, 20]
+                    const totalGrowth = ((companyGrowth[5] - companyGrowth[0]) / companyGrowth[0] * 100)
+                    
+                    return (
+                      <Card key={index} className="p-4 border-l-4 border-l-blue-500">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold">
+                              {company.name.charAt(0)}
+                            </div>
+                            <div>
+                              <h5 className="font-semibold">{company.name}</h5>
+                              <p className="text-sm text-muted-foreground">{company.sector}</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <Badge className={`${
+                              totalGrowth > 50 ? 'bg-green-500' :
+                              totalGrowth > 0 ? 'bg-blue-500' :
+                              'bg-red-500'
+                            } text-white`}>
+                              {totalGrowth > 0 ? '+' : ''}{totalGrowth.toFixed(1)}%
+                            </Badge>
+                            <div className="text-sm text-muted-foreground mt-1">6M Growth</div>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-6 gap-2 mb-4">
+                          {companyGrowth.map((value, monthIndex) => (
+                            <div key={monthIndex} className="text-center">
+                              <div className="text-xs text-gray-600">
+                                {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'][monthIndex]}
+                              </div>
+                              <div className="text-sm font-semibold">{formatCurrency(value * 1000000)}</div>
+                              <div className="mt-1">
+                                <div 
+                                  className={`w-full rounded ${
+                                    totalGrowth > 50 ? 'bg-green-400' :
+                                    totalGrowth > 0 ? 'bg-blue-400' :
+                                    'bg-red-400'
+                                  }`}
+                                  style={{height: `${(value / Math.max(...companyGrowth)) * 32}px`}}
+                                ></div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* AI Insights for this company */}
+                        <div className="bg-gray-50 rounded-lg p-3 border-l-4 border-l-purple-500">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Brain className="h-4 w-4 text-purple-600" />
+                            <span className="text-sm font-medium text-purple-800">AI Insights</span>
+                          </div>
+                          <div className="text-sm text-gray-700">
+                            {index === 0 && "Strong momentum driven by AWS partnership and enterprise client acquisition. Projected to reach $50M valuation by Q4 2024."}
+                            {index === 1 && "Steady growth with government contract providing stability. Zero-trust market expansion creating new opportunities."}
+                            {index === 2 && "Declining trend due to customer churn. Recommend immediate intervention and product pivot strategy review."}
+                          </div>
+                          <div className="flex gap-2 mt-2">
+                            <Badge variant="outline" className="text-xs">
+                              {index === 0 && "High Growth Potential"}
+                              {index === 1 && "Stable Performer"}
+                              {index === 2 && "Requires Attention"}
+                            </Badge>
+                            <Badge variant="outline" className="text-xs">
+                              Confidence: {index === 0 ? '94%' : index === 1 ? '87%' : '91%'}
+                            </Badge>
+                          </div>
+                        </div>
+
+                        {/* Action Recommendations */}
+                        <div className="flex gap-2 mt-3">
+                          <Button
+                            onClick={() => executeAction('Deep Dive Analysis', company.name)}
+                            size="sm"
+                            variant="outline"
+                          >
+                            <Eye className="h-3 w-3" />
+                            Deep Dive
+                          </Button>
+                          <Button
+                            onClick={() => executeAction('Trend Forecast', company.name)}
+                            size="sm"
+                            variant="outline"
+                          >
+                            <TrendingUp className="h-3 w-3" />
+                            Forecast
+                          </Button>
+                          {index === 2 && (
+                            <Button
+                              onClick={() => executeAction('Intervention Plan', company.name)}
+                              size="sm"
+                              className="bg-red-500 hover:bg-red-600 text-white"
+                            >
+                              <AlertTriangle className="h-3 w-3" />
+                              Intervention
+                            </Button>
+                          )}
+                        </div>
+                      </Card>
+                    )
+                  })}
+                </div>
+
+                {/* AI-Powered Predictions */}
+                <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Brain className="h-5 w-5 text-purple-600" />
+                      AI-Powered Portfolio Predictions
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="text-center p-4 bg-white rounded-lg">
+                        <div className="text-2xl font-bold text-green-600">$1.8B</div>
+                        <div className="text-sm text-muted-foreground">Projected Value (12M)</div>
+                        <div className="text-xs text-green-600 mt-1">+50% growth potential</div>
+                      </div>
+                      <div className="text-center p-4 bg-white rounded-lg">
+                        <div className="text-2xl font-bold text-blue-600">85%</div>
+                        <div className="text-sm text-muted-foreground">Success Probability</div>
+                        <div className="text-xs text-blue-600 mt-1">High confidence</div>
+                      </div>
+                      <div className="text-center p-4 bg-white rounded-lg">
+                        <div className="text-2xl font-bold text-purple-600">Q2 2025</div>
+                        <div className="text-sm text-muted-foreground">Next Exit Window</div>
+                        <div className="text-xs text-purple-600 mt-1">Optimal timing</div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Performance Metrics & Risk Analysis */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Funding Trend Chart */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Funding Trend Analysis</CardTitle>
-                <CardDescription>Monthly funding volume and deal count</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="h-64 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg">
-                  <div className="text-center">
-                    <LineChart className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-                    <p className="text-gray-500">Interactive funding trend chart</p>
-                    <p className="text-sm text-gray-400">Chart.js integration would go here</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Sector Distribution */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Sector Distribution</CardTitle>
-                <CardDescription>Investment allocation by cybersecurity sector</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="h-64 flex items-center justify-center border-2 border-dashed border-gray-300 rounded-lg">
-                  <div className="text-center">
-                    <PieChart className="h-12 w-12 mx-auto mb-4 text-gray-400" />
-                    <p className="text-gray-500">Interactive pie chart</p>
-                    <p className="text-sm text-gray-400">Sector allocation visualization</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
             {/* Performance Metrics */}
-            <Card>
+            <Card className="border-2 border-green-100">
               <CardHeader>
-                <CardTitle>Portfolio Performance Metrics</CardTitle>
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5 text-green-600" />
+                  Portfolio Performance Metrics
+                </CardTitle>
                 <CardDescription>Key performance indicators and benchmarks</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span>Average ROI</span>
-                    <span className="text-2xl font-bold text-green-600">247%</span>
+                  <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
+                    <span className="font-medium">Average ROI</span>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-green-600">247%</div>
+                      <div className="text-xs text-green-600">vs 185% industry avg</div>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span>Success Rate</span>
-                    <span className="text-2xl font-bold text-blue-600">78%</span>
+                  <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
+                    <span className="font-medium">Success Rate</span>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-blue-600">78%</div>
+                      <div className="text-xs text-blue-600">vs 65% industry avg</div>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span>Time to Exit</span>
-                    <span className="text-2xl font-bold text-purple-600">4.2y</span>
+                  <div className="flex justify-between items-center p-3 bg-purple-50 rounded-lg">
+                    <span className="font-medium">Time to Exit</span>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-purple-600">4.2y</div>
+                      <div className="text-xs text-purple-600">vs 5.1y industry avg</div>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span>Portfolio IRR</span>
-                    <span className="text-2xl font-bold text-orange-600">32%</span>
+                  <div className="flex justify-between items-center p-3 bg-orange-50 rounded-lg">
+                    <span className="font-medium">Portfolio IRR</span>
+                    <div className="text-right">
+                      <div className="text-2xl font-bold text-orange-600">32%</div>
+                      <div className="text-xs text-orange-600">vs 24% industry avg</div>
+                    </div>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             {/* Risk Analysis */}
-            <Card>
+            <Card className="border-2 border-red-100">
               <CardHeader>
-                <CardTitle>Risk Analysis</CardTitle>
-                <CardDescription>Portfolio risk assessment and mitigation</CardDescription>
+                <CardTitle className="flex items-center gap-2">
+                  <Shield className="h-5 w-5 text-red-600" />
+                  AI Risk Assessment
+                </CardTitle>
+                <CardDescription>Portfolio risk analysis with mitigation strategies</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span>Market Risk</span>
-                    <Badge variant="secondary">Medium</Badge>
+                  <div className="flex justify-between items-center p-3 border rounded-lg">
+                    <div>
+                      <span className="font-medium">Market Risk</span>
+                      <div className="text-xs text-muted-foreground">Cybersecurity market volatility</div>
+                    </div>
+                    <div className="text-right">
+                      <Badge variant="secondary">Medium</Badge>
+                      <div className="text-xs text-muted-foreground mt-1">Score: 65/100</div>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span>Technology Risk</span>
-                    <Badge variant="destructive">High</Badge>
+                  <div className="flex justify-between items-center p-3 border rounded-lg">
+                    <div>
+                      <span className="font-medium">Technology Risk</span>
+                      <div className="text-xs text-muted-foreground">AI disruption potential</div>
+                    </div>
+                    <div className="text-right">
+                      <Badge variant="destructive">High</Badge>
+                      <div className="text-xs text-muted-foreground mt-1">Score: 78/100</div>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span>Competitive Risk</span>
-                    <Badge variant="default">Low</Badge>
+                  <div className="flex justify-between items-center p-3 border rounded-lg">
+                    <div>
+                      <span className="font-medium">Competitive Risk</span>
+                      <div className="text-xs text-muted-foreground">Big tech competition</div>
+                    </div>
+                    <div className="text-right">
+                      <Badge variant="default">Low</Badge>
+                      <div className="text-xs text-muted-foreground mt-1">Score: 35/100</div>
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span>Regulatory Risk</span>
-                    <Badge variant="secondary">Medium</Badge>
+                  <div className="flex justify-between items-center p-3 border rounded-lg">
+                    <div>
+                      <span className="font-medium">Regulatory Risk</span>
+                      <div className="text-xs text-muted-foreground">Compliance changes</div>
+                    </div>
+                    <div className="text-right">
+                      <Badge variant="secondary">Medium</Badge>
+                      <div className="text-xs text-muted-foreground mt-1">Score: 55/100</div>
+                    </div>
                   </div>
                 </div>
               </CardContent>
@@ -975,16 +1227,14 @@ export default function ExecutiveDashboard() {
                       <div className="font-medium">Board Meeting - CyberSecure</div>
                       <div className="text-sm text-muted-foreground">Tomorrow, 2:00 PM</div>
                     </div>
-                    <SecureActionButton
+                    <Button
                       onClick={() => executeAction('Join Meeting', 'CyberSecure')}
-                      debounceMs={300}
-                      maxClicksPerMinute={20}
                       size="sm"
                       variant="outline"
                     >
                       <ExternalLink className="h-3 w-3" />
                       Join
-                    </SecureActionButton>
+                    </Button>
                   </div>
                   
                   <div className="flex items-center justify-between p-3 border rounded-lg">
@@ -992,15 +1242,13 @@ export default function ExecutiveDashboard() {
                       <div className="font-medium">Due Diligence Call - SecureFlow AI</div>
                       <div className="text-sm text-muted-foreground">Friday, 10:00 AM</div>
                     </div>
-                    <SecureActionButton
+                    <Button
                       onClick={() => executeAction('Prepare Materials', 'SecureFlow AI')}
-                      debounceMs={500}
-                      maxClicksPerMinute={10}
                       size="sm"
                       variant="outline"
                     >
                       Prepare
-                    </SecureActionButton>
+                    </Button>
                   </div>
 
                   <div className="flex items-center justify-between p-3 border rounded-lg">
@@ -1008,15 +1256,13 @@ export default function ExecutiveDashboard() {
                       <div className="font-medium">Portfolio Review - Q4 2024</div>
                       <div className="text-sm text-muted-foreground">Next Monday, 9:00 AM</div>
                     </div>
-                    <SecureActionButton
+                    <Button
                       onClick={() => generateReport('Q4 Portfolio Review')}
-                      debounceMs={1000}
-                      maxClicksPerMinute={5}
                       size="sm"
                       variant="outline"
                     >
                       Generate Report
-                    </SecureActionButton>
+                    </Button>
                   </div>
                 </div>
               </CardContent>
