@@ -38,7 +38,8 @@ import {
   Shield,
   Rocket,
   Brain,
-  Database
+  Database,
+  FileText
 } from 'lucide-react'
 
 interface ExecutiveMetrics {
@@ -120,6 +121,7 @@ export default function ExecutiveDashboard() {
   const [marketIntel, setMarketIntel] = useState<MarketIntelligence | null>(null)
   const [selectedTimeframe, setSelectedTimeframe] = useState('30d')
   const [selectedSector, setSelectedSector] = useState('all')
+  const [selectedCompany, setSelectedCompany] = useState<string>('CyberSecure')
   const [isLoading, setIsLoading] = useState(false)
 
   // Load dashboard data
@@ -1132,130 +1134,267 @@ export default function ExecutiveDashboard() {
               <CardDescription>Interactive portfolio analysis with detailed information input and comprehensive statistics</CardDescription>
             </CardHeader>
             <CardContent>
-              {/* Portfolio Information Input & Management */}
-              <div className="mb-8 p-6 bg-gradient-to-r from-gray-50 to-slate-50 rounded-xl border">
+              {/* Company Selection & Detailed Analysis */}
+              <div className="mb-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border-2 border-blue-200 shadow-lg">
                 <div className="flex items-center justify-between mb-6">
                   <div>
-                    <h4 className="font-bold text-lg text-gray-900">Portfolio Data Management</h4>
-                    <p className="text-sm text-gray-600 mt-1">Input and manage detailed portfolio information for comprehensive analysis</p>
+                    <h4 className="font-bold text-xl text-gray-900">Detailed Company Analysis</h4>
+                    <p className="text-sm text-gray-600 mt-1">Switch between companies for comprehensive individual analysis and metrics</p>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="flex gap-3">
+                    <select 
+                      value={selectedCompany}
+                      onChange={(e) => setSelectedCompany(e.target.value)}
+                      className="px-4 py-2 border-2 border-blue-300 rounded-lg text-sm font-medium bg-white shadow-sm"
+                    >
+                      {portfolio.map((company) => (
+                        <option key={company.name} value={company.name}>
+                          {company.name} - {company.sector}
+                        </option>
+                      ))}
+                    </select>
                     <SecureActionButton
-                      onClick={() => executeAction('Import Portfolio Data', 'All Companies')}
+                      onClick={() => executeAction('Deep Analysis', selectedCompany)}
                       debounceMs={1000}
                       maxClicksPerMinute={5}
                       size="sm"
                     >
-                      <Database className="h-4 w-4" />
-                      Import Data
-                    </SecureActionButton>
-                    <SecureActionButton
-                      onClick={() => executeAction('Export Portfolio Stats', 'All Companies')}
-                      debounceMs={1000}
-                      maxClicksPerMinute={5}
-                      size="sm"
-                    >
-                      <Download className="h-4 w-4" />
-                      Export Stats
+                      <Brain className="h-4 w-4" />
+                      AI Analysis
                     </SecureActionButton>
                   </div>
                 </div>
 
-                {/* Quick Stats Input Form */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                  <div className="bg-white p-4 rounded-lg border shadow-sm">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Total Portfolio Value</label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="text"
-                        placeholder="$1,200,000,000"
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
-                        defaultValue="$1,200,000,000"
-                      />
-                      <SecureActionButton
-                        onClick={() => executeAction('Update Portfolio Value', 'Portfolio')}
-                        debounceMs={500}
-                        maxClicksPerMinute={10}
-                        size="sm"
-                      >
-                        Update
-                      </SecureActionButton>
-                    </div>
-                  </div>
+                {/* Selected Company Detailed Dashboard */}
+                {(() => {
+                  const company = portfolio.find(c => c.name === selectedCompany) || portfolio[0]
+                  const roi = ((company.currentValuation - company.investmentAmount) / company.investmentAmount) * 100
+                  const monthlyData = selectedCompany === 'CyberSecure' ? 
+                    [12, 15, 18, 22, 28, 35] : selectedCompany === 'ZeroTrust Pro' ? 
+                    [8, 9, 11, 14, 18, 22] : [15, 16, 14, 12, 10, 8]
+                  
+                  return (
+                    <div className="bg-white rounded-xl p-6 border-2 border-gray-100 shadow-sm">
+                      {/* Company Header */}
+                      <div className="flex items-center justify-between mb-6 pb-4 border-b">
+                        <div className="flex items-center gap-4">
+                          <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white font-bold text-xl">
+                            {company.name.charAt(0)}
+                          </div>
+                          <div>
+                            <h3 className="text-2xl font-bold text-gray-900">{company.name}</h3>
+                            <p className="text-lg text-gray-600">{company.sector}</p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <Badge className={`${
+                                company.status === 'thriving' ? 'bg-green-500' :
+                                company.status === 'growing' ? 'bg-blue-500' :
+                                company.status === 'stable' ? 'bg-yellow-500' :
+                                'bg-red-500'
+                              } text-white px-3 py-1`}>
+                                {company.status.toUpperCase()}
+                              </Badge>
+                              <span className="text-sm text-gray-500">Last updated: {company.lastUpdate}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <div className="text-3xl font-bold text-green-600">{formatCurrency(company.currentValuation)}</div>
+                          <div className="text-sm text-gray-600">Current Valuation</div>
+                          <div className={`text-lg font-semibold ${roi >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                            {roi > 0 ? '+' : ''}{roi.toFixed(1)}% ROI
+                          </div>
+                        </div>
+                      </div>
 
-                  <div className="bg-white p-4 rounded-lg border shadow-sm">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Target Growth Rate</label>
-                    <div className="flex items-center gap-2">
-                      <input
-                        type="text"
-                        placeholder="25%"
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm"
-                        defaultValue="25%"
-                      />
-                      <SecureActionButton
-                        onClick={() => executeAction('Update Growth Target', 'Portfolio')}
-                        debounceMs={500}
-                        maxClicksPerMinute={10}
-                        size="sm"
-                      >
-                        Set
-                      </SecureActionButton>
-                    </div>
-                  </div>
+                      {/* Detailed Metrics Grid */}
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-6">
+                        <div className="bg-blue-50 p-4 rounded-lg border text-center">
+                          <div className="text-2xl font-bold text-blue-700">{formatCurrency(company.investmentAmount)}</div>
+                          <div className="text-sm text-blue-600 font-medium">Initial Investment</div>
+                          <div className="text-xs text-gray-600 mt-1">Investment Date: Jan 2019</div>
+                        </div>
+                        <div className="bg-green-50 p-4 rounded-lg border text-center">
+                          <div className="text-2xl font-bold text-green-700">{formatCurrency(company.currentValuation)}</div>
+                          <div className="text-sm text-green-600 font-medium">Current Value</div>
+                          <div className="text-xs text-gray-600 mt-1">Last Valuation: {company.lastUpdate}</div>
+                        </div>
+                        <div className="bg-purple-50 p-4 rounded-lg border text-center">
+                          <div className="text-2xl font-bold text-purple-700">{company.momentum}/100</div>
+                          <div className="text-sm text-purple-600 font-medium">Momentum Score</div>
+                          <div className="text-xs text-gray-600 mt-1">
+                            {company.momentum >= 80 ? 'Excellent' : 
+                             company.momentum >= 60 ? 'Good' : 
+                             company.momentum >= 40 ? 'Fair' : 'Poor'}
+                          </div>
+                        </div>
+                        <div className="bg-orange-50 p-4 rounded-lg border text-center">
+                          <div className="text-2xl font-bold text-orange-700">
+                            {Math.round((company.currentValuation / company.investmentAmount) * 10) / 10}x
+                          </div>
+                          <div className="text-sm text-orange-600 font-medium">Multiple</div>
+                          <div className="text-xs text-gray-600 mt-1">Investment Multiple</div>
+                        </div>
+                      </div>
 
-                  <div className="bg-white p-4 rounded-lg border shadow-sm">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Risk Tolerance</label>
-                    <div className="flex items-center gap-2">
-                      <select className="flex-1 px-3 py-2 border border-gray-300 rounded-md text-sm">
-                        <option>Moderate</option>
-                        <option>Conservative</option>
-                        <option>Aggressive</option>
-                      </select>
-                      <SecureActionButton
-                        onClick={() => executeAction('Update Risk Profile', 'Portfolio')}
-                        debounceMs={500}
-                        maxClicksPerMinute={10}
-                        size="sm"
-                      >
-                        Apply
-                      </SecureActionButton>
-                    </div>
-                  </div>
-                </div>
+                      {/* Company Performance Chart */}
+                      <div className="mb-6">
+                        <h5 className="font-semibold text-lg mb-4">6-Month Performance Trend</h5>
+                        <div className="bg-gray-50 rounded-lg p-4">
+                          <div className="relative">
+                            <div className="grid grid-cols-6 gap-3 items-end h-32 mb-2">
+                              {monthlyData.map((value, index) => {
+                                const maxValue = Math.max(...monthlyData)
+                                const barHeight = (value / maxValue) * 100
+                                const growth = index > 0 ? ((value - monthlyData[index-1]) / monthlyData[index-1] * 100) : 0
+                                
+                                return (
+                                  <div key={index} className="relative flex flex-col items-center group">
+                                    <div className="absolute -top-16 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity z-10 whitespace-nowrap">
+                                      <div>{formatCurrency(value * 1000000)}</div>
+                                      {index > 0 && (
+                                        <div className={growth >= 0 ? 'text-green-300' : 'text-red-300'}>
+                                          {growth > 0 ? '+' : ''}{growth.toFixed(1)}%
+                                        </div>
+                                      )}
+                                    </div>
+                                    
+                                    <div 
+                                      className={`w-full rounded-t transition-all duration-300 hover:opacity-80 cursor-pointer ${
+                                        company.status === 'thriving' ? 'bg-gradient-to-t from-green-400 to-green-500' :
+                                        company.status === 'growing' ? 'bg-gradient-to-t from-blue-400 to-blue-500' :
+                                        'bg-gradient-to-t from-red-400 to-red-500'
+                                      } shadow-sm`}
+                                      style={{height: `${barHeight}%`}}
+                                    />
+                                    
+                                    <div className="text-xs font-medium text-gray-700 mt-2">
+                                      {formatCurrency(value * 1000000)}
+                                    </div>
+                                  </div>
+                                )
+                              })}
+                            </div>
+                            
+                            <div className="grid grid-cols-6 gap-3 text-center">
+                              {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map((month) => (
+                                <div key={month} className="text-sm font-medium text-gray-600">
+                                  {month}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
-                {/* Real-time Portfolio Statistics */}
-                <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
-                  <div className="bg-white p-4 rounded-lg border text-center">
-                    <div className="text-2xl font-bold text-blue-600">23</div>
-                    <div className="text-xs text-gray-600">Total Companies</div>
-                    <div className="text-xs text-green-600 mt-1">+2 this quarter</div>
-                  </div>
-                  <div className="bg-white p-4 rounded-lg border text-center">
-                    <div className="text-2xl font-bold text-green-600">$1.2B</div>
-                    <div className="text-xs text-gray-600">Current Value</div>
-                    <div className="text-xs text-green-600 mt-1">+24.3% YTD</div>
-                  </div>
-                  <div className="bg-white p-4 rounded-lg border text-center">
-                    <div className="text-2xl font-bold text-purple-600">247%</div>
-                    <div className="text-xs text-gray-600">Avg ROI</div>
-                    <div className="text-xs text-green-600 mt-1">vs 185% industry</div>
-                  </div>
-                  <div className="bg-white p-4 rounded-lg border text-center">
-                    <div className="text-2xl font-bold text-orange-600">78%</div>
-                    <div className="text-xs text-gray-600">Success Rate</div>
-                    <div className="text-xs text-green-600 mt-1">vs 65% industry</div>
-                  </div>
-                  <div className="bg-white p-4 rounded-lg border text-center">
-                    <div className="text-2xl font-bold text-red-600">32%</div>
-                    <div className="text-xs text-gray-600">Portfolio IRR</div>
-                    <div className="text-xs text-green-600 mt-1">vs 24% industry</div>
-                  </div>
-                  <div className="bg-white p-4 rounded-lg border text-center">
-                    <div className="text-2xl font-bold text-indigo-600">4.2y</div>
-                    <div className="text-xs text-gray-600">Avg Exit Time</div>
-                    <div className="text-xs text-green-600 mt-1">vs 5.1y industry</div>
-                  </div>
-                </div>
+                      {/* Detailed Company Information */}
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {/* Key Events & Milestones */}
+                        <div className="bg-gray-50 p-4 rounded-lg">
+                          <h5 className="font-semibold mb-3 flex items-center gap-2">
+                            <Calendar className="h-4 w-4" />
+                            Recent Key Events
+                          </h5>
+                          <div className="space-y-3">
+                            {company.keyEvents.map((event, index) => (
+                              <div key={index} className="flex items-start gap-3 p-3 bg-white rounded border">
+                                <div className={`w-3 h-3 rounded-full mt-1 ${
+                                  event.type === 'Partnership' ? 'bg-blue-500' :
+                                  event.type === 'Revenue' ? 'bg-green-500' :
+                                  event.type === 'Product Launch' ? 'bg-purple-500' :
+                                  event.type === 'Team' ? 'bg-orange-500' :
+                                  event.type === 'Expansion' ? 'bg-indigo-500' :
+                                  'bg-gray-500'
+                                }`} />
+                                <div className="flex-1">
+                                  <div className="font-medium text-sm">{event.type}</div>
+                                  <div className="text-sm text-gray-600">{event.description}</div>
+                                  <div className="text-xs text-gray-500 mt-1">{event.date}</div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Financial Metrics */}
+                        <div className="bg-gray-50 p-4 rounded-lg">
+                          <h5 className="font-semibold mb-3 flex items-center gap-2">
+                            <BarChart3 className="h-4 w-4" />
+                            Financial Analysis
+                          </h5>
+                          <div className="space-y-4">
+                            <div className="bg-white p-3 rounded border">
+                              <div className="flex justify-between items-center mb-2">
+                                <span className="text-sm font-medium">Investment Performance</span>
+                                <span className={`text-sm font-bold ${roi >= 100 ? 'text-green-600' : roi >= 0 ? 'text-blue-600' : 'text-red-600'}`}>
+                                  {roi > 0 ? '+' : ''}{roi.toFixed(1)}%
+                                </span>
+                              </div>
+                              <Progress value={Math.min(roi, 100)} className="w-full" />
+                            </div>
+                            
+                            <div className="bg-white p-3 rounded border">
+                              <div className="flex justify-between items-center mb-2">
+                                <span className="text-sm font-medium">Momentum Score</span>
+                                <span className="text-sm font-bold text-purple-600">{company.momentum}/100</span>
+                              </div>
+                              <Progress value={company.momentum} className="w-full" />
+                            </div>
+
+                            <div className="bg-white p-3 rounded border">
+                              <div className="text-sm font-medium mb-2">Investment Timeline</div>
+                              <div className="text-xs text-gray-600 space-y-1">
+                                <div>Initial Investment: Jan 2019</div>
+                                <div>Last Valuation: {company.lastUpdate}</div>
+                                <div>Hold Period: {Math.round((new Date().getTime() - new Date('2019-01-01').getTime()) / (365.25 * 24 * 60 * 60 * 1000) * 10) / 10} years</div>
+                                <div>Target Exit: Q2 2025</div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-3 mt-6 pt-4 border-t">
+                        <SecureActionButton
+                          onClick={() => executeAction('Detailed Report', company.name)}
+                          debounceMs={1000}
+                          maxClicksPerMinute={5}
+                          size="sm"
+                        >
+                          <FileText className="h-4 w-4" />
+                          Generate Report
+                        </SecureActionButton>
+                        <SecureActionButton
+                          onClick={() => executeAction('Schedule Review', company.name)}
+                          debounceMs={500}
+                          maxClicksPerMinute={10}
+                          size="sm"
+                        >
+                          <Calendar className="h-4 w-4" />
+                          Schedule Review
+                        </SecureActionButton>
+                        <SecureActionButton
+                          onClick={() => executeAction('Update Valuation', company.name)}
+                          debounceMs={1000}
+                          maxClicksPerMinute={5}
+                          size="sm"
+                        >
+                          <TrendingUp className="h-4 w-4" />
+                          Update Valuation
+                        </SecureActionButton>
+                        <SecureActionButton
+                          onClick={() => executeAction('Risk Assessment', company.name)}
+                          debounceMs={1000}
+                          maxClicksPerMinute={5}
+                          size="sm"
+                        >
+                          <Shield className="h-4 w-4" />
+                          Risk Analysis
+                        </SecureActionButton>
+                      </div>
+                    </div>
+                  )
+                })()}
               </div>
 
               {/* Detailed Portfolio Analytics Dashboard */}
