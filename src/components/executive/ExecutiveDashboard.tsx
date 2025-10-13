@@ -889,36 +889,138 @@ export default function ExecutiveDashboard() {
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
-                {/* Overall Portfolio Trend */}
-                <div className="p-4 bg-gradient-to-r from-green-50 to-blue-50 rounded-lg border">
-                  <div className="flex items-center justify-between mb-4">
-                    <h4 className="font-semibold text-lg">Overall Portfolio Performance</h4>
-                    <Badge className="bg-green-500 text-white">+24.3% YTD</Badge>
+                {/* Overall Portfolio Trend - Enhanced Chart */}
+                <div className="p-6 bg-gradient-to-r from-slate-50 to-blue-50 rounded-xl border-2 border-blue-100 shadow-sm">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h4 className="font-bold text-xl text-gray-900">Overall Portfolio Performance</h4>
+                      <p className="text-sm text-gray-600 mt-1">6-month growth trajectory with detailed metrics</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <Badge className="bg-green-500 text-white px-3 py-1 text-sm">+24.3% YTD</Badge>
+                      <Badge variant="outline" className="px-3 py-1 text-sm">$1.2B Portfolio</Badge>
+                    </div>
                   </div>
-                  <div className="grid grid-cols-6 gap-4 mb-4">
-                    {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map((month, index) => {
-                      const values = [850, 920, 1050, 1180, 1220, 1200]
-                      const growth = index > 0 ? ((values[index] - values[index-1]) / values[index-1] * 100) : 0
-                      return (
-                        <div key={month} className="text-center">
-                          <div className="text-sm font-medium text-gray-600">{month}</div>
-                          <div className="text-lg font-bold text-blue-900">{formatCurrency(values[index] * 1000000)}</div>
-                          <div className={`text-xs ${growth >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                            {growth > 0 ? '+' : ''}{growth.toFixed(1)}%
-                          </div>
-                          <div className="mt-2">
-                            <div className={`h-16 w-full rounded ${
-                              index === 0 ? 'bg-blue-200' :
-                              index === 1 ? 'bg-blue-300' :
-                              index === 2 ? 'bg-green-300' :
-                              index === 3 ? 'bg-green-400' :
-                              index === 4 ? 'bg-green-500' :
-                              'bg-green-400'
-                            }`} style={{height: `${(values[index] / 1400) * 64}px`}}></div>
-                          </div>
+                  
+                  {/* Enhanced Chart Container */}
+                  <div className="bg-white rounded-lg p-6 border shadow-sm">
+                    {/* Chart Area */}
+                    <div className="relative">
+                      {/* Y-Axis Labels */}
+                      <div className="absolute left-0 top-0 h-64 flex flex-col justify-between text-xs text-gray-500 -ml-12">
+                        <span>$1.4B</span>
+                        <span>$1.2B</span>
+                        <span>$1.0B</span>
+                        <span>$0.8B</span>
+                        <span>$0.6B</span>
+                      </div>
+                      
+                      {/* Chart Grid */}
+                      <div className="relative h-64 border-l-2 border-b-2 border-gray-200">
+                        {/* Horizontal Grid Lines */}
+                        {[0, 1, 2, 3, 4].map((line) => (
+                          <div 
+                            key={line}
+                            className="absolute w-full border-t border-gray-100"
+                            style={{ top: `${line * 25}%` }}
+                          />
+                        ))}
+                        
+                        {/* Chart Bars and Line */}
+                        <div className="grid grid-cols-6 gap-4 h-full items-end px-4">
+                          {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map((month, index) => {
+                            const values = [850, 920, 1050, 1180, 1220, 1200]
+                            const growth = index > 0 ? ((values[index] - values[index-1]) / values[index-1] * 100) : 0
+                            const barHeight = (values[index] / 1400) * 100
+                            
+                            return (
+                              <div key={month} className="relative flex flex-col items-center">
+                                {/* Value Display on Hover */}
+                                <div className="absolute -top-8 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 hover:opacity-100 transition-opacity z-10">
+                                  {formatCurrency(values[index] * 1000000)}
+                                </div>
+                                
+                                {/* Bar */}
+                                <div 
+                                  className={`w-full rounded-t-md transition-all duration-500 hover:opacity-80 cursor-pointer ${
+                                    index === 0 ? 'bg-gradient-to-t from-blue-400 to-blue-500' :
+                                    index === 1 ? 'bg-gradient-to-t from-blue-500 to-blue-600' :
+                                    index === 2 ? 'bg-gradient-to-t from-green-400 to-green-500' :
+                                    index === 3 ? 'bg-gradient-to-t from-green-500 to-green-600' :
+                                    index === 4 ? 'bg-gradient-to-t from-green-600 to-green-700' :
+                                    'bg-gradient-to-t from-green-500 to-green-600'
+                                  } shadow-sm`}
+                                  style={{ height: `${barHeight}%` }}
+                                />
+                                
+                                {/* Growth Indicator */}
+                                <div className={`text-xs font-semibold mt-1 ${growth >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                                  {growth > 0 ? '+' : ''}{growth.toFixed(1)}%
+                                </div>
+                              </div>
+                            )
+                          })}
                         </div>
-                      )
-                    })}
+                        
+                        {/* Trend Line Overlay */}
+                        <svg className="absolute inset-0 w-full h-full pointer-events-none">
+                          <polyline
+                            points="8.33,76 25,63 41.67,40 58.33,16 75,13 91.67,20"
+                            fill="none"
+                            stroke="#3B82F6"
+                            strokeWidth="3"
+                            strokeDasharray="5,5"
+                            className="opacity-60"
+                          />
+                          {/* Data Points */}
+                          {[8.33, 25, 41.67, 58.33, 75, 91.67].map((x, index) => {
+                            const y = [76, 63, 40, 16, 13, 20][index]
+                            return (
+                              <circle
+                                key={index}
+                                cx={`${x}%`}
+                                cy={`${y}%`}
+                                r="4"
+                                fill="#3B82F6"
+                                className="drop-shadow-sm"
+                              />
+                            )
+                          })}
+                        </svg>
+                      </div>
+                      
+                      {/* X-Axis Labels */}
+                      <div className="grid grid-cols-6 gap-4 mt-3 px-4">
+                        {['Jan 2024', 'Feb 2024', 'Mar 2024', 'Apr 2024', 'May 2024', 'Jun 2024'].map((month, index) => (
+                          <div key={month} className="text-center">
+                            <div className="text-sm font-medium text-gray-700">{month.split(' ')[0]}</div>
+                            <div className="text-xs text-gray-500">{month.split(' ')[1]}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Chart Legend and Metrics */}
+                    <div className="mt-6 pt-4 border-t border-gray-100">
+                      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div className="text-center p-3 bg-blue-50 rounded-lg">
+                          <div className="text-lg font-bold text-blue-700">$1.2B</div>
+                          <div className="text-xs text-blue-600">Current Value</div>
+                        </div>
+                        <div className="text-center p-3 bg-green-50 rounded-lg">
+                          <div className="text-lg font-bold text-green-700">+24.3%</div>
+                          <div className="text-xs text-green-600">YTD Growth</div>
+                        </div>
+                        <div className="text-center p-3 bg-purple-50 rounded-lg">
+                          <div className="text-lg font-bold text-purple-700">$350M</div>
+                          <div className="text-xs text-purple-600">6M Gain</div>
+                        </div>
+                        <div className="text-center p-3 bg-orange-50 rounded-lg">
+                          <div className="text-lg font-bold text-orange-700">23</div>
+                          <div className="text-xs text-orange-600">Companies</div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -958,25 +1060,85 @@ export default function ExecutiveDashboard() {
                           </div>
                         </div>
                         
-                        <div className="grid grid-cols-6 gap-2 mb-4">
-                          {companyGrowth.map((value, monthIndex) => (
-                            <div key={monthIndex} className="text-center">
-                              <div className="text-xs text-gray-600">
-                                {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'][monthIndex]}
-                              </div>
-                              <div className="text-sm font-semibold">{formatCurrency(value * 1000000)}</div>
-                              <div className="mt-1">
-                                <div 
-                                  className={`w-full rounded ${
-                                    totalGrowth > 50 ? 'bg-green-400' :
-                                    totalGrowth > 0 ? 'bg-blue-400' :
-                                    'bg-red-400'
-                                  }`}
-                                  style={{height: `${(value / Math.max(...companyGrowth)) * 32}px`}}
-                                ></div>
-                              </div>
+                        {/* Enhanced Individual Company Chart */}
+                        <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                          <div className="relative">
+                            {/* Mini Chart Container */}
+                            <div className="grid grid-cols-6 gap-3 items-end h-20 mb-2">
+                              {companyGrowth.map((value, monthIndex) => {
+                                const maxValue = Math.max(...companyGrowth)
+                                const barHeight = (value / maxValue) * 100
+                                const monthGrowth = monthIndex > 0 ? ((value - companyGrowth[monthIndex-1]) / companyGrowth[monthIndex-1] * 100) : 0
+                                
+                                return (
+                                  <div key={monthIndex} className="relative flex flex-col items-center group">
+                                    {/* Tooltip on Hover */}
+                                    <div className="absolute -top-12 bg-gray-800 text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity z-10 whitespace-nowrap">
+                                      <div>{formatCurrency(value * 1000000)}</div>
+                                      {monthIndex > 0 && (
+                                        <div className={monthGrowth >= 0 ? 'text-green-300' : 'text-red-300'}>
+                                          {monthGrowth > 0 ? '+' : ''}{monthGrowth.toFixed(1)}%
+                                        </div>
+                                      )}
+                                    </div>
+                                    
+                                    {/* Bar */}
+                                    <div 
+                                      className={`w-full rounded-t transition-all duration-300 hover:opacity-80 cursor-pointer ${
+                                        totalGrowth > 50 ? 'bg-gradient-to-t from-green-400 to-green-500' :
+                                        totalGrowth > 0 ? 'bg-gradient-to-t from-blue-400 to-blue-500' :
+                                        'bg-gradient-to-t from-red-400 to-red-500'
+                                      } shadow-sm`}
+                                      style={{height: `${barHeight}%`}}
+                                    />
+                                    
+                                    {/* Value Display */}
+                                    <div className="text-xs font-medium text-gray-700 mt-1">
+                                      {formatCurrency(value * 1000000)}
+                                    </div>
+                                  </div>
+                                )
+                              })}
                             </div>
-                          ))}
+                            
+                            {/* Month Labels */}
+                            <div className="grid grid-cols-6 gap-3 text-center">
+                              {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'].map((month, monthIndex) => (
+                                <div key={monthIndex} className="text-xs font-medium text-gray-600">
+                                  {month}
+                                </div>
+                              ))}
+                            </div>
+                            
+                            {/* Trend Line for Individual Company */}
+                            <svg className="absolute inset-0 w-full h-20 pointer-events-none">
+                              <polyline
+                                points={companyGrowth.map((value, idx) => {
+                                  const x = (idx / (companyGrowth.length - 1)) * 100
+                                  const y = 100 - (value / Math.max(...companyGrowth)) * 80
+                                  return `${x},${y}`
+                                }).join(' ')}
+                                fill="none"
+                                stroke={totalGrowth > 50 ? '#10B981' : totalGrowth > 0 ? '#3B82F6' : '#EF4444'}
+                                strokeWidth="2"
+                                strokeDasharray="3,3"
+                                className="opacity-70"
+                              />
+                            </svg>
+                          </div>
+                          
+                          {/* Performance Summary */}
+                          <div className="flex justify-between items-center mt-3 pt-3 border-t border-gray-200">
+                            <div className="text-xs text-gray-600">
+                              <span className="font-medium">Peak:</span> {formatCurrency(Math.max(...companyGrowth) * 1000000)}
+                            </div>
+                            <div className="text-xs text-gray-600">
+                              <span className="font-medium">Current:</span> {formatCurrency(companyGrowth[companyGrowth.length - 1] * 1000000)}
+                            </div>
+                            <div className={`text-xs font-semibold ${totalGrowth >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                              <span className="font-medium">6M:</span> {totalGrowth > 0 ? '+' : ''}{totalGrowth.toFixed(1)}%
+                            </div>
+                          </div>
                         </div>
 
                         {/* AI Insights for this company */}
