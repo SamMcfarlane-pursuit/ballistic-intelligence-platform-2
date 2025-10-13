@@ -23,9 +23,16 @@ import {
 
 const intelligenceModules = [
   {
+    name: 'Executive Center',
+    href: '/executive',
+    icon: Command,
+    description: 'Executive command center',
+    status: 'operational'
+  },
+  {
     name: 'Intelligence Center',
     href: '/intelligence-center',
-    icon: Command,
+    icon: Activity,
     description: 'Unified command center',
     status: 'operational'
   },
@@ -84,6 +91,20 @@ const intelligenceModules = [
     icon: BarChart3,
     description: 'AI-powered data entry',
     status: 'operational'
+  },
+  {
+    name: 'Integrated Workflow',
+    href: '/integrated-workflow',
+    icon: Zap,
+    description: '3-phase processing pipeline',
+    status: 'operational'
+  },
+  {
+    name: 'News & Signals',
+    href: '/news-signals',
+    icon: TrendingUp,
+    description: 'Business momentum tracking',
+    status: 'operational'
   }
 ]
 
@@ -108,7 +129,7 @@ export default function IntelligenceNavigation() {
               <Activity className="h-5 w-5 text-blue-600" />
               <span className="font-semibold text-gray-900">Intelligence Platform</span>
               <Badge variant="outline" className="text-xs">
-                7 Modules Active
+                10 Modules Active
               </Badge>
             </div>
             
@@ -140,7 +161,7 @@ export default function IntelligenceNavigation() {
 
         {isExpanded && (
           <div className="pb-4">
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-3">
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3">
               {intelligenceModules.map((module) => {
                 const Icon = module.icon
                 const isActive = pathname === module.href
