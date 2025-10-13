@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { validateCompanyData, sanitizeText, checkRateLimit } from '@/lib/security'
 
 // Data Management API for CS Intelligence Platform
 // Handles AI extraction, manual entry, and bulk upload operations
@@ -163,9 +164,41 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { action, data } = await request.json()
+    // Rate limiting check
+    const clientIP = request.ip || request.headers.get('x-forwarded-for') || 'unknown'
+    const rateLimit = checkRateLimit(clientIP, 30, 60000) // 30 requests per minute
+    
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { success: false, error: 'Rate limit exceeded. Please try again later.' },
+        { status: 429 }
+      )
+    }
 
-    switch (action) {
+    const body = await request.json()
+    
+    // Validate request structure
+    if (!body || typeof body !== 'object') {
+      return NextResponse.json(
+        { success: false, error: 'Invalid request format' },
+        { status: 400 }
+      )
+    }
+
+    const { action, data } = body
+
+    // Validate action parameter
+    if (!action || typeof action !== 'string') {
+      return NextResponse.json(
+        { success: false, error: 'Action parameter is required' },
+        { status: 400 }
+      )
+    }
+
+    // Sanitize action
+    const sanitizedAction = sanitizeText(action)
+
+    switch (sanitizedAction) {
       case 'ai-extract':
         const extractionRequest = data as AIExtractionRequest
         const extractedData = await processAIExtraction(extractionRequest)

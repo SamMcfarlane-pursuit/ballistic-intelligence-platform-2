@@ -19,6 +19,7 @@ import {
   Clock,
   Target
 } from 'lucide-react'
+import { SecureButton, SecureActionButton } from '@/components/ui/secure-button'
 
 interface BatchItem {
   id: string
@@ -102,10 +103,24 @@ export default function BatchProcessor({ onBatchComplete }: BatchProcessorProps)
   }
 
   const processBatch = async () => {
+    // Input validation
+    if (!batchInput.trim() && batchItems.length === 0) {
+      return
+    }
+
+    // Sanitize and validate input
+    const sanitizedInput = batchInput.trim().slice(0, 50000)
+    if (sanitizedInput.length < 10) {
+      return
+    }
+
     if (batchItems.length === 0) {
-      const items = parseBatchInput(batchInput)
+      const items = parseBatchInput(sanitizedInput)
       if (items.length === 0) return
-      setBatchItems(items)
+      
+      // Limit number of items to prevent abuse
+      const limitedItems = items.slice(0, 20) // Max 20 items per batch
+      setBatchItems(limitedItems)
     }
 
     setIsProcessing(true)
@@ -210,14 +225,15 @@ export default function BatchProcessor({ onBatchComplete }: BatchProcessorProps)
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex gap-2 mb-4">
-            <Button 
-              variant="outline" 
+            <SecureActionButton 
               onClick={loadSampleBatch}
               className="flex items-center gap-2"
+              debounceMs={500}
+              maxClicksPerMinute={10}
             >
               <FileText className="h-4 w-4" />
               Load Sample Batch
-            </Button>
+            </SecureActionButton>
             <Badge variant="secondary" className="flex items-center gap-1">
               <Target className="h-3 w-3" />
               Saves 8-12 min vs individual processing
@@ -240,31 +256,30 @@ CloudGuard Security acquired by Microsoft for $2.1B...
 Identity Management IPO
 SecureID announces IPO filing, targeting $500M raise...`}
             value={batchInput}
-            onChange={(e) => setBatchInput(e.target.value)}
+            onChange={(e) => {
+              const sanitizedValue = e.target.value.slice(0, 50000) // Limit input length
+              setBatchInput(sanitizedValue)
+            }}
             className="min-h-[200px] font-mono text-sm"
+            maxLength={50000}
           />
 
           <div className="flex items-center justify-between">
             <div className="text-sm text-muted-foreground">
               {parseBatchInput(batchInput).length} articles detected
             </div>
-            <Button 
+            <SecureButton 
               onClick={processBatch}
-              disabled={isProcessing || (!batchInput.trim() && batchItems.length === 0)}
+              loading={isProcessing}
+              loadingText={isProcessing ? `Processing ${currentItem + 1}/${totalItems}` : 'Processing...'}
+              disabled={!batchInput.trim() && batchItems.length === 0}
               className="flex items-center gap-2"
+              debounceMs={1000}
+              maxClicksPerMinute={5}
             >
-              {isProcessing ? (
-                <>
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                  Processing {currentItem + 1}/{totalItems}
-                </>
-              ) : (
-                <>
-                  <Brain className="h-4 w-4" />
-                  Process Batch
-                </>
-              )}
-            </Button>
+              <Brain className="h-4 w-4" />
+              Process Batch
+            </SecureButton>
           </div>
         </CardContent>
       </Card>

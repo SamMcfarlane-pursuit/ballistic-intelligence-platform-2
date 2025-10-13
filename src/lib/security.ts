@@ -1,257 +1,287 @@
-import { NextRequest, NextResponse } from 'next/server'
+/**
+ * Security utilities for input validation and sanitization
+ */
 
-// Security configuration
-export const securityConfig = {
-  // CORS configuration
-  cors: {
-    origin: process.env.NODE_ENV === 'production' 
-      ? ['https://yourdomain.com'] 
-      : ['http://localhost:3000'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-    credentials: true,
-    maxAge: 86400 // 24 hours
-  },
+// Input validation patterns
+export const VALIDATION_PATTERNS = {
+  companyName: /^[a-zA-Z0-9\s\-\.\,\&\(\)]{2,100}$/,
+  url: /^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$/,
+  email: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+  amount: /^\d+(\.\d{1,2})?$/,
+  year: /^(19|20)\d{2}$/,
+  text: /^[\w\s\-\.\,\!\?\:\;\(\)\[\]\{\}\"\']{1,10000}$/
+} as const
 
-  // Rate limiting
-  rateLimit: {
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100, // limit each IP to 100 requests per windowMs
-    message: 'Too many requests from this IP, please try again later.'
-  },
-
-  // Security headers
-  headers: {
-    'X-DNS-Prefetch-Control': 'on',
-    'Strict-Transport-Security': 'max-age=63072000; includeSubDomains; preload',
-    'X-Frame-Options': 'SAMEORIGIN',
-    'X-Content-Type-Options': 'nosniff',
-    'Referrer-Policy': 'origin-when-cross-origin',
-    'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
-    'X-XSS-Protection': '1; mode=block'
-  },
-
-  // Encryption settings
-  encryption: {
-    algorithm: 'aes-256-gcm',
-    keyLength: 32, // 256 bits
-    ivLength: 16, // 128 bits
-    tagLength: 16 // 128 bits
+// Sanitize text input to prevent XSS and injection attacks
+export function sanitizeText(input: string): string {
+  if (typeof input !== 'string') {
+    return ''
   }
+
+  return input
+    .trim()
+    .replace(/[<>]/g, '') // Remove potential HTML tags
+    .replace(/javascript:/gi, '') // Remove javascript: protocol
+    .replace(/on\w+=/gi, '') // Remove event handlers
+    .replace(/script/gi, '') // Remove script references
+    .slice(0, 10000) // Limit length
 }
 
-// Rate limiting store (in-memory for demo, use Redis in production)
-const rateLimitStore = new Map<string, { count: number; resetTime: number }>()
+// Sanitize URL input
+export function sanitizeUrl(input: string): string {
+  if (typeof input !== 'string') {
+    return ''
+  }
 
-// Security middleware
-export async function securityMiddleware(request: NextRequest): Promise<NextResponse | null> {
-  const ip = request.ip || 'unknown'
-  const url = request.nextUrl.pathname
+  const sanitized = input.trim().toLowerCase()
   
-  // Skip security checks for health checks and static assets
-  if (url === '/api/health' || url.startsWith('/_next/') || url.startsWith('/static/')) {
-    return null
+  // Only allow http and https protocols
+  if (!sanitized.startsWith('http://') && !sanitized.startsWith('https://')) {
+    return `https://${sanitized}`
   }
 
-  // Apply rate limiting
-  const rateLimitResult = await checkRateLimit(ip)
-  if (!rateLimitResult.allowed) {
-    return NextResponse.json(
-      { error: securityConfig.rateLimit.message },
-      { status: 429 }
-    )
+  // Validate against pattern
+  if (!VALIDATION_PATTERNS.url.test(sanitized)) {
+    return ''
   }
 
-  // Add security headers
-  const response = NextResponse.next()
-  Object.entries(securityConfig.headers).forEach(([key, value]) => {
-    response.headers.set(key, value)
-  })
-
-  return null
+  return sanitized
 }
 
-// Rate limiting check
-async function checkRateLimit(ip: string): Promise<{ allowed: boolean; remaining: number }> {
-  const now = Date.now()
-  const windowStart = now - securityConfig.rateLimit.windowMs
-  
-  let record = rateLimitStore.get(ip)
-  
-  // Reset if window has passed
-  if (!record || record.resetTime < now) {
-    record = {
-      count: 1,
-      resetTime: now + securityConfig.rateLimit.windowMs
+// Validate and sanitize company data
+export interface CompanyDataValidation {
+  isValid: boolean
+  errors: string[]
+  sanitizedData: Record<string, any>
+}
+
+export function validateCompanyData(data: Record<string, any>): CompanyDataValidation {
+  const errors: string[] = []
+  const sanitizedData: Record<string, any> = {}
+
+  // Validate company name
+  if (data.name) {
+    const sanitizedName = sanitizeText(data.name)
+    if (!VALIDATION_PATTERNS.companyName.test(sanitizedName)) {
+      errors.push('Company name contains invalid characters or is too long')
+    } else {
+      sanitizedData.name = sanitizedName
     }
-    rateLimitStore.set(ip, record)
-    return { allowed: true, remaining: securityConfig.rateLimit.max - 1 }
+  } else {
+    errors.push('Company name is required')
   }
-  
-  // Increment count
-  record.count++
-  
-  if (record.count > securityConfig.rateLimit.max) {
+
+  // Validate industry
+  if (data.industry) {
+    sanitizedData.industry = sanitizeText(data.industry)
+  }
+
+  // Validate funding amount
+  if (data.funding) {
+    const fundingStr = String(data.funding).replace(/[^\d\.]/g, '')
+    if (VALIDATION_PATTERNS.amount.test(fundingStr)) {
+      const fundingNum = parseFloat(fundingStr)
+      if (fundingNum >= 0 && fundingNum <= 10000000000) { // Max $10B
+        sanitizedData.funding = fundingNum
+      } else {
+        errors.push('Funding amount must be between 0 and 10 billion')
+      }
+    } else {
+      errors.push('Invalid funding amount format')
+    }
+  }
+
+  // Validate founded year
+  if (data.founded) {
+    const yearStr = String(data.founded).replace(/\D/g, '')
+    if (VALIDATION_PATTERNS.year.test(yearStr)) {
+      const year = parseInt(yearStr)
+      const currentYear = new Date().getFullYear()
+      if (year >= 1900 && year <= currentYear) {
+        sanitizedData.founded = year
+      } else {
+        errors.push('Founded year must be between 1900 and current year')
+      }
+    } else {
+      errors.push('Invalid founded year format')
+    }
+  }
+
+  // Validate employee count
+  if (data.employees) {
+    const employeeStr = String(data.employees).replace(/\D/g, '')
+    const employeeNum = parseInt(employeeStr)
+    if (employeeNum >= 0 && employeeNum <= 1000000) { // Max 1M employees
+      sanitizedData.employees = employeeNum
+    } else {
+      errors.push('Employee count must be between 0 and 1,000,000')
+    }
+  }
+
+  // Validate website URL
+  if (data.website) {
+    const sanitizedUrl = sanitizeUrl(data.website)
+    if (sanitizedUrl) {
+      sanitizedData.website = sanitizedUrl
+    } else {
+      errors.push('Invalid website URL format')
+    }
+  }
+
+  // Validate description
+  if (data.description) {
+    const sanitizedDesc = sanitizeText(data.description)
+    if (sanitizedDesc.length > 0 && sanitizedDesc.length <= 5000) {
+      sanitizedData.description = sanitizedDesc
+    } else {
+      errors.push('Description must be between 1 and 5000 characters')
+    }
+  }
+
+  // Validate location
+  if (data.location) {
+    sanitizedData.location = sanitizeText(data.location)
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors,
+    sanitizedData
+  }
+}
+
+// Rate limiting utility
+interface RateLimitEntry {
+  count: number
+  resetTime: number
+}
+
+const rateLimitStore = new Map<string, RateLimitEntry>()
+
+export function checkRateLimit(
+  identifier: string, 
+  maxRequests: number = 60, 
+  windowMs: number = 60000
+): { allowed: boolean; remaining: number } {
+  const now = Date.now()
+  const entry = rateLimitStore.get(identifier)
+
+  if (!entry || now > entry.resetTime) {
+    // Create new entry or reset expired entry
+    rateLimitStore.set(identifier, {
+      count: 1,
+      resetTime: now + windowMs
+    })
+    return { allowed: true, remaining: maxRequests - 1 }
+  }
+
+  if (entry.count >= maxRequests) {
     return { allowed: false, remaining: 0 }
   }
-  
-  return { allowed: true, remaining: securityConfig.rateLimit.max - record.count }
+
+  entry.count++
+  return { allowed: true, remaining: maxRequests - entry.count }
 }
 
-// Input validation and sanitization
-export function validateAndSanitize(input: string, type: 'email' | 'url' | 'text' | 'id'): string | null {
-  if (!input || typeof input !== 'string') {
+// Clean up expired rate limit entries
+export function cleanupRateLimit() {
+  const now = Date.now()
+  for (const [key, entry] of rateLimitStore.entries()) {
+    if (now > entry.resetTime) {
+      rateLimitStore.delete(key)
+    }
+  }
+}
+
+// Set up periodic cleanup
+if (typeof window === 'undefined') {
+  // Server-side cleanup
+  setInterval(cleanupRateLimit, 300000) // Clean up every 5 minutes
+}
+
+// CSRF token generation and validation
+export function generateCSRFToken(): string {
+  const array = new Uint8Array(32)
+  if (typeof window !== 'undefined' && window.crypto) {
+    window.crypto.getRandomValues(array)
+  } else {
+    // Fallback for server-side
+    for (let i = 0; i < array.length; i++) {
+      array[i] = Math.floor(Math.random() * 256)
+    }
+  }
+  return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('')
+}
+
+// Session management
+export interface SessionData {
+  id: string
+  userId?: string
+  createdAt: number
+  lastActivity: number
+  csrfToken: string
+}
+
+const sessionStore = new Map<string, SessionData>()
+
+export function createSession(userId?: string): SessionData {
+  const sessionId = generateCSRFToken()
+  const now = Date.now()
+  
+  const session: SessionData = {
+    id: sessionId,
+    userId,
+    createdAt: now,
+    lastActivity: now,
+    csrfToken: generateCSRFToken()
+  }
+  
+  sessionStore.set(sessionId, session)
+  return session
+}
+
+export function validateSession(sessionId: string, csrfToken?: string): SessionData | null {
+  const session = sessionStore.get(sessionId)
+  
+  if (!session) {
     return null
   }
-
-  const trimmed = input.trim()
   
-  switch (type) {
-    case 'email':
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      return emailRegex.test(trimmed) ? trimmed : null
-      
-    case 'url':
-      try {
-        const url = new URL(trimmed)
-        return ['http:', 'https:'].includes(url.protocol) ? trimmed : null
-      } catch {
-        return null
-      }
-      
-    case 'id':
-      // Allow alphanumeric, hyphens, and underscores
-      const idRegex = /^[a-zA-Z0-9_-]+$/
-      return idRegex.test(trimmed) && trimmed.length <= 50 ? trimmed : null
-      
-    case 'text':
-      // Remove potentially dangerous characters
-      return trimmed
-        .replace(/[<>]/g, '') // Remove < and >
-        .replace(/javascript:/gi, '') // Remove javascript: protocol
-        .replace(/on\w+\s*=/gi, '') // Remove event handlers
-        .substring(0, 1000) // Limit length
-      
-    default:
-      return null
-  }
-}
-
-// Data encryption utilities
-export async function encryptData(data: string, key: string): Promise<string> {
-  // In a real implementation, use a proper encryption library
-  // This is a placeholder for demonstration
-  const encoder = new TextEncoder()
-  const dataBuffer = encoder.encode(data)
-  const keyBuffer = encoder.encode(key.padEnd(32, '0').slice(0, 32))
+  const now = Date.now()
+  const maxAge = 24 * 60 * 60 * 1000 // 24 hours
   
-  // Simple XOR encryption for demo (NOT secure for production)
-  const encrypted = new Uint8Array(dataBuffer.length)
-  for (let i = 0; i < dataBuffer.length; i++) {
-    encrypted[i] = dataBuffer[i] ^ keyBuffer[i % keyBuffer.length]
+  // Check if session is expired
+  if (now - session.lastActivity > maxAge) {
+    sessionStore.delete(sessionId)
+    return null
   }
   
-  return btoa(String.fromCharCode(...encrypted))
-}
-
-export async function decryptData(encryptedData: string, key: string): Promise<string> {
-  // In a real implementation, use a proper decryption library
-  const encrypted = atob(encryptedData)
-  const encryptedBuffer = new Uint8Array(encrypted.split('').map(char => char.charCodeAt(0)))
-  const keyBuffer = new TextEncoder().encode(key.padEnd(32, '0').slice(0, 32))
-  
-  // Simple XOR decryption for demo (NOT secure for production)
-  const decrypted = new Uint8Array(encryptedBuffer.length)
-  for (let i = 0; i < encryptedBuffer.length; i++) {
-    decrypted[i] = encryptedBuffer[i] ^ keyBuffer[i % keyBuffer.length]
+  // Validate CSRF token if provided
+  if (csrfToken && session.csrfToken !== csrfToken) {
+    return null
   }
   
-  return new TextDecoder().decode(decrypted)
-}
-
-// Audit logging
-export interface AuditLog {
-  id: string
-  timestamp: string
-  userId?: string
-  action: string
-  resource: string
-  details: Record<string, any>
-  ipAddress: string
-  userAgent: string
-  result: 'success' | 'failure'
-}
-
-const auditLogs: AuditLog[] = []
-
-export function logAuditEvent(
-  action: string,
-  resource: string,
-  details: Record<string, any>,
-  result: 'success' | 'failure' = 'success',
-  userId?: string,
-  request?: NextRequest
-): void {
-  const auditLog: AuditLog = {
-    id: crypto.randomUUID(),
-    timestamp: new Date().toISOString(),
-    userId,
-    action,
-    resource,
-    details,
-    ipAddress: request?.ip || 'unknown',
-    userAgent: request?.headers.get('user-agent') || 'unknown',
-    result
-  }
+  // Update last activity
+  session.lastActivity = now
   
-  auditLogs.push(auditLog)
-  
-  // In production, you would send this to a logging service
-  console.log('Audit Event:', JSON.stringify(auditLog, null, 2))
+  return session
 }
 
-// Security monitoring
-export function getSecurityMetrics() {
-  return {
-    totalRequests: auditLogs.length,
-    failedRequests: auditLogs.filter(log => log.result === 'failure').length,
-    uniqueIPs: new Set(auditLogs.map(log => log.ipAddress)).size,
-    recentActivity: auditLogs.slice(-10), // Last 10 events
-    rateLimitViolations: rateLimitStore.size
-  }
-}
+// Content Security Policy helpers
+export const CSP_DIRECTIVES = {
+  'default-src': ["'self'"],
+  'script-src': ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+  'style-src': ["'self'", "'unsafe-inline'"],
+  'img-src': ["'self'", "data:", "https:"],
+  'font-src': ["'self'", "https:"],
+  'connect-src': ["'self'", "https:"],
+  'frame-ancestors': ["'none'"],
+  'base-uri': ["'self'"],
+  'form-action': ["'self'"]
+} as const
 
-// CSRF Protection
-export function generateCSRFToken(): string {
-  return crypto.randomUUID()
-}
-
-export function validateCSRFToken(token: string, sessionToken: string): boolean {
-  return token === sessionToken
-}
-
-// Security health check
-export async function securityHealthCheck(): Promise<{
-  status: 'healthy' | 'degraded' | 'unhealthy'
-  checks: Record<string, boolean>
-  timestamp: string
-}> {
-  const checks = {
-    rateLimiting: rateLimitStore.size < 1000, // Not too many IPs tracked
-    auditLogging: auditLogs.length < 10000, // Not too many logs
-    headersConfigured: Object.keys(securityConfig.headers).length > 0,
-    encryptionReady: !!process.env.ENCRYPTION_KEY
-  }
-  
-  const failedChecks = Object.values(checks).filter(check => !check).length
-  
-  let status: 'healthy' | 'degraded' | 'unhealthy' = 'healthy'
-  if (failedChecks > 2) status = 'unhealthy'
-  else if (failedChecks > 0) status = 'degraded'
-  
-  return {
-    status,
-    checks,
-    timestamp: new Date().toISOString()
-  }
+export function generateCSPHeader(): string {
+  return Object.entries(CSP_DIRECTIVES)
+    .map(([directive, sources]) => `${directive} ${sources.join(' ')}`)
+    .join('; ')
 }
