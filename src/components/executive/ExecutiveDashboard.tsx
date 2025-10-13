@@ -132,173 +132,46 @@ export default function ExecutiveDashboard() {
   const loadDashboardData = async () => {
     setIsLoading(true)
     try {
-      // Simulate loading comprehensive executive data
-      await new Promise(resolve => setTimeout(resolve, 1500))
+      // Load real data from API endpoints
+      const [metricsResponse, opportunitiesResponse, portfolioResponse, marketResponse] = await Promise.all([
+        fetch(`/api/executive?action=metrics&timeframe=${selectedTimeframe}&sector=${selectedSector}`),
+        fetch(`/api/executive?action=opportunities&sector=${selectedSector}`),
+        fetch(`/api/executive?action=portfolio&timeframe=${selectedTimeframe}`),
+        fetch(`/api/executive?action=market-intelligence`)
+      ])
       
-      setMetrics({
-        totalFunding: 2400000000, // $2.4B
-        totalCompanies: 156,
-        avgFundingSize: 15400000, // $15.4M
-        topSectors: [
-          { name: 'Cloud Security', count: 45, funding: 680000000 },
-          { name: 'Identity & Access', count: 32, funding: 520000000 },
-          { name: 'Threat Intelligence', count: 28, funding: 450000000 },
-          { name: 'Zero Trust', count: 25, funding: 380000000 },
-          { name: 'AI Security', count: 26, funding: 370000000 }
-        ],
-        fundingTrend: [
-          { month: 'Jan', amount: 180000000, deals: 12 },
-          { month: 'Feb', amount: 220000000, deals: 15 },
-          { month: 'Mar', amount: 195000000, deals: 13 },
-          { month: 'Apr', amount: 240000000, deals: 16 },
-          { month: 'May', amount: 280000000, deals: 18 },
-          { month: 'Jun', amount: 320000000, deals: 21 }
-        ],
-        portfolioValue: 1200000000, // $1.2B
-        activeDeals: 8,
-        pipelineValue: 450000000 // $450M
-      })
-
-      setOpportunities([
-        {
-          id: '1',
-          companyName: 'CyberGuard Pro',
-          sector: 'Cloud Security',
-          fundingStage: 'Series A',
-          fundingAmount: 15000000,
-          momentum: 92,
-          riskScore: 25,
-          recommendation: 'strong_buy',
-          keyMetrics: {
-            teamScore: 95,
-            marketSize: 88,
-            traction: 85,
-            technology: 92
-          },
-          recentSignals: [
-            { type: 'Partnership', description: 'Strategic partnership with AWS', date: '2024-10-10', impact: 'positive' },
-            { type: 'Customer Win', description: 'Fortune 500 enterprise client', date: '2024-10-08', impact: 'positive' },
-            { type: 'Product Launch', description: 'AI-powered threat detection', date: '2024-10-05', impact: 'positive' }
-          ],
-          nextActions: [
-            'Schedule due diligence call',
-            'Review technical architecture',
-            'Validate customer references',
-            'Negotiate term sheet'
-          ]
-        },
-        {
-          id: '2',
-          companyName: 'SecureFlow AI',
-          sector: 'AI Security',
-          fundingStage: 'Seed',
-          fundingAmount: 8500000,
-          momentum: 78,
-          riskScore: 45,
-          recommendation: 'buy',
-          keyMetrics: {
-            teamScore: 82,
-            marketSize: 95,
-            traction: 65,
-            technology: 88
-          },
-          recentSignals: [
-            { type: 'Executive Hire', description: 'Former Google VP joins as CTO', date: '2024-10-12', impact: 'positive' },
-            { type: 'Funding', description: 'Oversubscribed seed round', date: '2024-10-01', impact: 'positive' }
-          ],
-          nextActions: [
-            'Technical deep dive session',
-            'Market analysis review',
-            'Competitive positioning assessment'
-          ]
-        },
-        {
-          id: '3',
-          companyName: 'ThreatShield',
-          sector: 'Threat Intelligence',
-          fundingStage: 'Series B',
-          fundingAmount: 25000000,
-          momentum: 65,
-          riskScore: 60,
-          recommendation: 'hold',
-          keyMetrics: {
-            teamScore: 75,
-            marketSize: 82,
-            traction: 78,
-            technology: 70
-          },
-          recentSignals: [
-            { type: 'Customer Churn', description: 'Lost major enterprise client', date: '2024-10-09', impact: 'negative' },
-            { type: 'Product Update', description: 'Platform performance improvements', date: '2024-10-06', impact: 'neutral' }
-          ],
-          nextActions: [
-            'Investigate customer churn',
-            'Review retention metrics',
-            'Assess competitive threats'
-          ]
+      // Process API responses
+      if (metricsResponse.ok) {
+        const metricsData = await metricsResponse.json()
+        if (metricsData.success) {
+          setMetrics(metricsData.data)
         }
-      ])
+      }
 
-      setPortfolio([
-        {
-          name: 'CyberSecure',
-          sector: 'Cloud Security',
-          investmentAmount: 12000000,
-          currentValuation: 85000000,
-          momentum: 88,
-          lastUpdate: '2024-10-12',
-          status: 'thriving',
-          keyEvents: [
-            { type: 'Partnership', description: 'Major cloud provider integration', date: '2024-10-10' },
-            { type: 'Revenue', description: '150% YoY growth achieved', date: '2024-10-05' }
-          ]
-        },
-        {
-          name: 'ZeroTrust Pro',
-          sector: 'Zero Trust',
-          investmentAmount: 8000000,
-          currentValuation: 45000000,
-          momentum: 72,
-          lastUpdate: '2024-10-11',
-          status: 'growing',
-          keyEvents: [
-            { type: 'Product Launch', description: 'Next-gen identity platform', date: '2024-10-08' },
-            { type: 'Team', description: 'VP Engineering hired', date: '2024-10-03' }
-          ]
-        },
-        {
-          name: 'ThreatIntel Corp',
-          sector: 'Threat Intelligence',
-          investmentAmount: 15000000,
-          currentValuation: 35000000,
-          momentum: 45,
-          lastUpdate: '2024-10-10',
-          status: 'concerning',
-          keyEvents: [
-            { type: 'Challenge', description: 'Customer acquisition slowdown', date: '2024-10-07' },
-            { type: 'Pivot', description: 'Product strategy adjustment', date: '2024-10-02' }
-          ]
+      if (opportunitiesResponse.ok) {
+        const opportunitiesData = await opportunitiesResponse.json()
+        if (opportunitiesData.success) {
+          setOpportunities(opportunitiesData.data)
         }
-      ])
+      }
 
-      setMarketIntel({
-        sectorTrends: [
-          { sector: 'AI Security', growth: 45, fundingVolume: 890000000, dealCount: 34, avgValuation: 26200000 },
-          { sector: 'Cloud Security', growth: 32, fundingVolume: 1200000000, dealCount: 48, avgValuation: 25000000 },
-          { sector: 'Zero Trust', growth: 28, fundingVolume: 650000000, dealCount: 26, avgValuation: 25000000 },
-          { sector: 'Identity & Access', growth: 25, fundingVolume: 580000000, dealCount: 29, avgValuation: 20000000 }
-        ],
-        competitiveThreats: [
-          { company: 'CrowdStrike', threat: 'Market consolidation', severity: 'high', description: 'Aggressive acquisition strategy targeting our portfolio sectors' },
-          { company: 'Palo Alto Networks', threat: 'Platform expansion', severity: 'medium', description: 'Expanding into adjacent security markets' },
-          { company: 'Microsoft', threat: 'Integrated solutions', severity: 'high', description: 'Bundling security with core products' }
-        ],
-        emergingTechnologies: [
-          { technology: 'Quantum-Safe Cryptography', adoptionRate: 15, marketPotential: 95, companies: ['QuantumSecure', 'CryptoShield'] },
-          { technology: 'AI-Powered SOC', adoptionRate: 35, marketPotential: 88, companies: ['AutoSOC', 'IntelliSecure'] },
-          { technology: 'Behavioral Biometrics', adoptionRate: 25, marketPotential: 82, companies: ['BioSecure', 'IdentityAI'] }
-        ]
-      })
+      if (portfolioResponse.ok) {
+        const portfolioData = await portfolioResponse.json()
+        if (portfolioData.success) {
+          setPortfolio(portfolioData.data)
+        }
+      }
+
+      if (marketResponse.ok) {
+        const marketData = await marketResponse.json()
+        if (marketData.success) {
+          setMarketIntel(marketData.data)
+        }
+      }
+
+      // All data is now loaded from API responses above
+
+
 
     } catch (error) {
       console.error('Failed to load dashboard data:', error)
@@ -349,14 +222,65 @@ export default function ExecutiveDashboard() {
   }
 
   const executeAction = async (action: string, companyName: string) => {
-    console.log(`Executing action: ${action} for ${companyName}`)
-    // In production, this would trigger actual workflows
-    alert(`Action initiated: ${action} for ${companyName}`)
+    try {
+      console.log(`Executing action: ${action} for ${companyName}`)
+      
+      const response = await fetch('/api/executive', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'execute-action',
+          actionType: action,
+          companyName: companyName,
+          details: { timestamp: new Date().toISOString() }
+        })
+      })
+
+      const data = await response.json()
+      
+      if (data.success) {
+        alert(`✅ ${action} initiated for ${companyName}\n\nAction ID: ${data.data.actionId}\nStatus: ${data.data.status}\nEstimated completion: ${new Date(data.data.estimatedCompletion).toLocaleString()}`)
+        
+        // Refresh data after action
+        await loadDashboardData()
+      } else {
+        throw new Error(data.error || 'Action failed')
+      }
+    } catch (error) {
+      console.error('Action execution failed:', error)
+      alert(`❌ Failed to execute ${action}: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    }
   }
 
   const generateReport = async (type: string) => {
-    console.log(`Generating ${type} report`)
-    alert(`${type} report generation started. You'll receive an email when ready.`)
+    try {
+      console.log(`Generating ${type} report`)
+      
+      const response = await fetch('/api/executive', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action: 'generate-report',
+          reportType: type,
+          parameters: {
+            timeframe: selectedTimeframe,
+            sector: selectedSector,
+            company: selectedCompany
+          }
+        })
+      })
+
+      const data = await response.json()
+      
+      if (data.success) {
+        alert(`✅ ${type} report generation started\n\nReport ID: ${data.data.reportId}\nStatus: ${data.data.status}\nDelivery: ${data.data.deliveryMethod}\nEstimated completion: ${new Date(data.data.estimatedCompletion).toLocaleString()}`)
+      } else {
+        throw new Error(data.error || 'Report generation failed')
+      }
+    } catch (error) {
+      console.error('Report generation failed:', error)
+      alert(`❌ Failed to generate ${type} report: ${error instanceof Error ? error.message : 'Unknown error'}`)
+    }
   }
 
   if (isLoading) {
