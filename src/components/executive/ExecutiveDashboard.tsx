@@ -586,14 +586,15 @@ export default function ExecutiveDashboard() {
                       <Calendar className="h-3 w-3" />
                       Due Diligence
                     </SecureActionButton>
-                    <Button
+                    <SecureActionButton
                       onClick={() => executeAction('View Details', opportunity.companyName)}
+                      debounceMs={300}
+                      maxClicksPerMinute={20}
                       size="sm"
-                      variant="outline"
                     >
                       <Eye className="h-3 w-3" />
                       Details
-                    </Button>
+                    </SecureActionButton>
                   </div>
                 </CardContent>
               </Card>
@@ -873,6 +874,248 @@ export default function ExecutiveDashboard() {
                   </div>
                   <div className="text-xs text-muted-foreground">Forecasting trends</div>
                   <Progress value={84} className="w-full mt-2" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* AI Insights Distribution Chart */}
+          <Card className="bg-gradient-to-r from-indigo-50 to-cyan-50 border-indigo-200">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Brain className="h-5 w-5 text-indigo-600" />
+                AI Insights Distribution & Analytics
+              </CardTitle>
+              <CardDescription>Comprehensive AI-powered analysis breakdown and insights generation</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* AI Insights Pie Chart */}
+                <div className="bg-white rounded-lg p-6 border shadow-sm">
+                  <h4 className="font-semibold text-lg mb-4 text-center">AI Analysis Distribution</h4>
+                  <div className="relative">
+                    {/* Pie Chart Container */}
+                    <div className="relative w-64 h-64 mx-auto">
+                      {/* SVG Pie Chart */}
+                      <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                        {/* Investment Recommendations - 34% */}
+                        <circle
+                          cx="50" cy="50" r="40"
+                          fill="none"
+                          stroke="#3B82F6"
+                          strokeWidth="20"
+                          strokeDasharray="34 66"
+                          strokeDashoffset="0"
+                          className="opacity-80"
+                        />
+                        {/* Risk Assessments - 28% */}
+                        <circle
+                          cx="50" cy="50" r="40"
+                          fill="none"
+                          stroke="#EF4444"
+                          strokeWidth="20"
+                          strokeDasharray="28 72"
+                          strokeDashoffset="-34"
+                          className="opacity-80"
+                        />
+                        {/* Market Analysis - 18% */}
+                        <circle
+                          cx="50" cy="50" r="40"
+                          fill="none"
+                          stroke="#10B981"
+                          strokeWidth="20"
+                          strokeDasharray="18 82"
+                          strokeDashoffset="-62"
+                          className="opacity-80"
+                        />
+                        {/* Technical Reviews - 9% */}
+                        <circle
+                          cx="50" cy="50" r="40"
+                          fill="none"
+                          stroke="#F59E0B"
+                          strokeWidth="20"
+                          strokeDasharray="9 91"
+                          strokeDashoffset="-80"
+                          className="opacity-80"
+                        />
+                        {/* Other Analysis - 11% */}
+                        <circle
+                          cx="50" cy="50" r="40"
+                          fill="none"
+                          stroke="#8B5CF6"
+                          strokeWidth="20"
+                          strokeDasharray="11 89"
+                          strokeDashoffset="-89"
+                          className="opacity-80"
+                        />
+                      </svg>
+                      
+                      {/* Center Label */}
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-gray-800">74</div>
+                          <div className="text-sm text-gray-600">Total Insights</div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Legend */}
+                    <div className="mt-6 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                          <span className="text-sm">Investment Recommendations</span>
+                        </div>
+                        <span className="text-sm font-semibold">34</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                          <span className="text-sm">Risk Assessments</span>
+                        </div>
+                        <span className="text-sm font-semibold">28</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                          <span className="text-sm">Market Analysis</span>
+                        </div>
+                        <span className="text-sm font-semibold">18</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                          <span className="text-sm">Technical Reviews</span>
+                        </div>
+                        <span className="text-sm font-semibold">9</span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                          <span className="text-sm">Other Analysis</span>
+                        </div>
+                        <span className="text-sm font-semibold">8</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* AI Performance Metrics */}
+                <div className="bg-white rounded-lg p-6 border shadow-sm">
+                  <h4 className="font-semibold text-lg mb-4">AI Performance Metrics</h4>
+                  <div className="space-y-4">
+                    {/* Accuracy Score */}
+                    <div>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm font-medium">Prediction Accuracy</span>
+                        <span className="text-sm font-bold text-green-600">94.7%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3">
+                        <div className="bg-gradient-to-r from-green-400 to-green-600 h-3 rounded-full" style={{width: '94.7%'}}></div>
+                      </div>
+                    </div>
+
+                    {/* Processing Speed */}
+                    <div>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm font-medium">Processing Speed</span>
+                        <span className="text-sm font-bold text-blue-600">87.2%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3">
+                        <div className="bg-gradient-to-r from-blue-400 to-blue-600 h-3 rounded-full" style={{width: '87.2%'}}></div>
+                      </div>
+                    </div>
+
+                    {/* Confidence Level */}
+                    <div>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm font-medium">Confidence Level</span>
+                        <span className="text-sm font-bold text-purple-600">91.5%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3">
+                        <div className="bg-gradient-to-r from-purple-400 to-purple-600 h-3 rounded-full" style={{width: '91.5%'}}></div>
+                      </div>
+                    </div>
+
+                    {/* Data Quality */}
+                    <div>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm font-medium">Data Quality Score</span>
+                        <span className="text-sm font-bold text-orange-600">89.8%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-3">
+                        <div className="bg-gradient-to-r from-orange-400 to-orange-600 h-3 rounded-full" style={{width: '89.8%'}}></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* AI Insights Summary */}
+                  <div className="mt-6 pt-4 border-t border-gray-100">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="text-center p-3 bg-blue-50 rounded-lg">
+                        <div className="text-lg font-bold text-blue-700">2.4M</div>
+                        <div className="text-xs text-blue-600">Data Points Analyzed</div>
+                      </div>
+                      <div className="text-center p-3 bg-green-50 rounded-lg">
+                        <div className="text-lg font-bold text-green-700">1,247</div>
+                        <div className="text-xs text-green-600">Insights Generated</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Real-time AI Activity Feed */}
+              <div className="mt-6 bg-white rounded-lg p-6 border shadow-sm">
+                <h4 className="font-semibold text-lg mb-4 flex items-center gap-2">
+                  <Activity className="h-5 w-5 text-indigo-600" />
+                  Real-time AI Activity Feed
+                </h4>
+                <div className="space-y-3 max-h-48 overflow-y-auto">
+                  <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg border-l-4 border-blue-500">
+                    <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                    <div className="flex-1">
+                      <div className="text-sm font-medium">Investment Recommendation Generated</div>
+                      <div className="text-xs text-gray-600">CyberGuard Pro - Strong Buy recommendation with 94% confidence</div>
+                    </div>
+                    <div className="text-xs text-gray-500">2 min ago</div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg border-l-4 border-green-500">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                    <div className="flex-1">
+                      <div className="text-sm font-medium">Market Analysis Completed</div>
+                      <div className="text-xs text-gray-600">AI Security sector analysis - 45% growth potential identified</div>
+                    </div>
+                    <div className="text-xs text-gray-500">5 min ago</div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3 p-3 bg-red-50 rounded-lg border-l-4 border-red-500">
+                    <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                    <div className="flex-1">
+                      <div className="text-sm font-medium">Risk Alert Generated</div>
+                      <div className="text-xs text-gray-600">ThreatIntel Corp - Customer churn risk detected, intervention recommended</div>
+                    </div>
+                    <div className="text-xs text-gray-500">8 min ago</div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3 p-3 bg-purple-50 rounded-lg border-l-4 border-purple-500">
+                    <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+                    <div className="flex-1">
+                      <div className="text-sm font-medium">Predictive Model Updated</div>
+                      <div className="text-xs text-gray-600">Portfolio valuation forecast updated - $1.8B projected by Q4 2025</div>
+                    </div>
+                    <div className="text-xs text-gray-500">12 min ago</div>
+                  </div>
+                  
+                  <div className="flex items-center gap-3 p-3 bg-yellow-50 rounded-lg border-l-4 border-yellow-500">
+                    <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse"></div>
+                    <div className="flex-1">
+                      <div className="text-sm font-medium">Technical Review Completed</div>
+                      <div className="text-xs text-gray-600">SecureFlow AI - Technology stack analysis shows strong competitive advantage</div>
+                    </div>
+                    <div className="text-xs text-gray-500">15 min ago</div>
+                  </div>
                 </div>
               </div>
             </CardContent>
