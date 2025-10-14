@@ -100,9 +100,11 @@ setTimeout(() => {
   if (issues.length === 0) {
     console.log('🎉 All checks passed! Ready to start development server.');
     console.log('\n💡 To start the server:');
-    console.log('   npm run dev');
+    console.log('   pnpm run dev');
     console.log('   OR');
-    console.log('   node start-dev-clean.js');
+    console.log('   pnpm run dev:simple');
+    console.log('   OR');
+    console.log('   node pnpm-dev.js');
     console.log('\n🌐 Access URLs:');
     console.log('   Main: http://localhost:3000');
     console.log('   Executive Dashboard: http://localhost:3000/executive');

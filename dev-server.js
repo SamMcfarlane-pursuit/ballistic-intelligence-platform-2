@@ -72,7 +72,7 @@ async function startDevServer() {
     console.log('🔧 Integrated Workflow: http://localhost:3000/integrated-workflow');
     console.log('\n' + '='.repeat(60) + '\n');
     
-    const devServer = spawn('npx', ['next', 'dev', '-p', '3000'], {
+    const devServer = spawn('pnpm', ['dlx', 'next', 'dev', '-p', '3000'], {
       stdio: 'inherit',
       shell: true,
       env: {
