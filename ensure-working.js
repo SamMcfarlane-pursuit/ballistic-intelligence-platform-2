@@ -39,13 +39,13 @@ setTimeout(async () => {
     try {
       const isWorking = await testEndpoint(test.url);
       if (isWorking) {
-        console.log(\`✅ \${test.name}: WORKING\`);
+        console.log(`✅ ${test.name}: WORKING`);
         workingCount++;
       } else {
-        console.log(\`❌ \${test.name}: NOT RESPONDING\`);
+        console.log(`❌ ${test.name}: NOT RESPONDING`);
       }
     } catch (error) {
-      console.log(\`❌ \${test.name}: ERROR\`);
+      console.log(`❌ ${test.name}: ERROR`);
     }
   }
   
@@ -99,7 +99,7 @@ server.on('error', (err) => {
 });
 
 server.on('close', (code) => {
-  console.log(\`\n📊 Server exited with code: \${code}\`);
+  console.log(`\n📊 Server exited with code: ${code}`);
   process.exit(code);
 });
 

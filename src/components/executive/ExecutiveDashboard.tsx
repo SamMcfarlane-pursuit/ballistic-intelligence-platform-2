@@ -458,12 +458,14 @@ export default function ExecutiveDashboard() {
       )}
 
       <Tabs defaultValue="opportunities" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-8">
           <TabsTrigger value="opportunities">Investment Opportunities</TabsTrigger>
           <TabsTrigger value="portfolio">Portfolio Performance</TabsTrigger>
           <TabsTrigger value="market">Market Intelligence</TabsTrigger>
           <TabsTrigger value="analytics">Advanced Analytics</TabsTrigger>
           <TabsTrigger value="missed">Missed Opportunities</TabsTrigger>
+          <TabsTrigger value="intelligence">Partner Intelligence</TabsTrigger>
+          <TabsTrigger value="business">Business Metrics</TabsTrigger>
           <TabsTrigger value="actions">Action Center</TabsTrigger>
         </TabsList>
 
@@ -2367,6 +2369,323 @@ export default function ExecutiveDashboard() {
                     View All Missed Opportunities
                   </Button>
                 </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Partner Intelligence */}
+        <TabsContent value="intelligence" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold">Partner Intelligence</h2>
+            <Link href="/partner-intelligence">
+              <SecureActionButton 
+                debounceMs={1000}
+                maxClicksPerMinute={5}
+              >
+                <Brain className="h-4 w-4 mr-2" />
+                Full Analysis
+              </SecureActionButton>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-purple-500" />
+                  Partner Notes Analysis
+                </CardTitle>
+                <CardDescription>
+                  AI analysis of partner investment decisions and correlations
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-purple-600">47</div>
+                      <div className="text-sm text-muted-foreground">Notes Analyzed</div>
+                    </div>
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-blue-600">12</div>
+                      <div className="text-sm text-muted-foreground">Correlations Found</div>
+                    </div>
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    <strong>Latest Insight:</strong> AI Security companies we passed on in 2022-2023 may now be ready for investment as market has matured.
+                  </div>
+                  <Link href="/partner-intelligence">
+                    <Button size="sm" className="w-full">
+                      <Eye className="h-3 w-3 mr-2" />
+                      View Analysis
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-r from-green-50 to-teal-50 border-green-200">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-green-500" />
+                  Market Trends
+                </CardTitle>
+                <CardDescription>
+                  AI-identified trends from partner notes and market data
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">AI Security Acceleration</span>
+                    <Badge className="bg-green-100 text-green-800">94% confidence</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Team Quality Focus</span>
+                    <Badge className="bg-blue-100 text-blue-800">89% confidence</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm">Enterprise Budget Shift</span>
+                    <Badge className="bg-purple-100 text-purple-800">82% confidence</Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-r from-orange-50 to-red-50 border-orange-200">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="h-5 w-5 text-orange-500" />
+                  Connection Gaps
+                </CardTitle>
+                <CardDescription>
+                  Missing connections and opportunities identified
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div className="text-sm">
+                    <strong>High Priority:</strong> Team8 Foundry relationship for Israeli deal flow
+                  </div>
+                  <div className="text-sm">
+                    <strong>Medium Priority:</strong> Shlomo Kramer network access
+                  </div>
+                  <div className="text-sm">
+                    <strong>Low Priority:</strong> Cybertech Global conference presence
+                  </div>
+                  <div className="mt-3">
+                    <Badge variant="outline" className="text-xs">15 gaps identified</Badge>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Export & Presentation Tools</CardTitle>
+              <CardDescription>
+                Generate reports and presentations for investors and LPs
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <SecureActionButton onClick={() => {}} className="flex-col h-20">
+                  <Download className="h-6 w-6 mb-2" />
+                  <span className="text-sm">Export for Deck</span>
+                </SecureActionButton>
+                <SecureActionButton onClick={() => {}} className="flex-col h-20">
+                  <FileText className="h-6 w-6 mb-2" />
+                  <span className="text-sm">Market Report</span>
+                </SecureActionButton>
+                <SecureActionButton onClick={() => {}} className="flex-col h-20">
+                  <BarChart3 className="h-6 w-6 mb-2" />
+                  <span className="text-sm">Charts & Metrics</span>
+                </SecureActionButton>
+                <SecureActionButton onClick={() => {}} className="flex-col h-20">
+                  <Target className="h-6 w-6 mb-2" />
+                  <span className="text-sm">LP Update</span>
+                </SecureActionButton>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Business Metrics */}
+        <TabsContent value="business" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold">Business Metrics & KPIs</h2>
+            <div className="flex gap-2">
+              <Link href="/business-metrics">
+                <SecureActionButton 
+                  debounceMs={1000}
+                  maxClicksPerMinute={5}
+                >
+                  <BarChart3 className="h-4 w-4 mr-2" />
+                  Full Dashboard
+                </SecureActionButton>
+              </Link>
+              <Link href="/data-scraping">
+                <SecureActionButton 
+                  debounceMs={1000}
+                  maxClicksPerMinute={5}
+                >
+                  <Globe className="h-4 w-4 mr-2" />
+                  Scraping Center
+                </SecureActionButton>
+              </Link>
+              <Link href="/verification-queue">
+                <SecureActionButton 
+                  debounceMs={1000}
+                  maxClicksPerMinute={5}
+                >
+                  <AlertTriangle className="h-4 w-4 mr-2" />
+                  Verification Queue
+                </SecureActionButton>
+              </Link>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <DollarSign className="h-5 w-5 text-green-500" />
+                  Financial Performance
+                </CardTitle>
+                <CardDescription>
+                  Key financial metrics for business decisions
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span>Portfolio Value</span>
+                    <span className="text-lg font-bold text-green-600">$850M</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>IRR</span>
+                    <span className="text-lg font-bold text-blue-600">32.4%</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Multiple</span>
+                    <span className="text-lg font-bold text-purple-600">3.2x</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Quarterly Growth</span>
+                    <span className="text-lg font-bold text-orange-600">+18.5%</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-r from-blue-50 to-cyan-50 border-blue-200">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Globe className="h-5 w-5 text-blue-500" />
+                  Data Scraping Status
+                </CardTitle>
+                <CardDescription>
+                  Free alternative to expensive subscriptions
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span>Annual Cost Savings</span>
+                    <span className="text-lg font-bold text-green-600">$58.8K</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Companies Tracked</span>
+                    <span className="text-lg font-bold text-blue-600">3,247</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Active Sources</span>
+                    <span className="text-lg font-bold text-purple-600">6</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Success Rate</span>
+                    <span className="text-lg font-bold text-orange-600">89.2%</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-gradient-to-r from-orange-50 to-red-50 border-orange-200">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-orange-500" />
+                  Verification Queue
+                </CardTitle>
+                <CardDescription>
+                  Data quality assurance and conflict resolution
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span>Pending Tasks</span>
+                    <span className="text-lg font-bold text-red-600">12</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>In Review</span>
+                    <span className="text-lg font-bold text-yellow-600">8</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>High Priority</span>
+                    <span className="text-lg font-bold text-orange-600">5</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Avg Resolution</span>
+                    <span className="text-lg font-bold text-blue-600">4.2h</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Download & Export Options</CardTitle>
+              <CardDescription>
+                Export business metrics and scraped data for presentations
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <SecureActionButton 
+                  onClick={() => {}} 
+                  className="flex-col h-20"
+                  debounceMs={1000}
+                >
+                  <Download className="h-6 w-6 mb-2" />
+                  <span className="text-sm">Business Metrics</span>
+                </SecureActionButton>
+                <SecureActionButton 
+                  onClick={() => {}} 
+                  className="flex-col h-20"
+                  debounceMs={1000}
+                >
+                  <FileText className="h-6 w-6 mb-2" />
+                  <span className="text-sm">Scraped Data</span>
+                </SecureActionButton>
+                <SecureActionButton 
+                  onClick={() => {}} 
+                  className="flex-col h-20"
+                  debounceMs={1000}
+                >
+                  <BarChart3 className="h-6 w-6 mb-2" />
+                  <span className="text-sm">Charts & Graphs</span>
+                </SecureActionButton>
+                <SecureActionButton 
+                  onClick={() => {}} 
+                  className="flex-col h-20"
+                  debounceMs={1000}
+                >
+                  <Target className="h-6 w-6 mb-2" />
+                  <span className="text-sm">Executive Summary</span>
+                </SecureActionButton>
               </div>
             </CardContent>
           </Card>

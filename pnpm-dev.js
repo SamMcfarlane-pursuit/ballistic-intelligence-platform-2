@@ -53,7 +53,8 @@ async function startServer() {
       env: {
         ...process.env,
         NODE_ENV: 'development',
-        FORCE_COLOR: '1'
+        FORCE_COLOR: '1',
+        DEBUG: 'next*'
       }
     });
     

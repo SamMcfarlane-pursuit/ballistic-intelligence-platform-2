@@ -17,16 +17,13 @@ const nextConfig: NextConfig = {
   },
   // Fix workspace root warning
   outputFileTracingRoot: __dirname,
-  // Optimize for development
-  experimental: {
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
       },
-    },
+    }
   },
 };
 
