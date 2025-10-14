@@ -185,3 +185,4 @@ export function SecureActionButton(props: Omit<SecureButtonProps, 'variant'>) {
       maxClicksPerMinute={30}
     />
   )
+}

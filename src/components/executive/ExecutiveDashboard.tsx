@@ -149,11 +149,19 @@ export default function ExecutiveDashboard() {
   const [selectedSector, setSelectedSector] = useState('all')
   const [selectedCompany, setSelectedCompany] = useState<string>('CyberSecure')
   const [isLoading, setIsLoading] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
-  // Load dashboard data
+  // Prevent SSR issues
   useEffect(() => {
-    loadDashboardData()
-  }, [selectedTimeframe, selectedSector])
+    setMounted(true)
+  }, [])
+
+  // Load dashboard data only after component is mounted
+  useEffect(() => {
+    if (mounted) {
+      loadDashboardData()
+    }
+  }, [mounted, selectedTimeframe, selectedSector])
 
   const loadDashboardData = async () => {
     setIsLoading(true)
@@ -309,7 +317,8 @@ export default function ExecutiveDashboard() {
     }
   }
 
-  if (isLoading) {
+  // Prevent hydration mismatch
+  if (!mounted || isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -1265,6 +1274,7 @@ export default function ExecutiveDashboard() {
                 {/* Selected Company Detailed Dashboard */}
                 {(() => {
                   const company = portfolio.find(c => c.name === selectedCompany) || portfolio[0]
+                  if (!company) return null
                   const roi = ((company.currentValuation - company.investmentAmount) / company.investmentAmount) * 100
                   const monthlyData = selectedCompany === 'CyberSecure' ? 
                     [12, 15, 18, 22, 28, 35] : selectedCompany === 'ZeroTrust Pro' ? 
@@ -1770,7 +1780,7 @@ export default function ExecutiveDashboard() {
 
                         {/* Company Bars */}
                         <div className="flex justify-between items-end h-full px-4 gap-2">
-                          {portfolio.map((company, index) => {
+                          {portfolio.length > 0 && portfolio.map((company, index) => {
                             const maxValuation = 100000000 // $100M max for scaling
                             const barHeight = (company.currentValuation / maxValuation) * 100
                             const roi = ((company.currentValuation - company.investmentAmount) / company.investmentAmount) * 100
@@ -1950,13 +1960,13 @@ export default function ExecutiveDashboard() {
                       <div className="grid grid-cols-3 gap-4">
                         <div className="text-center p-3 bg-gray-50 rounded-lg">
                           <div className="text-lg font-bold text-gray-800">
-                            {formatCurrency(portfolio.reduce((sum, c) => sum + c.currentValuation, 0))}
+                            {portfolio.length > 0 ? formatCurrency(portfolio.reduce((sum, c) => sum + c.currentValuation, 0)) : '$0'}
                           </div>
                           <div className="text-xs text-gray-600">Total Portfolio Value</div>
                         </div>
                         <div className="text-center p-3 bg-gray-50 rounded-lg">
                           <div className="text-lg font-bold text-gray-800">
-                            {Math.round(portfolio.reduce((sum, c) => sum + ((c.currentValuation - c.investmentAmount) / c.investmentAmount * 100), 0) / portfolio.length)}%
+                            {portfolio.length > 0 ? Math.round(portfolio.reduce((sum, c) => sum + ((c.currentValuation - c.investmentAmount) / c.investmentAmount * 100), 0) / portfolio.length) : 0}%
                           </div>
                           <div className="text-xs text-gray-600">Average ROI</div>
                         </div>

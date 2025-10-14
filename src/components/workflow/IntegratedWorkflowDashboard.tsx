@@ -59,12 +59,20 @@ export default function IntegratedWorkflowDashboard() {
   const [lastResult, setLastResult] = useState<WorkflowResult | null>(null)
   const [currentPhase, setCurrentPhase] = useState('')
   const [progress, setProgress] = useState(0)
+  const [mounted, setMounted] = useState(false)
 
-  // Load initial data
+  // Prevent SSR issues
   useEffect(() => {
-    loadWorkflowStats()
-    loadVerificationQueue()
+    setMounted(true)
   }, [])
+
+  // Load initial data only after component is mounted
+  useEffect(() => {
+    if (mounted) {
+      loadWorkflowStats()
+      loadVerificationQueue()
+    }
+  }, [mounted])
 
   const loadWorkflowStats = async () => {
     try {
@@ -243,6 +251,18 @@ AI security company ThreatShield raised $22 million in Series B funding from Ent
       case 'company_profiling': return <Building className="h-4 w-4" />
       default: return <FileText className="h-4 w-4" />
     }
+  }
+
+  // Prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <Brain className="h-12 w-12 mx-auto mb-4 animate-pulse text-blue-500" />
+          <p className="text-lg font-medium">Loading Workflow Dashboard...</p>
+        </div>
+      </div>
+    )
   }
 
   return (

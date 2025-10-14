@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import ZAI from 'z-ai-web-dev-sdk'
-import { validateAndSanitize, logAuditEvent } from '@/lib/security'
+import { sanitizeText, checkRateLimit } from '@/lib/security'
 
 // This endpoint will serve as a webhook for n8n workflows
 export async function POST(request: NextRequest) {
@@ -8,16 +8,29 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     const { action, data } = body
 
+    // Rate limiting
+    const clientIP = request.headers.get('x-forwarded-for') || 
+                     request.headers.get('x-real-ip') || 
+                     'unknown'
+    const rateLimit = checkRateLimit(clientIP, 30, 60000)
+
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { success: false, error: 'Rate limit exceeded' },
+        { status: 429 }
+      )
+    }
+
     // Validate input
     if (!action || typeof action !== 'string') {
-      logAuditEvent('invalid_input', '/api/automation', { action: 'missing' }, 'failure', undefined, request)
+      console.log('Invalid input - missing action')
       return NextResponse.json({ error: 'Action is required' }, { status: 400 })
     }
 
     // Sanitize action
-    const sanitizedAction = validateAndSanitize(action, 'text')
+    const sanitizedAction = sanitizeText(action)
     if (!sanitizedAction) {
-      logAuditEvent('invalid_input', '/api/automation', { action }, 'failure', undefined, request)
+      console.log('Invalid input - action failed sanitization')
       return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
     }
 
@@ -26,12 +39,12 @@ export async function POST(request: NextRequest) {
     switch (sanitizedAction) {
       case 'process-funding-news':
         if (!data?.url) {
-          logAuditEvent('invalid_input', '/api/automation', { action: sanitizedAction, error: 'missing_url' }, 'failure', undefined, request)
+          console.log('Invalid input - missing URL for funding news processing')
           return NextResponse.json({ error: 'URL is required for processing funding news' }, { status: 400 })
         }
-        const sanitizedUrl = validateAndSanitize(data.url, 'url')
+        const sanitizedUrl = sanitizeText(data.url)
         if (!sanitizedUrl) {
-          logAuditEvent('invalid_input', '/api/automation', { action: sanitizedAction, url: data.url }, 'failure', undefined, request)
+          console.log('Invalid input - URL failed sanitization')
           return NextResponse.json({ error: 'Invalid URL provided' }, { status: 400 })
         }
         sanitizedData = { ...data, url: sanitizedUrl }
@@ -39,12 +52,12 @@ export async function POST(request: NextRequest) {
         
       case 'enrich-company-data':
         if (!data?.company_name) {
-          logAuditEvent('invalid_input', '/api/automation', { action: sanitizedAction, error: 'missing_company_name' }, 'failure', undefined, request)
+          console.log('Invalid input - missing company name')
           return NextResponse.json({ error: 'Company name is required' }, { status: 400 })
         }
-        const sanitizedName = validateAndSanitize(data.company_name, 'text')
+        const sanitizedName = sanitizeText(data.company_name)
         if (!sanitizedName) {
-          logAuditEvent('invalid_input', '/api/automation', { action: sanitizedAction, company_name: data.company_name }, 'failure', undefined, request)
+          console.log('Invalid input - company name failed sanitization')
           return NextResponse.json({ error: 'Invalid company name' }, { status: 400 })
         }
         sanitizedData = { ...data, company_name: sanitizedName }
@@ -52,12 +65,12 @@ export async function POST(request: NextRequest) {
         
       case 'scrape-convention-data':
         if (!data?.url) {
-          logAuditEvent('invalid_input', '/api/automation', { action: sanitizedAction, error: 'missing_url' }, 'failure', undefined, request)
+          console.log('Invalid input - missing URL for convention scraping')
           return NextResponse.json({ error: 'URL is required for scraping convention data' }, { status: 400 })
         }
-        const sanitizedConventionUrl = validateAndSanitize(data.url, 'url')
+        const sanitizedConventionUrl = sanitizeText(data.url)
         if (!sanitizedConventionUrl) {
-          logAuditEvent('invalid_input', '/api/automation', { action: sanitizedAction, url: data.url }, 'failure', undefined, request)
+          console.log('Invalid input - convention URL failed sanitization')
           return NextResponse.json({ error: 'Invalid URL provided' }, { status: 400 })
         }
         sanitizedData = { ...data, url: sanitizedConventionUrl }
@@ -65,7 +78,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Log the action attempt
-    logAuditEvent('automation_attempt', '/api/automation', { action: sanitizedAction }, 'success', undefined, request)
+    console.log('Automation action attempted:', sanitizedAction)
 
     switch (sanitizedAction) {
       case 'process-funding-news':
@@ -81,15 +94,11 @@ export async function POST(request: NextRequest) {
       case 'predict-trends':
         return await predictTrends(sanitizedData)
       default:
-        logAuditEvent('unknown_action', '/api/automation', { action: sanitizedAction }, 'failure', undefined, request)
+        console.log('Unknown automation action:', sanitizedAction)
         return NextResponse.json({ error: 'Unknown action' }, { status: 400 })
     }
   } catch (error) {
     console.error('Error in automation endpoint:', error)
-    logAuditEvent('automation_error', '/api/automation', { 
-      error: error instanceof Error ? error.message : 'Unknown error',
-      action: sanitizedAction 
-    }, 'failure', undefined, request)
     return NextResponse.json(
       { error: 'Automation processing failed' },
       { status: 500 }

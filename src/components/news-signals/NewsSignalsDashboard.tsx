@@ -73,12 +73,20 @@ export default function NewsSignalsDashboard() {
   const [newCompanyName, setNewCompanyName] = useState('')
   const [newCompanyWebsite, setNewCompanyWebsite] = useState('')
   const [agentStatus, setAgentStatus] = useState<any>(null)
+  const [mounted, setMounted] = useState(false)
 
-  // Load initial data
+  // Prevent SSR issues
   useEffect(() => {
-    loadAgentStatus()
-    loadMonitoredCompanies()
+    setMounted(true)
   }, [])
+
+  // Load initial data only after component is mounted
+  useEffect(() => {
+    if (mounted) {
+      loadAgentStatus()
+      loadMonitoredCompanies()
+    }
+  }, [mounted])
 
   const loadAgentStatus = async () => {
     try {
@@ -266,6 +274,18 @@ export default function NewsSignalsDashboard() {
       day: 'numeric',
       year: 'numeric'
     })
+  }
+
+  // Prevent hydration mismatch
+  if (!mounted) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <Newspaper className="h-12 w-12 mx-auto mb-4 animate-pulse text-blue-500" />
+          <p className="text-lg font-medium">Loading News Signals Dashboard...</p>
+        </div>
+      </div>
+    )
   }
 
   return (

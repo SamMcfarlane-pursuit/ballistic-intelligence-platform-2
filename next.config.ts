@@ -11,8 +11,6 @@ const nextConfig: NextConfig = {
   },
   // Enable React strict mode for better development experience
   reactStrictMode: true,
-  // Optimize for better performance
-  swcMinify: true,
   // Ensure proper image optimization
   images: {
     domains: ['localhost'],
