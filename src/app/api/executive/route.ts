@@ -142,19 +142,23 @@ export async function POST(request: NextRequest) {
 }
 
 /**
- * Get executive-level metrics and KPIs
+ * Get executive-level metrics and KPIs focused on cybersecurity funding landscape
  */
 async function getExecutiveMetrics(timeframe: string, sector: string) {
   // Simulate comprehensive metrics calculation
   await new Promise(resolve => setTimeout(resolve, 800))
 
+  // Ballistic Intelligence Platform focuses on venture-backed cybersecurity companies
+  // Tracking 3000+ companies globally with focus on US and Israel markets
   const baseMetrics = {
-    totalFunding: 2400000000,
-    totalCompanies: 156,
-    avgFundingSize: 15400000,
-    portfolioValue: 1200000000,
-    activeDeals: 8,
-    pipelineValue: 450000000
+    totalFunding: 7800000000, // Total cybersecurity funding tracked (realistic 2024 numbers)
+    totalCompanies: 3247, // Total venture-backed cybersecurity companies tracked
+    avgFundingSize: 18500000, // Average funding round size
+    portfolioValue: 850000000, // Ballistic's portfolio value
+    activeDeals: 12, // Currently active investment opportunities
+    pipelineValue: 320000000, // Pipeline of potential investments
+    weeklyNewCompanies: 8, // New companies discovered weekly
+    fundingAnnouncements: 23 // Weekly funding announcements tracked
   }
 
   // Adjust metrics based on timeframe and sector
@@ -167,25 +171,48 @@ async function getExecutiveMetrics(timeframe: string, sector: string) {
     totalCompanies: Math.round(baseMetrics.totalCompanies * sectorMultiplier),
     portfolioValue: Math.round(baseMetrics.portfolioValue * sectorMultiplier),
     topSectors: [
-      { name: 'Cloud Security', count: 45, funding: 680000000, growth: 32 },
-      { name: 'Identity & Access', count: 32, funding: 520000000, growth: 28 },
-      { name: 'AI Security', count: 26, funding: 450000000, growth: 45 },
-      { name: 'Zero Trust', count: 25, funding: 380000000, growth: 25 },
-      { name: 'Threat Intelligence', count: 28, funding: 370000000, growth: 22 }
+      { name: 'AI Security', count: 287, funding: 1200000000, growth: 67 }, // Fastest growing sector
+      { name: 'Cloud Security', count: 542, funding: 1850000000, growth: 34 },
+      { name: 'Zero Trust', count: 198, funding: 890000000, growth: 42 },
+      { name: 'Identity & Access', count: 324, funding: 1100000000, growth: 29 },
+      { name: 'Threat Intelligence', count: 156, funding: 650000000, growth: 25 },
+      { name: 'Application Security', count: 234, funding: 780000000, growth: 31 },
+      { name: 'IoT Security', count: 89, funding: 420000000, growth: 38 }
     ],
     fundingTrend: [
-      { month: 'Jan', amount: 180000000, deals: 12, growth: 15 },
-      { month: 'Feb', amount: 220000000, deals: 15, growth: 22 },
-      { month: 'Mar', amount: 195000000, deals: 13, growth: -11 },
-      { month: 'Apr', amount: 240000000, deals: 16, growth: 23 },
-      { month: 'May', amount: 280000000, deals: 18, growth: 17 },
-      { month: 'Jun', amount: 320000000, deals: 21, growth: 14 }
+      { month: 'Jan 2024', amount: 580000000, deals: 47, growth: 12, newCompanies: 32 },
+      { month: 'Feb 2024', amount: 620000000, deals: 52, growth: 18, newCompanies: 28 },
+      { month: 'Mar 2024', amount: 750000000, deals: 61, growth: 21, newCompanies: 35 },
+      { month: 'Apr 2024', amount: 680000000, deals: 55, growth: -9, newCompanies: 31 },
+      { month: 'May 2024', amount: 890000000, deals: 68, growth: 31, newCompanies: 42 },
+      { month: 'Jun 2024', amount: 920000000, deals: 71, growth: 3, newCompanies: 38 },
+      { month: 'Jul 2024', amount: 1100000000, deals: 84, growth: 20, newCompanies: 45 },
+      { month: 'Aug 2024', amount: 980000000, deals: 76, growth: -11, newCompanies: 39 },
+      { month: 'Sep 2024', amount: 1200000000, deals: 89, growth: 22, newCompanies: 51 },
+      { month: 'Oct 2024', amount: 850000000, deals: 67, growth: -29, newCompanies: 33 }
     ],
     performanceMetrics: {
       avgROI: 247,
       successRate: 78,
       timeToExit: 4.2,
       portfolioIRR: 32
+    },
+    geographicBreakdown: {
+      'United States': { companies: 2156, funding: 5200000000, percentage: 66.4 },
+      'Israel': { companies: 487, funding: 1850000000, percentage: 23.7 },
+      'United Kingdom': { companies: 234, funding: 420000000, percentage: 5.4 },
+      'Canada': { companies: 156, funding: 280000000, percentage: 3.6 },
+      'Other': { companies: 214, funding: 50000000, percentage: 0.9 }
+    },
+    weeklyInsights: {
+      newFundingAnnouncements: 23,
+      newCompaniesDiscovered: 8,
+      emergingTrends: ['Quantum-Safe Cryptography', 'AI-Powered SOC', 'Supply Chain Security'],
+      upcomingConferences: [
+        { name: 'RSA Conference 2025', date: '2025-05-05', location: 'San Francisco', relevance: 'high' },
+        { name: 'Black Hat USA 2024', date: '2024-08-03', location: 'Las Vegas', relevance: 'high' },
+        { name: 'DEF CON 32', date: '2024-08-08', location: 'Las Vegas', relevance: 'medium' }
+      ]
     }
   }
 }
@@ -199,101 +226,174 @@ async function getInvestmentOpportunities(sector: string) {
   const allOpportunities = [
     {
       id: '1',
-      companyName: 'CyberGuard Pro',
-      sector: 'Cloud Security',
+      companyName: 'QuantumShield Security',
+      sector: 'AI Security',
       fundingStage: 'Series A',
-      fundingAmount: 15000000,
-      momentum: 92,
-      riskScore: 25,
+      fundingAmount: 22000000,
+      momentum: 94,
+      riskScore: 18,
       recommendation: 'strong_buy',
+      location: 'Tel Aviv, Israel',
+      foundedYear: 2022,
       keyMetrics: {
-        teamScore: 95,
-        marketSize: 88,
-        traction: 85,
-        technology: 92,
-        competitive: 78
+        teamScore: 96, // Ex-Unit 8200 founders
+        marketSize: 92, // AI security is exploding
+        traction: 89, // Strong enterprise adoption
+        technology: 95, // Proprietary quantum-resistant algorithms
+        competitive: 82
       },
       recentSignals: [
-        { type: 'Partnership', description: 'Strategic partnership with AWS', date: '2024-10-10', impact: 'positive' },
-        { type: 'Customer Win', description: 'Fortune 500 enterprise client', date: '2024-10-08', impact: 'positive' },
-        { type: 'Product Launch', description: 'AI-powered threat detection', date: '2024-10-05', impact: 'positive' }
+        { type: 'Partnership', description: 'Strategic partnership with Microsoft Azure', date: '2024-10-12', impact: 'positive' },
+        { type: 'Customer Win', description: 'Major US bank deployment', date: '2024-10-08', impact: 'positive' },
+        { type: 'Product Launch', description: 'Quantum-safe AI threat detection', date: '2024-10-05', impact: 'positive' },
+        { type: 'Team Expansion', description: 'Former NSA cryptographer joins as CTO', date: '2024-09-28', impact: 'positive' }
       ],
       nextActions: [
-        'Schedule due diligence call',
-        'Review technical architecture',
-        'Validate customer references',
-        'Negotiate term sheet'
+        'Schedule technical deep dive with founders',
+        'Review quantum cryptography patents',
+        'Validate enterprise customer pipeline',
+        'Assess US market expansion plan'
       ],
       financials: {
-        revenue: 2400000,
-        growth: 180,
-        burnRate: 350000,
-        runway: 18
-      }
+        revenue: 3800000,
+        growth: 240, // 240% YoY growth
+        burnRate: 580000,
+        runway: 24,
+        customers: 12, // Enterprise customers
+        arr: 4200000 // Annual Recurring Revenue
+      },
+      fundingHistory: [
+        { round: 'Seed', amount: 4500000, date: '2023-03-15', lead: 'Aleph VC' },
+        { round: 'Series A', amount: 22000000, date: '2024-10-01', lead: 'Ballistic Ventures' }
+      ]
     },
     {
       id: '2',
-      companyName: 'SecureFlow AI',
-      sector: 'AI Security',
-      fundingStage: 'Seed',
-      fundingAmount: 8500000,
-      momentum: 78,
-      riskScore: 45,
-      recommendation: 'buy',
-      keyMetrics: {
-        teamScore: 82,
-        marketSize: 95,
-        traction: 65,
-        technology: 88,
-        competitive: 72
-      },
-      recentSignals: [
-        { type: 'Executive Hire', description: 'Former Google VP joins as CTO', date: '2024-10-12', impact: 'positive' },
-        { type: 'Funding', description: 'Oversubscribed seed round', date: '2024-10-01', impact: 'positive' }
-      ],
-      nextActions: [
-        'Technical deep dive session',
-        'Market analysis review',
-        'Competitive positioning assessment'
-      ],
-      financials: {
-        revenue: 850000,
-        growth: 220,
-        burnRate: 180000,
-        runway: 24
-      }
-    },
-    {
-      id: '3',
       companyName: 'ZeroTrust Networks',
       sector: 'Zero Trust',
       fundingStage: 'Series B',
-      fundingAmount: 22000000,
-      momentum: 85,
-      riskScore: 35,
-      recommendation: 'buy',
+      fundingAmount: 35000000,
+      momentum: 87,
+      riskScore: 28,
+      recommendation: 'strong_buy',
+      location: 'Austin, Texas',
+      foundedYear: 2021,
       keyMetrics: {
-        teamScore: 88,
-        marketSize: 85,
-        traction: 82,
-        technology: 85,
-        competitive: 80
+        teamScore: 91, // Strong enterprise security background
+        marketSize: 94, // Zero Trust market rapidly expanding
+        traction: 88, // Government and enterprise adoption
+        technology: 89, // Comprehensive ZTNA platform
+        competitive: 85
       },
       recentSignals: [
-        { type: 'Customer Win', description: 'Government contract secured', date: '2024-10-11', impact: 'positive' },
-        { type: 'Partnership', description: 'Microsoft integration announced', date: '2024-10-07', impact: 'positive' }
+        { type: 'Government Contract', description: '$15M Department of Defense contract', date: '2024-10-11', impact: 'positive' },
+        { type: 'Partnership', description: 'Cisco integration partnership', date: '2024-10-07', impact: 'positive' },
+        { type: 'Expansion', description: 'European market entry announced', date: '2024-09-25', impact: 'positive' },
+        { type: 'Executive Hire', description: 'Former Palo Alto VP Sales joins', date: '2024-09-15', impact: 'positive' }
       ],
       nextActions: [
-        'Government contract analysis',
-        'Scalability assessment',
-        'Partnership impact evaluation'
+        'Review government contract details',
+        'Assess European expansion strategy',
+        'Validate Cisco partnership impact',
+        'Schedule board observer rights discussion'
       ],
       financials: {
-        revenue: 5200000,
-        growth: 145,
-        burnRate: 580000,
-        runway: 20
-      }
+        revenue: 8200000,
+        growth: 185, // 185% YoY growth
+        burnRate: 750000,
+        runway: 28,
+        customers: 47, // Mix of enterprise and government
+        arr: 9800000
+      },
+      fundingHistory: [
+        { round: 'Seed', amount: 3200000, date: '2022-01-20', lead: 'Bessemer Venture Partners' },
+        { round: 'Series A', amount: 12000000, date: '2023-06-15', lead: 'Andreessen Horowitz' },
+        { round: 'Series B', amount: 35000000, date: '2024-09-30', lead: 'Ballistic Ventures' }
+      ]
+    },
+    {
+      id: '3',
+      companyName: 'SecureCode AI',
+      sector: 'Application Security',
+      fundingStage: 'Seed',
+      fundingAmount: 12000000,
+      momentum: 82,
+      riskScore: 35,
+      recommendation: 'buy',
+      location: 'San Francisco, CA',
+      foundedYear: 2023,
+      keyMetrics: {
+        teamScore: 88, // Ex-GitHub and Google security engineers
+        marketSize: 89, // DevSecOps market growing rapidly
+        traction: 76, // Strong developer adoption
+        technology: 92, // AI-powered code analysis
+        competitive: 78
+      },
+      recentSignals: [
+        { type: 'Product Launch', description: 'AI code vulnerability scanner', date: '2024-10-09', impact: 'positive' },
+        { type: 'Customer Win', description: 'Major fintech adopts platform', date: '2024-10-03', impact: 'positive' },
+        { type: 'Partnership', description: 'GitHub Marketplace integration', date: '2024-09-28', impact: 'positive' },
+        { type: 'Funding', description: 'Oversubscribed seed round', date: '2024-09-15', impact: 'positive' }
+      ],
+      nextActions: [
+        'Technical product demo',
+        'Developer community growth analysis',
+        'Competitive landscape assessment',
+        'Go-to-market strategy review'
+      ],
+      financials: {
+        revenue: 1800000,
+        growth: 320, // Very high growth for early stage
+        burnRate: 420000,
+        runway: 18,
+        customers: 89, // Developer teams
+        arr: 2100000
+      },
+      fundingHistory: [
+        { round: 'Pre-Seed', amount: 2500000, date: '2023-08-10', lead: 'Accel Partners' },
+        { round: 'Seed', amount: 12000000, date: '2024-09-15', lead: 'Ballistic Ventures' }
+      ]
+    },
+    {
+      id: '4',
+      companyName: 'CyberMesh IoT',
+      sector: 'IoT Security',
+      fundingStage: 'Series A',
+      fundingAmount: 18000000,
+      momentum: 79,
+      riskScore: 42,
+      recommendation: 'buy',
+      location: 'Boston, MA',
+      foundedYear: 2022,
+      keyMetrics: {
+        teamScore: 84, // MIT and industry IoT experts
+        marketSize: 91, // IoT security critical need
+        traction: 73, // Manufacturing and healthcare adoption
+        technology: 87, // Edge-based security mesh
+        competitive: 76
+      },
+      recentSignals: [
+        { type: 'Customer Win', description: 'Major automotive manufacturer deployment', date: '2024-10-08', impact: 'positive' },
+        { type: 'Partnership', description: 'AWS IoT Core integration', date: '2024-09-30', impact: 'positive' },
+        { type: 'Product Launch', description: 'Edge security mesh platform', date: '2024-09-20', impact: 'positive' }
+      ],
+      nextActions: [
+        'Manufacturing sector analysis',
+        'Edge computing scalability review',
+        'Partnership ecosystem assessment'
+      ],
+      financials: {
+        revenue: 2900000,
+        growth: 165,
+        burnRate: 520000,
+        runway: 22,
+        customers: 23, // Enterprise IoT deployments
+        arr: 3400000
+      },
+      fundingHistory: [
+        { round: 'Seed', amount: 5500000, date: '2023-02-28', lead: 'General Catalyst' },
+        { round: 'Series A', amount: 18000000, date: '2024-09-01', lead: 'Ballistic Ventures' }
+      ]
     }
   ]
 
@@ -430,11 +530,13 @@ async function getMarketIntelligence() {
 
   return {
     sectorTrends: [
-      { sector: 'AI Security', growth: 45, fundingVolume: 890000000, dealCount: 34, avgValuation: 26200000 },
-      { sector: 'Cloud Security', growth: 32, fundingVolume: 1200000000, dealCount: 48, avgValuation: 25000000 },
-      { sector: 'Zero Trust', growth: 28, fundingVolume: 650000000, dealCount: 26, avgValuation: 25000000 },
-      { sector: 'Identity & Access', growth: 25, fundingVolume: 580000000, dealCount: 29, avgValuation: 20000000 },
-      { sector: 'Threat Intelligence', growth: 22, fundingVolume: 450000000, dealCount: 22, avgValuation: 20500000 }
+      { sector: 'AI Security', growth: 67, fundingVolume: 1200000000, dealCount: 89, avgValuation: 28500000 },
+      { sector: 'Cloud Security', growth: 34, fundingVolume: 1850000000, dealCount: 124, avgValuation: 24200000 },
+      { sector: 'Zero Trust', growth: 42, fundingVolume: 890000000, dealCount: 67, avgValuation: 26800000 },
+      { sector: 'Application Security', growth: 38, fundingVolume: 780000000, dealCount: 78, avgValuation: 19500000 },
+      { sector: 'Identity & Access', growth: 29, fundingVolume: 1100000000, dealCount: 95, avgValuation: 22300000 },
+      { sector: 'IoT Security', growth: 45, fundingVolume: 420000000, dealCount: 34, avgValuation: 18900000 },
+      { sector: 'Threat Intelligence', growth: 25, fundingVolume: 650000000, dealCount: 56, avgValuation: 21200000 }
     ],
     competitiveThreats: [
       { 
@@ -462,35 +564,111 @@ async function getMarketIntelligence() {
     emergingTechnologies: [
       { 
         technology: 'Quantum-Safe Cryptography', 
-        adoptionRate: 15, 
-        marketPotential: 95, 
-        companies: ['QuantumSecure', 'CryptoShield'],
-        timeline: '2-3 years to mainstream adoption'
+        adoptionRate: 18, 
+        marketPotential: 96, 
+        companies: ['QuantumShield Security', 'PostQuantum', 'CryptoNext'],
+        timeline: '2-3 years to mainstream adoption',
+        fundingActivity: 'High - $340M raised in 2024'
       },
       { 
-        technology: 'AI-Powered SOC', 
-        adoptionRate: 35, 
-        marketPotential: 88, 
-        companies: ['AutoSOC', 'IntelliSecure'],
-        timeline: '1-2 years to mainstream adoption'
+        technology: 'AI-Powered SOC Automation', 
+        adoptionRate: 42, 
+        marketPotential: 91, 
+        companies: ['Darktrace', 'Vectra AI', 'Cybereason'],
+        timeline: '1-2 years to mainstream adoption',
+        fundingActivity: 'Very High - $890M raised in 2024'
       },
       { 
-        technology: 'Behavioral Biometrics', 
-        adoptionRate: 25, 
-        marketPotential: 82, 
-        companies: ['BioSecure', 'IdentityAI'],
-        timeline: '2-4 years to mainstream adoption'
+        technology: 'Supply Chain Security', 
+        adoptionRate: 28, 
+        marketPotential: 89, 
+        companies: ['Chainguard', 'Anchore', 'Snyk'],
+        timeline: '1-3 years to mainstream adoption',
+        fundingActivity: 'High - $520M raised in 2024'
+      },
+      { 
+        technology: 'Cloud-Native Security', 
+        adoptionRate: 55, 
+        marketPotential: 87, 
+        companies: ['Wiz', 'Orca Security', 'Prisma Cloud'],
+        timeline: 'Already mainstream, rapid evolution',
+        fundingActivity: 'Very High - $1.2B raised in 2024'
+      },
+      { 
+        technology: 'Extended Detection & Response (XDR)', 
+        adoptionRate: 38, 
+        marketPotential: 85, 
+        companies: ['SentinelOne', 'CrowdStrike', 'Microsoft Sentinel'],
+        timeline: '1-2 years to mainstream adoption',
+        fundingActivity: 'High - $680M raised in 2024'
       }
     ],
     marketForces: {
       regulatoryChanges: [
-        { regulation: 'EU Cyber Resilience Act', impact: 'high', timeline: '2025' },
-        { regulation: 'US Federal Zero Trust Strategy', impact: 'medium', timeline: '2024-2025' }
+        { regulation: 'EU Cyber Resilience Act', impact: 'high', timeline: '2025', description: 'Mandatory cybersecurity requirements for connected products' },
+        { regulation: 'US Federal Zero Trust Strategy', impact: 'high', timeline: '2024-2025', description: 'Government mandate driving enterprise adoption' },
+        { regulation: 'SEC Cybersecurity Disclosure Rules', impact: 'medium', timeline: '2024', description: 'Public companies must disclose material cyber incidents' },
+        { regulation: 'NIST Cybersecurity Framework 2.0', impact: 'medium', timeline: '2024', description: 'Updated framework emphasizing governance and supply chain' }
       ],
       economicFactors: {
-        cybersecuritySpending: { growth: 12.5, total: 173000000000 },
-        ventureInvestment: { growth: -15.2, total: 7800000000 },
-        publicMarketMultiples: { average: 8.5, trend: 'declining' }
+        cybersecuritySpending: { growth: 14.2, total: 189000000000 },
+        ventureInvestment: { growth: -8.3, total: 7800000000 }, // Down from 2021 peak but stabilizing
+        publicMarketMultiples: { average: 6.8, trend: 'stabilizing' },
+        exitActivity: { ipos: 3, acquisitions: 47, totalValue: 12400000000 }
+      },
+      industryEvents: {
+        upcoming: [
+          { 
+            name: 'RSA Conference 2025', 
+            date: '2025-05-05', 
+            location: 'San Francisco, CA', 
+            relevance: 'critical',
+            portfolioSpeaking: ['CyberSecure', 'ZeroTrust Pro'],
+            attendees: 45000,
+            focus: 'AI Security, Zero Trust, Cloud Security'
+          },
+          { 
+            name: 'Black Hat USA 2024', 
+            date: '2024-08-03', 
+            location: 'Las Vegas, NV', 
+            relevance: 'high',
+            portfolioSpeaking: ['ThreatIntel Corp'],
+            attendees: 20000,
+            focus: 'Advanced Threats, Research, Offensive Security'
+          },
+          { 
+            name: 'DEF CON 32', 
+            date: '2024-08-08', 
+            location: 'Las Vegas, NV', 
+            relevance: 'medium',
+            portfolioSpeaking: [],
+            attendees: 30000,
+            focus: 'Hacker Community, Research, CTF'
+          },
+          { 
+            name: 'BSides Tel Aviv', 
+            date: '2024-12-15', 
+            location: 'Tel Aviv, Israel', 
+            relevance: 'high',
+            portfolioSpeaking: ['QuantumShield Security'],
+            attendees: 2500,
+            focus: 'Israeli Security Ecosystem, Startups'
+          },
+          { 
+            name: 'Cybertech Global', 
+            date: '2025-01-28', 
+            location: 'Tel Aviv, Israel', 
+            relevance: 'high',
+            portfolioSpeaking: ['QuantumShield Security', 'CyberMesh IoT'],
+            attendees: 15000,
+            focus: 'Innovation, Startups, Government'
+          }
+        ],
+        speakingOpportunities: [
+          { event: 'CloudSecCon', deadline: '2024-11-15', topic: 'Cloud-Native Security' },
+          { event: 'AI Security Summit', deadline: '2024-12-01', topic: 'AI/ML Security' },
+          { event: 'Zero Trust World', deadline: '2024-11-30', topic: 'Zero Trust Architecture' }
+        ]
       }
     }
   }

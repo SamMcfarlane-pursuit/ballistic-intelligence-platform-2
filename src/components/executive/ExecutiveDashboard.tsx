@@ -46,11 +46,20 @@ interface ExecutiveMetrics {
   totalFunding: number
   totalCompanies: number
   avgFundingSize: number
-  topSectors: Array<{ name: string; count: number; funding: number }>
-  fundingTrend: Array<{ month: string; amount: number; deals: number }>
+  topSectors: Array<{ name: string; count: number; funding: number; growth: number }>
+  fundingTrend: Array<{ month: string; amount: number; deals: number; growth: number; newCompanies: number }>
   portfolioValue: number
   activeDeals: number
   pipelineValue: number
+  weeklyNewCompanies: number
+  fundingAnnouncements: number
+  geographicBreakdown: Record<string, { companies: number; funding: number; percentage: number }>
+  weeklyInsights: {
+    newFundingAnnouncements: number
+    newCompaniesDiscovered: number
+    emergingTrends: string[]
+    upcomingConferences: Array<{ name: string; date: string; location: string; relevance: string }>
+  }
 }
 
 interface InvestmentOpportunity {
@@ -62,11 +71,14 @@ interface InvestmentOpportunity {
   momentum: number
   riskScore: number
   recommendation: 'strong_buy' | 'buy' | 'hold' | 'pass'
+  location: string
+  foundedYear: number
   keyMetrics: {
     teamScore: number
     marketSize: number
     traction: number
     technology: number
+    competitive: number
   }
   recentSignals: Array<{
     type: string
@@ -75,6 +87,20 @@ interface InvestmentOpportunity {
     impact: 'positive' | 'neutral' | 'negative'
   }>
   nextActions: string[]
+  financials: {
+    revenue: number
+    growth: number
+    burnRate: number
+    runway: number
+    customers: number
+    arr: number
+  }
+  fundingHistory: Array<{
+    round: string
+    amount: number
+    date: string
+    lead: string
+  }>
 }
 
 interface PortfolioCompany {
@@ -329,6 +355,32 @@ export default function ExecutiveDashboard() {
         </div>
       </div>
 
+      {/* Weekly Intelligence Summary */}
+      {metrics && (
+        <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
+          <CardContent className="pt-6">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="text-center">
+                <div className="text-2xl font-bold text-indigo-600">{metrics.weeklyInsights.newFundingAnnouncements}</div>
+                <div className="text-sm text-indigo-600">Funding Announcements This Week</div>
+              </div>
+              <div className="text-center">
+                <div className="text-2xl font-bold text-purple-600">{metrics.weeklyInsights.newCompaniesDiscovered}</div>
+                <div className="text-sm text-purple-600">New Companies Discovered</div>
+              </div>
+              <div className="text-center">
+                <div className="text-lg font-bold text-blue-600">{metrics.weeklyInsights.emergingTrends.length}</div>
+                <div className="text-sm text-blue-600">Emerging Trends Tracked</div>
+              </div>
+              <div className="text-center">
+                <div className="text-lg font-bold text-green-600">{metrics.weeklyInsights.upcomingConferences.length}</div>
+                <div className="text-sm text-green-600">Upcoming Conferences</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Key Metrics Overview */}
       {metrics && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -376,8 +428,8 @@ export default function ExecutiveDashboard() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm font-medium text-orange-600">Companies Tracked</p>
-                  <p className="text-3xl font-bold text-orange-900">{metrics.totalCompanies}</p>
-                  <p className="text-sm text-orange-600 mt-1">Avg: {formatCurrency(metrics.avgFundingSize)}</p>
+                  <p className="text-3xl font-bold text-orange-900">{metrics.totalCompanies.toLocaleString()}</p>
+                  <p className="text-sm text-orange-600 mt-1">+{metrics.weeklyNewCompanies} this week</p>
                 </div>
                 <Building className="h-8 w-8 text-orange-500" />
               </div>
@@ -429,7 +481,12 @@ export default function ExecutiveDashboard() {
                   <div className="flex items-start justify-between">
                     <div>
                       <CardTitle className="text-lg">{opportunity.companyName}</CardTitle>
-                      <CardDescription>{opportunity.sector} • {opportunity.fundingStage}</CardDescription>
+                      <CardDescription>
+                        {opportunity.sector} • {opportunity.fundingStage} • {opportunity.location}
+                      </CardDescription>
+                      <div className="text-xs text-muted-foreground mt-1">
+                        Founded {opportunity.foundedYear} • {opportunity.financials.customers} customers • ARR: {formatCurrency(opportunity.financials.arr)}
+                      </div>
                     </div>
                     <div className="flex items-center gap-2">
                       <Badge className={`${getRecommendationColor(opportunity.recommendation)} text-white`}>
@@ -698,8 +755,40 @@ export default function ExecutiveDashboard() {
                 </CardContent>
               </Card>
 
+              {/* Geographic Breakdown */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Globe className="h-5 w-5" />
+                    Geographic Distribution
+                  </CardTitle>
+                  <CardDescription>
+                    Focus on US and Israel markets - key cybersecurity hubs
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {metrics && (
+                    <div className="space-y-4">
+                      {Object.entries(metrics.geographicBreakdown).map(([country, data]) => (
+                        <div key={country} className="space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="font-medium">{country}</span>
+                            <Badge variant="outline">{data.percentage.toFixed(1)}%</Badge>
+                          </div>
+                          <div className="grid grid-cols-2 gap-2 text-sm text-muted-foreground">
+                            <div>Companies: {data.companies.toLocaleString()}</div>
+                            <div>Funding: {formatCurrency(data.funding)}</div>
+                          </div>
+                          <Progress value={data.percentage} className="w-full" />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
               {/* Emerging Technologies */}
-              <Card className="lg:col-span-2">
+              <Card className="lg:col-span-1">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Lightbulb className="h-5 w-5" />
@@ -729,6 +818,90 @@ export default function ExecutiveDashboard() {
                       </div>
                     ))}
                   </div>
+                </CardContent>
+              </Card>
+
+              {/* Conference & Events Tracking */}
+              <Card className="lg:col-span-2">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Calendar className="h-5 w-5" />
+                    Industry Events & Speaking Opportunities
+                  </CardTitle>
+                  <CardDescription>
+                    Track conferences for portfolio company speaking opportunities and industry networking
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  {metrics && (
+                    <div className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {metrics.weeklyInsights.upcomingConferences.map((conference, index) => (
+                          <div key={index} className="p-4 border rounded-lg">
+                            <div className="flex justify-between items-start mb-2">
+                              <h4 className="font-medium">{conference.name}</h4>
+                              <Badge variant={conference.relevance === 'critical' ? 'destructive' : conference.relevance === 'high' ? 'default' : 'secondary'}>
+                                {conference.relevance}
+                              </Badge>
+                            </div>
+                            <div className="text-sm text-muted-foreground space-y-1">
+                              <div>📅 {new Date(conference.date).toLocaleDateString()}</div>
+                              <div>📍 {conference.location}</div>
+                            </div>
+                            <div className="mt-3 flex gap-2">
+                              <SecureActionButton
+                                onClick={() => executeAction('Submit Speaker Proposal', conference.name)}
+                                debounceMs={500}
+                                maxClicksPerMinute={10}
+                                size="sm"
+                              >
+                                <Users className="h-3 w-3" />
+                                Speaker Proposal
+                              </SecureActionButton>
+                              <Button
+                                onClick={() => executeAction('Track Event', conference.name)}
+                                size="sm"
+                                variant="outline"
+                              >
+                                <Eye className="h-3 w-3" />
+                                Track
+                              </Button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      
+                      {/* Weekly Funding Announcements */}
+                      <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                        <h4 className="font-medium mb-3 flex items-center gap-2">
+                          <DollarSign className="h-4 w-4" />
+                          This Week's Funding Intelligence
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-blue-600">{metrics.weeklyInsights.newFundingAnnouncements}</div>
+                            <div className="text-blue-600">New Funding Rounds</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-2xl font-bold text-green-600">{metrics.weeklyInsights.newCompaniesDiscovered}</div>
+                            <div className="text-green-600">Companies Discovered</div>
+                          </div>
+                          <div className="text-center">
+                            <div className="text-lg font-bold text-purple-600">{metrics.weeklyInsights.emergingTrends.length}</div>
+                            <div className="text-purple-600">Emerging Trends</div>
+                          </div>
+                        </div>
+                        <div className="mt-3">
+                          <div className="text-sm font-medium mb-2">Trending Technologies:</div>
+                          <div className="flex flex-wrap gap-2">
+                            {metrics.weeklyInsights.emergingTrends.map((trend, index) => (
+                              <Badge key={index} variant="outline">{trend}</Badge>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </div>
