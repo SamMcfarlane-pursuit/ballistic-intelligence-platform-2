@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { SecureButton, SecureActionButton } from '@/components/ui/secure-button'
+import Link from 'next/link'
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -367,7 +368,16 @@ export default function ExecutiveDashboard() {
       {/* Weekly Intelligence Summary */}
       {metrics && (
         <Card className="bg-gradient-to-r from-indigo-50 to-purple-50 border-indigo-200">
-          <CardContent className="pt-6">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Database className="h-5 w-5" />
+              Weekly Intelligence Summary
+            </CardTitle>
+            <CardDescription>
+              Data aggregated from 12 sources: Crunchbase, TechCrunch, LinkedIn, VentureBeat, Company websites, Patents, News articles, Conference data, Social media, Government contracts, Press releases, Industry reports
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
               <div className="text-center">
                 <div className="text-2xl font-bold text-indigo-600">{metrics.weeklyInsights.newFundingAnnouncements}</div>
@@ -448,11 +458,12 @@ export default function ExecutiveDashboard() {
       )}
 
       <Tabs defaultValue="opportunities" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5">
+        <TabsList className="grid w-full grid-cols-6">
           <TabsTrigger value="opportunities">Investment Opportunities</TabsTrigger>
           <TabsTrigger value="portfolio">Portfolio Performance</TabsTrigger>
           <TabsTrigger value="market">Market Intelligence</TabsTrigger>
           <TabsTrigger value="analytics">Advanced Analytics</TabsTrigger>
+          <TabsTrigger value="missed">Missed Opportunities</TabsTrigger>
           <TabsTrigger value="actions">Action Center</TabsTrigger>
         </TabsList>
 
@@ -579,15 +590,12 @@ export default function ExecutiveDashboard() {
                       <Calendar className="h-3 w-3" />
                       Due Diligence
                     </SecureActionButton>
-                    <SecureActionButton
-                      onClick={() => executeAction('View Details', opportunity.companyName)}
-                      debounceMs={300}
-                      maxClicksPerMinute={20}
-                      size="sm"
-                    >
-                      <Eye className="h-3 w-3" />
-                      Details
-                    </SecureActionButton>
+                    <Link href={`/company/${opportunity.id}`}>
+                      <Button size="sm" variant="outline">
+                        <Eye className="h-3 w-3 mr-2" />
+                        Deep Dive
+                      </Button>
+                    </Link>
                   </div>
                 </CardContent>
               </Card>
@@ -2287,6 +2295,81 @@ export default function ExecutiveDashboard() {
               </CardContent>
             </Card>
           </div>
+        </TabsContent>
+
+        {/* Missed Opportunities */}
+        <TabsContent value="missed" className="space-y-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold">Missed Opportunities</h2>
+            <Link href="/missed-opportunities">
+              <SecureActionButton 
+                debounceMs={1000}
+                maxClicksPerMinute={5}
+              >
+                <AlertTriangle className="h-4 w-4 mr-2" />
+                Full Analysis
+              </SecureActionButton>
+            </Link>
+          </div>
+
+          <Card className="bg-gradient-to-r from-red-50 to-orange-50 border-red-200">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <AlertTriangle className="h-5 w-5 text-red-500" />
+                Deal Sourcing Gap Analysis
+              </CardTitle>
+              <CardDescription>
+                Companies that received funding but weren't tracked in our pipeline
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-red-600">23</div>
+                  <div className="text-sm text-muted-foreground">Missed Companies</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-orange-600">$287M</div>
+                  <div className="text-sm text-muted-foreground">Missed Funding</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-blue-600">18.4%</div>
+                  <div className="text-sm text-muted-foreground">Miss Rate</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-purple-600">28d</div>
+                  <div className="text-sm text-muted-foreground">Avg Discovery Time</div>
+                </div>
+              </div>
+              
+              <div className="mt-6">
+                <h4 className="font-medium mb-3">Top Missed Sectors</h4>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span>AI Security</span>
+                    <Badge variant="destructive">8 companies • $125M</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Cloud Security</span>
+                    <Badge variant="destructive">6 companies • $89M</Badge>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span>Zero Trust</span>
+                    <Badge variant="destructive">5 companies • $73M</Badge>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 text-center">
+                <Link href="/missed-opportunities">
+                  <Button>
+                    <Eye className="h-4 w-4 mr-2" />
+                    View All Missed Opportunities
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Action Center */}

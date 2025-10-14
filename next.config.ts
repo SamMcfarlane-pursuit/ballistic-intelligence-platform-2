@@ -15,6 +15,19 @@ const nextConfig: NextConfig = {
   images: {
     domains: ['localhost'],
   },
+  // Fix workspace root warning
+  outputFileTracingRoot: __dirname,
+  // Optimize for development
+  experimental: {
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
+  },
 };
 
 export default nextConfig;

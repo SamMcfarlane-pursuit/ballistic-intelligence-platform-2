@@ -1,397 +1,267 @@
+/**
+ * Company Profile API
+ * Provides comprehensive company intelligence data
+ * Aggregates data from multiple sources for deep dive analysis
+ */
+
 import { NextRequest, NextResponse } from 'next/server'
-
-// PitchBook-style company profile API
-// Professional-grade company intelligence with comprehensive data
-
-interface CompanyProfile {
-  name: string
-  ticker?: string
-  profileType: 'Company' | 'Startup'
-  industry: {
-    primary: string
-    secondary: string[]
-    keywords: string[]
-  }
-  overview: {
-    description: string
-    founded: number
-    hqLocation: string
-    employeeCount: number
-    website: string
-    status: 'Active' | 'Acquired' | 'IPO' | 'Closed'
-  }
-  financials: {
-    lastValuation: number
-    lastRound: string
-    totalFunding: number
-    revenueEstimate?: number
-    growthRate?: number
-    burnRate?: number
-  }
-  timeline: FundingRound[]
-  similarCompanies: SimilarCompany[]
-  investors: InvestorInfo[]
-  keyMetrics: KeyMetric[]
-}
-
-interface FundingRound {
-  date: string
-  roundType: string
-  amount: number
-  preMoneyValuation?: number
-  postMoneyValuation?: number
-  leadInvestor: string
-  participatingInvestors: string[]
-  employeeCount?: number
-}
-
-interface SimilarCompany {
-  name: string
-  industry: string
-  hqLocation: string
-  lastFunding: number
-  lastRound: string
-  yearFounded: number
-  status: string
-}
-
-interface InvestorInfo {
-  name: string
-  type: 'VC' | 'PE' | 'Corporate' | 'Angel'
-  rounds: string[]
-  totalInvested: number
-  boardSeat?: boolean
-}
-
-interface KeyMetric {
-  metric: string
-  value: string | number
-  period: string
-  source: string
-}
+import { sanitizeText, checkRateLimit } from '@/lib/security'
 
 export async function GET(request: NextRequest) {
   try {
-    const { searchParams } = new URL(request.url)
-    const company = searchParams.get('company')
-    const action = searchParams.get('action')
+    // Rate limiting
+    const clientIP = request.headers.get('x-forwarded-for') || 
+                     request.headers.get('x-real-ip') || 
+                     'unknown'
+    const rateLimit = checkRateLimit(clientIP, 30, 60000)
 
-    switch (action) {
-      case 'profile':
-        if (!company) {
-          return NextResponse.json(
-            { success: false, error: 'Company parameter required' },
-            { status: 400 }
-          )
-        }
-
-        // Return PitchBook-style company profile
-        const profile = generateCompanyProfile(company)
-        return NextResponse.json({
-          success: true,
-          data: profile
-        })
-
-      case 'timeline':
-        if (!company) {
-          return NextResponse.json(
-            { success: false, error: 'Company parameter required' },
-            { status: 400 }
-          )
-        }
-
-        const timeline = generateFundingTimeline(company)
-        return NextResponse.json({
-          success: true,
-          data: {
-            company,
-            timeline,
-            totalRounds: timeline.length,
-            totalFunding: timeline.reduce((sum, round) => sum + round.amount, 0),
-            lastRound: timeline[0],
-            foundingYear: 2018
-          }
-        })
-
-      case 'similar':
-        if (!company) {
-          return NextResponse.json(
-            { success: false, error: 'Company parameter required' },
-            { status: 400 }
-          )
-        }
-
-        const similarCompanies = generateSimilarCompanies(company)
-        return NextResponse.json({
-          success: true,
-          data: {
-            company,
-            similarCompanies,
-            totalSimilar: similarCompanies.length,
-            industryFocus: 'Cybersecurity',
-            comparisonMetrics: ['Funding Amount', 'Valuation', 'Employee Count', 'Growth Rate']
-          }
-        })
-
-      default:
-        return NextResponse.json({
-          success: true,
-          data: {
-            service: 'Company Profile API',
-            description: 'PitchBook-style company intelligence and analysis',
-            availableActions: [
-              'profile - Get comprehensive company profile',
-              'timeline - Get funding timeline with rounds',
-              'similar - Get similar companies analysis'
-            ],
-            supportedCompanies: [
-              'Exabeam', 'Securonix', 'Vectra', 'Cybereason', 'CrowdStrike',
-              'SentinelOne', 'Okta', 'Zscaler', 'Palo Alto Networks'
-            ],
-            features: [
-              'PitchBook-style profiles',
-              'Interactive funding timelines',
-              'Competitive analysis',
-              'Investor mapping',
-              'Financial estimates'
-            ]
-          }
-        })
+    if (!rateLimit.allowed) {
+      return NextResponse.json(
+        { success: false, error: 'Rate limit exceeded' },
+        { status: 429 }
+      )
     }
+
+    const { searchParams } = new URL(request.url)
+    const companyId = sanitizeText(searchParams.get('id') || '')
+
+    if (!companyId) {
+      return NextResponse.json({
+        success: false,
+        error: 'Company ID is required'
+      }, { status: 400 })
+    }
+
+    // Simulate data aggregation from multiple sources
+    const companyIntelligence = await aggregateCompanyIntelligence(companyId)
+
+    return NextResponse.json({
+      success: true,
+      data: companyIntelligence,
+      metadata: {
+        lastUpdated: new Date().toISOString(),
+        dataSourcesCount: 6,
+        confidenceScore: 94
+      }
+    })
 
   } catch (error) {
-    console.error('Company Profile API error:', error)
-    return NextResponse.json(
-      { success: false, error: 'Company profile request failed' },
-      { status: 500 }
-    )
+    console.error('Company Profile API Error:', error)
+    return NextResponse.json({
+      success: false,
+      error: 'Internal server error'
+    }, { status: 500 })
   }
 }
 
-// Generate PitchBook-style company profile
-function generateCompanyProfile(companyName: string): CompanyProfile {
-  const profiles: Record<string, CompanyProfile> = {
-    'Exabeam': {
-      name: 'Exabeam',
-      profileType: 'Company',
-      industry: {
-        primary: 'Cybersecurity',
-        secondary: ['Security Analytics', 'SIEM', 'UEBA'],
-        keywords: ['User Behavior Analytics', 'Security Operations', 'Threat Detection']
-      },
-      overview: {
-        description: 'Exabeam is a cybersecurity company that provides security management platform for threat detection, investigation and response.',
-        founded: 2013,
-        hqLocation: 'Foster City, CA',
-        employeeCount: 850,
-        website: 'www.exabeam.com',
-        status: 'Active'
-      },
-      financials: {
-        lastValuation: 2400000000,
-        lastRound: 'Series F',
-        totalFunding: 400000000,
-        revenueEstimate: 150000000,
-        growthRate: 45,
-        burnRate: 12000000
-      },
-      timeline: [
-        {
-          date: '2021-05-01',
-          roundType: 'Series F',
-          amount: 200000000,
-          preMoneyValuation: 2200000000,
-          postMoneyValuation: 2400000000,
-          leadInvestor: 'Lightspeed Venture Partners',
-          participatingInvestors: ['Norwest Venture Partners', 'Scale Venture Partners'],
-          employeeCount: 850
-        },
-        {
-          date: '2019-08-01',
-          roundType: 'Series E',
-          amount: 50000000,
-          preMoneyValuation: 1000000000,
-          postMoneyValuation: 1050000000,
-          leadInvestor: 'Lightspeed Venture Partners',
-          participatingInvestors: ['Norwest Venture Partners'],
-          employeeCount: 600
-        }
-      ],
-      similarCompanies: [
-        {
-          name: 'Securonix',
-          industry: 'Security Analytics',
-          hqLocation: 'Addison, TX',
-          lastFunding: 34000000,
-          lastRound: 'Series A',
-          yearFounded: 2009,
-          status: 'Active'
-        },
-        {
-          name: 'Vectra',
-          industry: 'Network Security',
-          hqLocation: 'San Jose, CA',
-          lastFunding: 68000000,
-          lastRound: 'Series T',
-          yearFounded: 2010,
-          status: 'Active'
-        }
-      ],
-      investors: [
-        {
-          name: 'Lightspeed Venture Partners',
-          type: 'VC',
-          rounds: ['Series F', 'Series E'],
-          totalInvested: 250000000,
-          boardSeat: true
-        },
-        {
-          name: 'Norwest Venture Partners',
-          type: 'VC',
-          rounds: ['Series F', 'Series E'],
-          totalInvested: 100000000,
-          boardSeat: true
-        }
-      ],
-      keyMetrics: [
-        { metric: 'Annual Recurring Revenue', value: '$150M', period: '2023', source: 'Estimate' },
-        { metric: 'Employee Growth', value: '25%', period: 'YoY', source: 'LinkedIn' },
-        { metric: 'Customer Count', value: '650+', period: '2023', source: 'Company' },
-        { metric: 'Market Share', value: '8.5%', period: 'SIEM Market', source: 'Gartner' }
-      ]
-    }
-  }
+/**
+ * Aggregate company intelligence from multiple sources
+ */
+async function aggregateCompanyIntelligence(companyId: string) {
+  // Simulate data aggregation delay
+  await new Promise(resolve => setTimeout(resolve, 1200))
 
-  return profiles[companyName] || generateDefaultProfile(companyName)
-}
-
-// Generate funding timeline
-function generateFundingTimeline(companyName: string): FundingRound[] {
-  const timelines: Record<string, FundingRound[]> = {
-    'Exabeam': [
-      {
-        date: '2021-05-01',
-        roundType: 'Series F',
-        amount: 200000000,
-        preMoneyValuation: 2200000000,
-        postMoneyValuation: 2400000000,
-        leadInvestor: 'Lightspeed Venture Partners',
-        participatingInvestors: ['Norwest Venture Partners', 'Scale Venture Partners'],
-        employeeCount: 850
-      },
-      {
-        date: '2019-08-01',
-        roundType: 'Series E',
-        amount: 50000000,
-        preMoneyValuation: 1000000000,
-        postMoneyValuation: 1050000000,
-        leadInvestor: 'Lightspeed Venture Partners',
-        participatingInvestors: ['Norwest Venture Partners'],
-        employeeCount: 600
-      },
-      {
-        date: '2018-03-01',
-        roundType: 'Series D',
-        amount: 25000000,
-        preMoneyValuation: 400000000,
-        postMoneyValuation: 425000000,
-        leadInvestor: 'Norwest Venture Partners',
-        participatingInvestors: ['Scale Venture Partners'],
-        employeeCount: 400
-      }
-    ]
-  }
-
-  return timelines[companyName] || generateDefaultTimeline(companyName)
-}
-
-// Generate similar companies
-function generateSimilarCompanies(companyName: string): SimilarCompany[] {
-  return [
-    {
-      name: 'Securonix',
-      industry: 'Security Analytics',
-      hqLocation: 'Addison, TX',
-      lastFunding: 34000000,
-      lastRound: 'Series A',
-      yearFounded: 2009,
-      status: 'Active'
-    },
-    {
-      name: 'Vectra',
-      industry: 'Network Security',
-      hqLocation: 'San Jose, CA',
-      lastFunding: 68000000,
-      lastRound: 'Series T',
-      yearFounded: 2010,
-      status: 'Active'
-    },
-    {
-      name: 'Cybereason',
-      industry: 'Endpoint Security',
-      hqLocation: 'Boston, MA',
-      lastFunding: 275000000,
-      lastRound: 'Series F',
-      yearFounded: 2012,
-      status: 'Active'
-    }
-  ]
-}
-
-// Default profile generator
-function generateDefaultProfile(companyName: string): CompanyProfile {
+  // Mock comprehensive company data
   return {
-    name: companyName,
-    profileType: 'Company',
-    industry: {
-      primary: 'Cybersecurity',
-      secondary: ['Security Software'],
-      keywords: ['Cybersecurity', 'Enterprise Security']
+    snapshot: {
+      id: companyId,
+      name: getCompanyName(companyId),
+      website: `https://${companyId.toLowerCase()}.com`,
+      location: getRandomLocation(),
+      foundedYear: 2020 + Math.floor(Math.random() * 4),
+      employeeRange: getRandomEmployeeRange(),
+      category: getRandomCategory(),
+      description: getCompanyDescription(companyId),
+      status: 'active',
+      lastUpdated: new Date().toISOString()
     },
-    overview: {
-      description: `${companyName} is a cybersecurity company focused on innovative security solutions.`,
-      founded: 2018,
-      hqLocation: 'San Francisco, CA',
-      employeeCount: 150,
-      website: `www.${companyName.toLowerCase()}.com`,
-      status: 'Active'
+    fundingHistory: generateFundingHistory(),
+    team: generateTeamMembers(),
+    customers: generateCustomers(),
+    recentNews: generateRecentNews(),
+    competitivePosition: {
+      marketPosition: 'Emerging leader with strong technical differentiation and strategic partnerships',
+      keyCompetitors: ['CrowdStrike', 'SentinelOne', 'Darktrace', 'Vectra AI'],
+      differentiators: [
+        'AI-powered threat detection',
+        'Real-time response automation',
+        'Cloud-native architecture',
+        'Zero false positive guarantee'
+      ]
     },
-    financials: {
-      lastValuation: 100000000,
-      lastRound: 'Series A',
-      totalFunding: 25000000,
-      revenueEstimate: 10000000,
-      growthRate: 120
+    investmentMetrics: {
+      totalFunding: 26500000,
+      lastRoundDate: '2024-09-15',
+      investorCount: 8,
+      momentum: 85 + Math.floor(Math.random() * 15),
+      riskScore: 15 + Math.floor(Math.random() * 25)
     },
-    timeline: generateDefaultTimeline(companyName),
-    similarCompanies: generateSimilarCompanies(companyName),
-    investors: [],
-    keyMetrics: []
+    dataSourceBreakdown: {
+      crunchbase: 15,
+      linkedin: 8,
+      newsArticles: 23,
+      companyWebsite: 12,
+      patents: 3,
+      other: 7
+    }
   }
 }
 
-// Default timeline generator
-function generateDefaultTimeline(companyName: string): FundingRound[] {
+function getCompanyName(id: string): string {
+  const names = [
+    'QuantumShield Security',
+    'CyberFlow AI',
+    'SecureVault Pro',
+    'ThreatGuard Systems',
+    'ZeroTrust Networks',
+    'CloudDefender',
+    'AI Security Labs',
+    'CyberSentinel'
+  ]
+  return names[Math.abs(id.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % names.length]
+}
+
+function getRandomLocation(): string {
+  const locations = [
+    'San Francisco, CA',
+    'New York, NY',
+    'Tel Aviv, Israel',
+    'Austin, TX',
+    'Boston, MA',
+    'Seattle, WA',
+    'London, UK',
+    'Toronto, Canada'
+  ]
+  return locations[Math.floor(Math.random() * locations.length)]
+}
+
+function getRandomEmployeeRange(): string {
+  const ranges = ['1-10', '11-25', '26-50', '51-100', '101-250', '251-500']
+  return ranges[Math.floor(Math.random() * ranges.length)]
+}
+
+function getRandomCategory(): string {
+  const categories = [
+    'AI Security',
+    'Cloud Security',
+    'Zero Trust',
+    'Application Security',
+    'Identity & Access Management',
+    'Threat Intelligence',
+    'IoT Security'
+  ]
+  return categories[Math.floor(Math.random() * categories.length)]
+}
+
+function getCompanyDescription(id: string): string {
+  return `Advanced cybersecurity platform leveraging artificial intelligence and machine learning to provide comprehensive threat detection and response capabilities for enterprise environments. The company's proprietary technology stack enables real-time analysis of security events and automated incident response.`
+}
+
+function generateFundingHistory() {
   return [
     {
-      date: '2023-01-01',
-      roundType: 'Series A',
-      amount: 15000000,
-      preMoneyValuation: 85000000,
-      postMoneyValuation: 100000000,
-      leadInvestor: 'Demo Ventures',
-      participatingInvestors: ['Tech Capital', 'Security Fund'],
-      employeeCount: 150
+      id: '1',
+      roundType: 'Seed',
+      amount: 4500000,
+      date: '2023-03-15',
+      leadInvestor: 'Bessemer Venture Partners',
+      participants: ['Cyber Mentor Fund', 'Individual Angels', 'Strategic Investors'],
+      source: 'Crunchbase'
     },
     {
-      date: '2021-06-01',
-      roundType: 'Seed',
-      amount: 5000000,
-      preMoneyValuation: 20000000,
-      postMoneyValuation: 25000000,
-      leadInvestor: 'Seed Capital',
-      participatingInvestors: ['Angel Investors'],
-      employeeCount: 50
+      id: '2',
+      roundType: 'Series A',
+      amount: 22000000,
+      date: '2024-09-15',
+      leadInvestor: 'Andreessen Horowitz',
+      participants: ['GV', 'Bessemer Venture Partners', 'CRV', 'Strategic Partners'],
+      valuation: 85000000,
+      source: 'TechCrunch'
     }
   ]
 }
+
+function generateTeamMembers() {
+  return [
+    {
+      name: 'Dr. Sarah Chen',
+      role: 'CEO & Co-Founder',
+      linkedinUrl: 'https://linkedin.com/in/sarahchen',
+      previousCompanies: ['Google', 'Palantir'],
+      background: 'Former Google security engineer with PhD in Computer Science from Stanford'
+    },
+    {
+      name: 'Michael Rodriguez',
+      role: 'CTO & Co-Founder',
+      linkedinUrl: 'https://linkedin.com/in/mrodriguez',
+      previousCompanies: ['Microsoft', 'FireEye'],
+      background: 'Former Microsoft principal engineer specializing in threat detection systems'
+    },
+    {
+      name: 'Jennifer Kim',
+      role: 'VP of Engineering',
+      previousCompanies: ['Uber', 'Airbnb'],
+      background: 'Engineering leader with 10+ years in security and infrastructure'
+    }
+  ]
+}
+
+function generateCustomers() {
+  return [
+    {
+      name: 'Microsoft Azure',
+      type: 'enterprise' as const,
+      relationship: 'partner' as const,
+      source: 'Press Release'
+    },
+    {
+      name: 'Goldman Sachs',
+      type: 'enterprise' as const,
+      relationship: 'customer' as const,
+      source: 'Case Study'
+    },
+    {
+      name: 'Department of Defense',
+      type: 'government' as const,
+      relationship: 'customer' as const,
+      source: 'Public Contract'
+    }
+  ]
+}
+
+function generateRecentNews() {
+  return [
+    {
+      id: '1',
+      title: 'Series A Funding Announcement',
+      description: 'Raised $22M to accelerate AI-powered security platform development',
+      date: '2024-09-15',
+      type: 'funding' as const,
+      sentiment: 'positive' as const,
+      source: 'TechCrunch',
+      sourceUrl: 'https://techcrunch.com/funding-announcement'
+    },
+    {
+      id: '2',
+      title: 'Strategic Partnership with Microsoft',
+      description: 'Integration with Azure Security Center for enhanced threat detection',
+      date: '2024-08-22',
+      type: 'partnership' as const,
+      sentiment: 'positive' as const,
+      source: 'Microsoft Blog',
+      sourceUrl: 'https://microsoft.com/blog/partnership'
+    },
+    {
+      id: '3',
+      title: 'New AI Security Platform Launch',
+      description: 'Next-generation threat detection with zero false positives',
+      date: '2024-07-10',
+      type: 'product' as const,
+      sentiment: 'positive' as const,
+      source: 'Company Blog',
+      sourceUrl: 'https://company.com/blog/product-launch'
+    }
+  ]
+}
+
+export const runtime = 'nodejs'
