@@ -16,7 +16,8 @@
     "db:push": "pnpm dlx prisma db push",
     "db:generate": "pnpm dlx prisma generate",
     "db:migrate": "pnpm dlx prisma migrate dev",
-    "db:reset": "pnpm dlx prisma migrate reset"
+    "db:reset": "pnpm dlx prisma migrate reset",
+    "db:seed": "pnpm dlx prisma db seed"
   },
   "dependencies": {
     "@prisma/client": "^6.16.3",
@@ -85,5 +86,8 @@
     "prisma": "^6.16.3",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "prisma": {
+    "seed": "pnpm dlx tsx prisma/seed.ts"
   }
 }

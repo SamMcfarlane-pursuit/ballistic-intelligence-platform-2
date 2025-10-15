@@ -396,3 +396,36 @@ model ConventionCompany {
   
   @@map("convention_companies")
 }
+
+model VerificationTask {
+  id              String   @id @default(cuid())
+  type            String
+  priority        String
+  status          String
+  title           String
+  description     String
+  conflictDetails String
+  sources         Json
+  createdAt       DateTime @default(now())
+  dueDate         DateTime
+  companyName     String?
+  flaggedBy       String
+  assignedTo      String?
+
+  @@map("verification_tasks")
+}
+
+model VerificationStats {
+  id                      String @id @default(cuid())
+  totalTasks              Int
+  pendingTasks            Int
+  inReviewTasks           Int
+  completedToday          Int
+  highPriorityTasks       Int
+  averageResolutionTime   Float
+  tasksByType             Json
+  createdAt               DateTime @default(now())
+  updatedAt               DateTime @updatedAt
+
+  @@map("verification_stats")
+}

@@ -65,6 +65,7 @@ export function middleware(request: NextRequest) {
   )
   
   if (isSensitivePath) {
+    /*
     securityManager.logSecurityEvent({
       type: 'data_access',
       message: `Access to sensitive path: ${request.nextUrl.pathname}`,
@@ -77,6 +78,7 @@ export function middleware(request: NextRequest) {
         timestamp: new Date().toISOString()
       }
     })
+    */
   }
   
   return response
