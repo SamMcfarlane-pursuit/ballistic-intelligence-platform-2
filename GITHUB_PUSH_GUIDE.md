@@ -1,109 +1,165 @@
-# Ballistic Intelligence Platform - GitHub Push Guide
+# 🚀 Quick GitHub Push Guide
 
-## Quick Setup Commands
+## Push Your Updates to GitHub
 
-### Step 1: Create GitHub Repository
-1. Go to [github.com](https://github.com)
-2. Click "+" → "New repository"
-3. Repository name: `ballistic-intelligence-platform`
-4. Choose Public/Private
-5. **Do not** initialize with README
-6. Click "Create repository"
+Your project is already connected to GitHub at:
+**https://github.com/SamMcfarlane-pursuit/ballistic-intelligence-platform**
 
-### Step 2: Copy Your Repository URL
-After creating, you'll see a URL like:
-```
-https://github.com/YOUR_USERNAME/ballistic-intelligence-platform.git
-```
+---
 
-### Step 3: Run These Commands
+## Option 1: Automated Push (Recommended)
+
+I've created an automated script for you:
 
 ```bash
-# Add the remote repository (replace with your URL)
-git remote add origin https://github.com/YOUR_USERNAME/ballistic-intelligence-platform.git
+# Make the script executable
+chmod +x push-trending-updates.sh
 
-# Verify the remote was added
-git remote -v
-
-# Push your code to GitHub
-git push -u origin master
+# Run the script
+./push-trending-updates.sh
 ```
 
-## Alternative: If You Want to Use SSH
+The script will:
+1. ✅ Show you what files will be committed
+2. ✅ Create a detailed commit message
+3. ✅ Ask for confirmation before pushing
+4. ✅ Push to GitHub with full documentation
+
+---
+
+## Option 2: Manual Push
+
+If you prefer to do it manually:
 
 ```bash
-# Add SSH remote (replace with your URL)
-git remote add origin git@github.com:YOUR_USERNAME/ballistic-intelligence-platform.git
+# 1. Stage all changes
+git add .
 
-# Push with SSH
-git push -u origin master
+# 2. Commit with message
+git commit -m "feat: Implement Trending Factors Pipeline with Enhanced UI
+
+- Added trending calculation engine with 5-factor algorithm
+- Created 7 RESTful API endpoints for trending analysis
+- Built interactive TrendingFactorsCard component
+- Enhanced display with prominent company information
+- Integrated into Executive Dashboard and Portfolio pages
+- Complete documentation and testing"
+
+# 3. Push to GitHub
+git push origin master
 ```
 
-## Verification Commands
+---
 
-After pushing, run these to verify:
+## What Will Be Pushed
 
-```bash
-# Check remote configuration
-git remote -v
+### 🆕 New Features
+- **Trending Factors Pipeline** - Complete data pipeline for trending analysis
+- **7 API Endpoints** - RESTful APIs for trending data
+- **Enhanced UI Component** - TrendingFactorsCard with prominent display
+- **Dashboard Integration** - Added to both Executive and Portfolio dashboards
 
-# Check branch tracking
-git branch -vv
+### 📁 New Files (7 files)
+1. `src/lib/trending-factors.ts` - Calculation engine (323 lines)
+2. `src/app/api/trending-factors/route.ts` - API endpoints (373 lines)
+3. `src/components/trending/TrendingFactorsCard.tsx` - Frontend component (372 lines)
+4. `TRENDING_FACTORS_VERIFICATION.md` - Verification report
+5. `PIPELINE_SUMMARY.md` - Implementation summary
+6. `VERIFICATION_COMPLETE.md` - Final verification
+7. `TRENDING_CARD_UPDATE.md` - Component update details
 
-# Check status
-git status
-```
+### ✏️ Modified Files (2 files)
+1. `src/app/executive-dashboard/page.tsx` - Added TrendingFactorsCard
+2. `src/app/ballistic-portfolio-new/page.tsx` - Added TrendingFactorsCard
+
+### 🧪 Test Files
+1. `test_trending_pipeline.sh` - Automated API testing
+
+---
+
+## After Pushing
+
+Once pushed to GitHub, your repository will include:
+
+✅ **Trending Factors Pipeline** - Full implementation  
+✅ **API Documentation** - 7 endpoints with examples  
+✅ **Component Library** - Enhanced UI components  
+✅ **Test Suite** - Automated testing scripts  
+✅ **Complete Documentation** - 4 comprehensive markdown files  
+
+---
+
+## Verify on GitHub
+
+After pushing, visit:
+**https://github.com/SamMcfarlane-pursuit/ballistic-intelligence-platform**
+
+You should see:
+- New commit with "feat: Implement Trending Factors Pipeline"
+- All new files in the repository
+- Updated documentation
+- Commit timestamp showing latest changes
+
+---
 
 ## Troubleshooting
 
-### If you get authentication errors:
-1. Make sure you're logged into GitHub
-2. For HTTPS: You may need to use a personal access token
-3. For SSH: Make sure your SSH key is configured
-
-### If push fails:
+### Issue: Authentication Required
 ```bash
-# Try force push (be careful with this)
-git push -f origin master
+# If you need to authenticate, GitHub may prompt for credentials
+# Use GitHub Personal Access Token instead of password
+```
 
-# Or check if there are conflicts
+### Issue: Push Rejected
+```bash
+# If remote has changes you don't have locally
 git pull origin master --rebase
 git push origin master
 ```
 
-## Current Project Status
-
-✅ **All changes committed**
-- Latest commit: `809426c feat: Update README and add GitHub setup instructions`
-- Working tree: Clean
-- Ready to push
-
-📁 **Project Structure**
-- Complete Next.js 15 application
-- shadcn/ui components
-- TypeScript configuration
-- Database setup with Prisma
-- Comprehensive documentation
-- Production-ready features
-
-## Next Steps After Push
-
-1. **Visit your repository** on GitHub
-2. **Verify all files** are present
-3. **Set up GitHub Pages** (optional for deployment)
-4. **Configure repository settings** (branch protection, etc.)
-5. **Add collaborators** if needed
-
-## Repository Features
-
-Your repository includes:
-- 🚀 **Modern Tech Stack**: Next.js 15, TypeScript, Tailwind CSS
-- 🎨 **Professional UI**: shadcn/ui components with responsive design
-- 📊 **Dashboard**: Cybersecurity investment intelligence platform
-- 🗄️ **Database**: Prisma + SQLite setup
-- 📚 **Documentation**: Complete README and setup guides
-- 🔧 **Development Tools**: ESLint, TypeScript configuration
+### Issue: Merge Conflicts
+```bash
+# If there are conflicts after pull
+# Resolve conflicts in your editor
+git add .
+git rebase --continue
+git push origin master
+```
 
 ---
 
-**Good luck with your Ballistic Intelligence Platform!** 🎯
+## Need Help?
+
+If you encounter any issues:
+
+1. **Check Git Status:**
+   ```bash
+   git status
+   ```
+
+2. **Check Remote:**
+   ```bash
+   git remote -v
+   ```
+
+3. **View Commit History:**
+   ```bash
+   git log --oneline -5
+   ```
+
+---
+
+## Ready to Push? 🚀
+
+Run the automated script:
+```bash
+./push-trending-updates.sh
+```
+
+Or use manual commands above. Either way, your Trending Factors Pipeline will be safely pushed to GitHub!
+
+---
+
+**Repository:** https://github.com/SamMcfarlane-pursuit/ballistic-intelligence-platform  
+**Branch:** master  
+**Status:** Ready to push ✅

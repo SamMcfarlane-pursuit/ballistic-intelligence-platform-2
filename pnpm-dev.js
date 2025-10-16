@@ -34,20 +34,20 @@ async function killPortProcesses(port) {
 
 async function startServer() {
   try {
-    // Kill any existing processes on port 3000
-    await killPortProcesses(3000);
+    // Kill any existing processes on port 4000
+    await killPortProcesses(4000);
     
-    console.log('✅ Port 3000 cleared');
+    console.log('✅ Port 4000 cleared');
     console.log('🌐 Starting Next.js development server with PNPM...\n');
-    console.log('📍 Server will be available at: http://localhost:3000');
-    console.log('📊 Executive Dashboard: http://localhost:3000/executive');
-    console.log('📈 News Signals: http://localhost:3000/news-signals');
-    console.log('🔍 Missed Opportunities: http://localhost:3000/missed-opportunities');
-    console.log('🏢 Company Deep Dive: http://localhost:3000/company/[id]');
+    console.log('📍 Server will be available at: http://localhost:4000');
+    console.log('📊 Executive Dashboard: http://localhost:4000/executive');
+    console.log('📈 News Signals: http://localhost:4000/news-signals');
+    console.log('🔍 Missed Opportunities: http://localhost:4000/missed-opportunities');
+    console.log('🏢 Company Deep Dive: http://localhost:4000/company/[id]');
     console.log('\n' + '='.repeat(60) + '\n');
     
     // Start Next.js with pnpm
-    const devServer = spawn('pnpm', ['dlx', 'next', 'dev', '-p', '3000'], {
+    const devServer = spawn('pnpm', ['dlx', 'next', 'dev', '-p', '4000'], {
       stdio: 'inherit',
       shell: true,
       env: {
@@ -74,7 +74,7 @@ async function startServer() {
   } catch (error) {
     console.error('❌ Error starting development server:', error.message);
     console.log('\n💡 Try running: pnpm run check');
-    console.log('💡 Or manually: pnpm dlx next dev -p 3000');
+    console.log('💡 Or manually: pnpm dlx next dev -p 4000');
     process.exit(1);
   }
 }

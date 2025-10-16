@@ -76,10 +76,6 @@ import {
   Announcer,
   FocusTrap
 } from '@/components/accessibility-utils'
-import AIConferenceAnalyst from '@/components/ai-conference-analyst'
-import AICompanyResearcher from '@/components/ai-company-researcher'
-import AIInvestmentAdvisor from '@/components/ai-investment-advisor'
-import AIVulnerabilityIntelligence from '@/components/ai-vulnerability-intelligence'
 import ConciseAIAnalyst from '@/components/concise-ai-analyst'
 import ResearchDashboard from '@/components/research-dashboard'
 import FundingCharts from '@/components/funding-charts'
@@ -90,17 +86,13 @@ import DealMap from '@/components/deal-map'
 import ConvergenceInsights from '@/components/convergence-insights'
 import PersonalizedExperience from '@/components/personalized-experience'
 import CollaborationHub from '@/components/collaboration-hub'
-import ActionableInsightsEngine from '@/components/actionable-insights-engine'
-import CybersecurityFundingLandscape from '@/components/cybersecurity-funding-landscape'
-import VentureCapitalList from '@/components/venture-capital-list'
-import BallisticFundingDatabase from '@/components/ballistic-funding-database'
 import DealFlowSourcing from '@/components/deal-flow-sourcing'
 
 export default function EnhancedDashboard() {
   const { stats, fundingOverTime, fundingByStage, vulnerabilities, loading, error } = useDashboardData()
   const { user, logout, hasPermission } = useAuth()
   const { isMobile, isTablet, isDesktop } = useResponsive()
-  const [activeTab, setActiveTab] = useState<'overview' | 'deal-map' | 'funding-landscape' | 'venture-capital' | 'ballistic-database' | 'deal-flow' | 'convergence' | 'personalized' | 'collaboration' | 'insights-engine' | 'ai-analyst' | 'ai-researcher' | 'ai-advisor' | 'ai-vulnerability' | 'concise-ai' | 'research-dashboard'>('overview')
+  const [activeTab, setActiveTab] = useState<'overview' | 'deal-map' | 'funding-landscape' | 'venture-capital' | 'ballistic-database' | 'deal-flow' | 'concise-ai' | 'research-dashboard'>('overview')
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [currentTime, setCurrentTime] = useState('')
@@ -148,19 +140,6 @@ export default function EnhancedDashboard() {
       icon: Map,
       description: 'Investment opportunities pipeline'
     },
-    { 
-      id: 'ai-vulnerability', 
-      label: 'Threat Intelligence', 
-      icon: Zap, 
-      permission: 'ai_analysis',
-      description: 'Security landscape monitoring'
-    },
-    { 
-      id: 'venture-capital', 
-      label: 'VC Network', 
-      icon: Briefcase,
-      description: 'Investor ecosystem insights'
-    }
   ].filter(item => !item.permission || hasPermission(item.permission))
 
   // Enhanced business metrics with sophisticated data structure
@@ -747,21 +726,10 @@ export default function EnhancedDashboard() {
 
           {/* Render other tabs with enhanced styling */}
           {activeTab === 'deal-map' && <DealMap />}
-          {activeTab === 'funding-landscape' && <CybersecurityFundingLandscape />}
-          {activeTab === 'venture-capital' && <VentureCapitalList />}
-          {activeTab === 'ballistic-database' && <BallisticFundingDatabase />}
           {activeTab === 'deal-flow' && <DealFlowSourcing />}
-          {activeTab === 'convergence' && <ConvergenceInsights />}
-          {activeTab === 'personalized' && <PersonalizedExperience />}
-          {activeTab === 'collaboration' && <CollaborationHub />}
-          {activeTab === 'insights-engine' && <ActionableInsightsEngine />}
 
           {activeTab === 'research-dashboard' && <ResearchDashboard />}
           {activeTab === 'concise-ai' && <ConciseAIAnalyst />}
-          {activeTab === 'ai-analyst' && <AIConferenceAnalyst />}
-          {activeTab === 'ai-researcher' && <AICompanyResearcher />}
-          {activeTab === 'ai-advisor' && <AIInvestmentAdvisor />}
-          {activeTab === 'ai-vulnerability' && <AIVulnerabilityIntelligence />}
           </main>
         </ResponsiveMainContent>
       </ResponsiveContainer>

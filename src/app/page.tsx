@@ -31,7 +31,7 @@ export default function HomePage() {
             <Link href="/executive-dashboard">
               <Button size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 w-full sm:w-auto">
                 <Target className="mr-2 h-5 w-5" />
-                Access Executive Dashboard
+                Access Ball-Intel Dashboard
               </Button>
             </Link>
             

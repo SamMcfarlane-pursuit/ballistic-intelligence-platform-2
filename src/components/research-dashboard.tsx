@@ -379,37 +379,7 @@ export default function ResearchDashboard() {
                 </Card>
               </div>
 
-              {/* AI Insights */}
-              {technicalData.aiInsights && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Lightbulb className="h-5 w-5 text-yellow-600" />
-                      AI Technical Insights
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-4">
-                      {technicalData.aiInsights.technologyTrends && (
-                        <div>
-                          <h4 className="font-medium mb-2">Technology Trends</h4>
-                          <p className="text-sm text-muted-foreground">
-                            {typeof technicalData.aiInsights.technologyTrends === 'string' 
-                              ? technicalData.aiInsights.technologyTrends
-                              : JSON.stringify(technicalData.aiInsights.technologyTrends)}
-                          </p>
-                        </div>
-                      )}
-                      {technicalData.aiInsights.yearEndSummary && (
-                        <div>
-                          <h4 className="font-medium mb-2">Year-End Summary</h4>
-                          <p className="text-sm text-muted-foreground">{technicalData.aiInsights.yearEndSummary}</p>
-                        </div>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+
             </>
           )}
         </TabsContent>

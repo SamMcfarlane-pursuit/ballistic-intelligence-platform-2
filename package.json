@@ -4,20 +4,23 @@
   "private": true,
   "scripts": {
     "dev": "node pnpm-dev.js",
-    "dev:simple": "pnpm dlx next dev -p 3000",
+    "dev:simple": "pnpm dlx next dev -p 4000",
     "dev:clean": "node dev-server.js",
     "dev:legacy": "node start-dev-clean.js",
     "dev-server": "nodemon --exec \"pnpm dlx tsx server.ts\" --watch server.ts --watch src --ext ts,tsx,js,jsx",
     "build": "next build",
-    "start": "next start -p 3000",
+    "start": "next start -p 4000",
     "start:custom": "NODE_ENV=production pnpm dlx tsx server.ts",
     "lint": "next lint",
     "check": "node check-localhost-ready.js",
+    "verify": "node verify-backend-services.js",
     "db:push": "pnpm dlx prisma db push",
     "db:generate": "pnpm dlx prisma generate",
     "db:migrate": "pnpm dlx prisma migrate dev",
     "db:reset": "pnpm dlx prisma migrate reset",
-    "db:seed": "pnpm dlx prisma db seed"
+    "db:seed": "pnpm dlx prisma db seed",
+    "db:studio": "pnpm dlx prisma studio",
+    "db:setup": "pnpm dlx prisma generate && pnpm dlx prisma db push"
   },
   "dependencies": {
     "@prisma/client": "^6.16.3",

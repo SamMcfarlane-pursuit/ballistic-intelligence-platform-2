@@ -402,21 +402,15 @@ export default function DataManagement() {
               <DataPreviewCard data={extractedData} />
             )}
             
-            {/* AI Insights */}
-            {aiInsights && (
-              <AIInsightsCard insights={aiInsights} />
-            )}
-            
             {/* Startup Detection */}
             {startupDetection && (
               <StartupDetectionCard detection={startupDetection} />
             )}
             
             {/* Detailed Analysis */}
-            {extractedData && aiInsights && (
+            {extractedData && (
               <DetailedAnalysisCard 
                 data={extractedData} 
-                insights={aiInsights}
                 show={showDetailedAnalysis}
                 onToggle={() => setShowDetailedAnalysis(!showDetailedAnalysis)}
               />
@@ -855,82 +849,6 @@ function DataPreviewCard({ data }: { data: CompanyData }) {
   )
 }
 
-// AI Insights Card Component
-function AIInsightsCard({ insights }: { insights: AIInsights }) {
-  const getRecommendationColor = (rec: string) => {
-    switch (rec) {
-      case 'strong_buy': return 'text-green-400 bg-green-400/10'
-      case 'buy': return 'text-blue-400 bg-blue-400/10'
-      case 'hold': return 'text-yellow-400 bg-yellow-400/10'
-      case 'pass': return 'text-red-400 bg-red-400/10'
-      default: return 'text-slate-400 bg-slate-400/10'
-    }
-  }
-
-  return (
-    <Card className="bg-slate-800/50 border-slate-700">
-      <CardHeader className="pb-3">
-        <CardTitle className="text-white flex items-center gap-2">
-          <Brain className="w-4 h-4 text-purple-400" />
-          AI Insights
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {/* Investment Recommendation */}
-        <div className="flex items-center justify-between">
-          <span className="text-slate-300 text-sm">Investment Recommendation</span>
-          <Badge className={getRecommendationColor(insights.investmentRecommendation)}>
-            {insights.investmentRecommendation.replace('_', ' ').toUpperCase()}
-          </Badge>
-        </div>
-
-        {/* Key Metrics */}
-        <div className="grid grid-cols-2 gap-3">
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-slate-400 text-xs">Industry Match</span>
-              <span className="text-white text-xs">{insights.industryMatch}%</span>
-            </div>
-            <Progress value={insights.industryMatch} className="h-1" />
-          </div>
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-slate-400 text-xs">Funding Potential</span>
-              <span className="text-white text-xs">{insights.fundingPotential}%</span>
-            </div>
-            <Progress value={insights.fundingPotential} className="h-1" />
-          </div>
-        </div>
-
-        {/* Key Strengths */}
-        <div>
-          <h4 className="text-white text-sm font-medium mb-2 flex items-center gap-1">
-            <Star className="w-3 h-3 text-yellow-400" />
-            Key Strengths
-          </h4>
-          <div className="space-y-1">
-            {insights.keyStrengths.slice(0, 2).map((strength, index) => (
-              <div key={index} className="flex items-center gap-2">
-                <div className="w-1 h-1 bg-green-400 rounded-full" />
-                <span className="text-slate-300 text-xs">{strength}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Market Opportunity */}
-        <div>
-          <h4 className="text-white text-sm font-medium mb-1 flex items-center gap-1">
-            <Target className="w-3 h-3 text-blue-400" />
-            Market Opportunity
-          </h4>
-          <p className="text-slate-300 text-xs">{insights.marketOpportunity.substring(0, 80)}...</p>
-        </div>
-      </CardContent>
-    </Card>
-  )
-}
-
 // Startup Detection Card Component
 function StartupDetectionCard({ detection }: { detection: StartupDetectionResult }) {
   return (
@@ -985,12 +903,10 @@ function StartupDetectionCard({ detection }: { detection: StartupDetectionResult
 // Detailed Analysis Card Component
 function DetailedAnalysisCard({ 
   data, 
-  insights, 
   show, 
   onToggle 
 }: { 
   data: CompanyData
-  insights: AIInsights
   show: boolean
   onToggle: () => void 
 }) {

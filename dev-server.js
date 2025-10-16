@@ -46,19 +46,19 @@ async function killPortProcesses(port) {
 
 async function startDevServer() {
   try {
-    // Step 1: Kill any existing processes on port 3000
-    await killPortProcesses(3000);
+    // Step 1: Kill any existing processes on port 4000
+    await killPortProcesses(4000);
     
     // Step 2: Wait a moment for port to be fully released
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     // Step 3: Verify port is available
     await new Promise((resolve, reject) => {
-      exec('lsof -ti:3000', (error, stdout) => {
+      exec('lsof -ti:4000', (error, stdout) => {
         if (stdout.trim()) {
-          reject(new Error(`Port 3000 is still in use by process ${stdout.trim()}`));
+          reject(new Error(`Port 4000 is still in use by process ${stdout.trim()}`));
         } else {
-          console.log('✅ Port 3000 is available');
+          console.log('✅ Port 4000 is available');
           resolve();
         }
       });
@@ -66,13 +66,13 @@ async function startDevServer() {
     
     // Step 4: Start Next.js development server
     console.log('🌐 Starting Next.js development server...\n');
-    console.log('📍 Server will be available at: http://localhost:3000');
-    console.log('📊 Executive Dashboard: http://localhost:3000/executive');
-    console.log('📈 News Signals: http://localhost:3000/news-signals');
-    console.log('🔧 Integrated Workflow: http://localhost:3000/integrated-workflow');
+    console.log('📍 Server will be available at: http://localhost:4000');
+    console.log('📊 Executive Dashboard: http://localhost:4000/executive');
+    console.log('📈 News Signals: http://localhost:4000/news-signals');
+    console.log('🔧 Integrated Workflow: http://localhost:4000/integrated-workflow');
     console.log('\n' + '='.repeat(60) + '\n');
     
-    const devServer = spawn('pnpm', ['dlx', 'next', 'dev', '-p', '3000'], {
+    const devServer = spawn('pnpm', ['dlx', 'next', 'dev', '-p', '4000'], {
       stdio: 'inherit',
       shell: true,
       env: {
@@ -115,7 +115,7 @@ async function startDevServer() {
   } catch (error) {
     console.error('❌ Error starting development server:', error.message);
     console.log('\n💡 Try running: npm run check');
-    console.log('💡 Or manually kill processes: lsof -ti:3000 | xargs kill -9');
+    console.log('💡 Or manually kill processes: lsof -ti:4000 | xargs kill -9');
     process.exit(1);
   }
 }

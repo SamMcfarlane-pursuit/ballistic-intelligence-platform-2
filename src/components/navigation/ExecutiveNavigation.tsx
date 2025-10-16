@@ -26,7 +26,7 @@ const navigationItems = [
   },
   {
     name: 'Portfolio Intelligence',
-    href: '/ballistic-portfolio',
+    href: '/ballistic-portfolio-new',
     icon: TrendingUp,
     description: 'Investment tracking',
     color: 'text-green-600'
@@ -38,20 +38,6 @@ const navigationItems = [
     description: 'Threat monitoring',
     color: 'text-red-600'
   },
-  {
-    name: 'AI Insights',
-    href: '/ai-agents',
-    icon: Brain,
-    description: 'Intelligence analysis',
-    color: 'text-purple-600'
-  },
-  {
-    name: 'Intelligence Center',
-    href: '/intelligence-center',
-    icon: Target,
-    description: 'Command center',
-    color: 'text-orange-600'
-  }
 ]
 
 export function ExecutiveNavigation() {
