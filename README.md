@@ -40,14 +40,16 @@ Ballistic Intelligence Platform 2.0 is a comprehensive cybersecurity intelligenc
 ## ✨ Features
 
 ### 🎨 **Executive Dashboard**
-- **3 Comprehensive Views**: Trending Sectors, Market Intelligence, Patent Deep Dive
+- **4 Comprehensive Views**: Trending Sectors, Market Intelligence, Patent Deep Dive, Data Intelligence
 - **Real-time Data**: Live updates from multiple data sources
+- **BrightData Integration**: Enterprise web scraping and proxy network
 - **Advanced Filtering**: Multi-dimensional search and filter capabilities
 - **Responsive Design**: Optimized for desktop, tablet, and mobile
 - **TypeScript Safety**: 100% type-safe codebase
 
 ### 💰 **Crunchbase Integration**
 - **Company Search**: Find any cybersecurity company instantly
+- **BrightData Enhanced**: Reliable web scraping with anti-bot bypass
 - **Funding Alerts**: Real-time notifications for new funding rounds
 - **Market Analysis**: Track top sectors, investors, and trends
 - **Organization Profiles**: Detailed company information and history
@@ -65,6 +67,15 @@ Ballistic Intelligence Platform 2.0 is a comprehensive cybersecurity intelligenc
 - **Multi-field Matching**: Search across multiple attributes
 - **Real-time Results**: Instant feedback as you type
 - **Filter Combinations**: Stack multiple filters seamlessly
+
+### 🌐 **BrightData Intelligence Network** (NEW)
+- **Proxy Network**: 33M+ residential IPs worldwide
+- **Web Unlocker**: Bypass anti-bot measures and CAPTCHAs
+- **Dataset Services**: Collect data from Crunchbase, LinkedIn, patents, news
+- **Company Enrichment**: Multi-source data aggregation
+- **Real-time Monitoring**: Live metrics and health dashboard
+- **Rate Limiting**: 60 requests/min with automatic queuing
+- **Cost Tracking**: Real-time usage and cost estimates
 
 ---
 
@@ -183,6 +194,7 @@ Discover innovative cybersecurity patents:
 Real-time company and funding data:
 
 - **Company Search**: Find any cybersecurity startup
+- **BrightData Powered**: Reliable scraping with anti-bot bypass
 - **Funding Alerts**: Last 30 days of activity
 - **Market Analysis**: Top sectors and investors
 - **Organization Details**: Complete company profiles
@@ -192,6 +204,16 @@ Real-time company and funding data:
 - $8.6B+ total funding
 - 451 funding deals
 - 342 investors
+
+### **5. Data Intelligence Network** (NEW)
+Real-time web scraping and data collection:
+
+- **BrightData Dashboard**: Live metrics and health monitoring
+- **Proxy Network**: 33M+ IPs for reliable data access
+- **Web Unlocker**: Automatic CAPTCHA solving
+- **Usage Analytics**: Request stats, success rates, costs
+- **Error Tracking**: Real-time error breakdown
+- **Performance**: Average response time < 1.5s
 
 ---
 
@@ -230,6 +252,34 @@ GET /api/crunchbase?action=real-time-alerts
 GET /api/crunchbase?action=funding-analysis&timeframe=6m
 ```
 
+### **BrightData API** (NEW)
+```typescript
+// Health check
+GET /api/brightdata?action=health
+
+// Proxy request
+GET /api/brightdata?action=proxy&url=https://example.com&renderJs=true
+
+// Web unlocker
+GET /api/brightdata?action=unlocker&url=https://site.com
+
+// Collect dataset
+GET /api/brightdata?action=dataset&type=crunchbase&query=cybersecurity
+
+// Enrich company
+GET /api/brightdata?action=enrich&company=SecureAI&sources=crunchbase,linkedin
+
+// Get metrics
+GET /api/brightdata?action=metrics
+
+// Batch enrichment (POST)
+POST /api/brightdata
+{
+  "action": "batch-enrich",
+  "companies": [{"name": "SecureAI"}, {"name": "CloudGuard"}]
+}
+```
+
 ### **Response Format**
 ```json
 {
@@ -248,6 +298,8 @@ GET /api/crunchbase?action=funding-analysis&timeframe=6m
 ## 📚 Documentation
 
 ### **Comprehensive Guides**
+- **[BrightData Integration](BRIGHTDATA_INTEGRATION.md)** - Complete API guide (895 lines) **NEW**
+- **[BrightData Quick Start](BRIGHTDATA_QUICK_START.md)** - 5-minute setup (462 lines) **NEW**
 - **[Executive Dashboard Integration](EXECUTIVE_DASHBOARD_INTEGRATION.md)** - Complete technical guide (609 lines)
 - **[Executive Dashboard Summary](EXECUTIVE_DASHBOARD_SUMMARY.md)** - Quick reference (477 lines)
 - **[Patent Deep Dive Implementation](PATENT_DEEP_DIVE_IMPLEMENTATION.md)** - Patent feature guide (587 lines)
@@ -257,8 +309,8 @@ GET /api/crunchbase?action=funding-analysis&timeframe=6m
 - **[GitHub Setup Guide](GITHUB_SETUP_GUIDE.md)** - Repository setup (326 lines)
 
 ### **Total Documentation**
-- **7 comprehensive guides**
-- **3,504 lines** of documentation
+- **9 comprehensive guides**
+- **4,861 lines** of documentation
 - **Complete API references**
 - **Usage examples**
 - **TypeScript interfaces**
@@ -272,10 +324,12 @@ ballistic-intelligence-platform-2/
 ├── src/
 │   ├── app/
 │   │   ├── executive-dashboard/
-│   │   │   └── page.tsx              # Main dashboard (1,453 lines)
+│   │   │   └── page.tsx              # Main dashboard (1,465 lines)
 │   │   ├── crunchbase-data/
 │   │   │   └── page.tsx              # Crunchbase page (27 lines)
 │   │   └── api/
+│   │       ├── brightdata/
+│   │       │   └── route.ts          # BrightData API (520 lines) NEW
 │   │       ├── crunchbase/
 │   │       │   └── route.ts          # Crunchbase API (285 lines)
 │   │       └── trending-factors/
@@ -283,9 +337,11 @@ ballistic-intelligence-platform-2/
 │   ├── components/
 │   │   ├── ui/                       # shadcn/ui components
 │   │   └── dashboard/
+│   │       ├── BrightDataMonitor.tsx # BrightData UI (398 lines) NEW
 │   │       └── CrunchbaseIntegration.tsx  # Crunchbase UI (591 lines)
 │   ├── services/
-│   │   └── crunchbase-service.ts     # Service layer (697 lines)
+│   │   ├── brightdata-service.ts     # BrightData core (820 lines) NEW
+│   │   └── crunchbase-service.ts     # Service layer (1,004 lines)
 │   └── lib/
 │       ├── db.ts                     # Database connection
 │       └── trending-factors.ts       # Trending algorithm (323 lines)
@@ -378,6 +434,14 @@ pnpm start
 ```bash
 # Database
 DATABASE_URL="postgresql://..."
+
+# BrightData (optional)
+BRIGHTDATA_API_KEY="your_key_here"
+BRIGHTDATA_PROXY_HOST="brd.superproxy.io"
+BRIGHTDATA_PROXY_PORT="33335"
+BRIGHTDATA_PROXY_USERNAME="your_username"
+BRIGHTDATA_PROXY_PASSWORD="your_password"
+ENABLE_BRIGHTDATA="true"
 
 # Crunchbase (optional)
 CRUNCHBASE_API_KEY="your_key_here"

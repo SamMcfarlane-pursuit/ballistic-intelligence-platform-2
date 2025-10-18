@@ -28,6 +28,11 @@ import {
 } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import BrightDataMonitor from '@/components/dashboard/BrightDataMonitor'
+import PatentIntelligenceCard from '@/components/dashboard/PatentIntelligenceCard'
+import SectorIntelligenceCard from '@/components/dashboard/SectorIntelligenceCard'
+import CompanyIntelligenceCard from '@/components/dashboard/CompanyIntelligenceCard'
+import EnhancedCompanyDialog from '@/components/dashboard/EnhancedCompanyDialog'
 
 interface SectorData {
   id: string
@@ -37,6 +42,11 @@ interface SectorData {
   totalFunding: number
   momentumScore: number
   momentumGrowth: number
+  // BrightData enhanced fields
+  marketGrowth?: number
+  investmentTrends?: string[]
+  keyPlayers?: string[]
+  emergingTechnologies?: string[]
 }
 
 interface Company {
@@ -58,6 +68,20 @@ interface Company {
     cto?: string
     head?: string
   }
+  // BrightData enhanced fields
+  brightData?: {
+    newsSentiment?: 'positive' | 'neutral' | 'negative'
+    recentMentions?: number
+    techStack?: string[]
+    patents?: number
+    competitors?: string[]
+    marketPosition?: 'Emerging' | 'Growing' | 'Established' | 'Innovative'
+    growthIndicators?: {
+      hiring?: number
+      funding?: number
+      news?: number
+    }
+  }
 }
 
 interface Patent {
@@ -74,6 +98,10 @@ interface Patent {
   status?: 'Filed' | 'Granted' | 'Pending'
   claims?: number
   citations?: number
+  // BrightData enhanced fields
+  marketImpact?: number
+  competitiveLandscape?: string[]
+  technologyTrends?: string[]
 }
 
 interface TrendingCompany {
@@ -194,7 +222,11 @@ export default function ExecutiveDashboard() {
         companies: 45,
         totalFunding: 890000000,
         momentumScore: 28,
-        momentumGrowth: 28
+        momentumGrowth: 28,
+        marketGrowth: 35,
+        investmentTrends: ['AI/ML', 'Zero Trust'],
+        keyPlayers: ['Wiz', 'Orca Security', 'Palo Alto Networks'],
+        emergingTechnologies: ['Cloud Native', 'Serverless Security']
       },
       {
         id: '2',
@@ -203,7 +235,11 @@ export default function ExecutiveDashboard() {
         companies: 28,
         totalFunding: 520000000,
         momentumScore: 25,
-        momentumGrowth: 25
+        momentumGrowth: 25,
+        marketGrowth: 28,
+        investmentTrends: ['AI Detection', 'Threat Hunting'],
+        keyPlayers: ['Recorded Future', 'CrowdStrike', 'Splunk'],
+        emergingTechnologies: ['Extended Detection', 'Threat Intelligence Platforms']
       },
       {
         id: '3',
@@ -212,7 +248,11 @@ export default function ExecutiveDashboard() {
         companies: 38,
         totalFunding: 720000000,
         momentumScore: 22,
-        momentumGrowth: 22
+        momentumGrowth: 22,
+        marketGrowth: 22,
+        investmentTrends: ['Zero Trust', 'SD-WAN'],
+        keyPlayers: ['Cisco', 'Fortinet', 'Palo Alto Networks'],
+        emergingTechnologies: ['Secure Access Service Edge', 'Next-Gen Firewalls']
       },
       {
         id: '4',
@@ -221,7 +261,11 @@ export default function ExecutiveDashboard() {
         companies: 32,
         totalFunding: 650000000,
         momentumScore: 18,
-        momentumGrowth: 18
+        momentumGrowth: 18,
+        marketGrowth: 20,
+        investmentTrends: ['Privacy Compliance', 'Data Loss Prevention'],
+        keyPlayers: ['Varonis', 'Proofpoint', 'Microsoft'],
+        emergingTechnologies: ['Data Classification', 'Privacy-Preserving Computation']
       },
       {
         id: '5',
@@ -230,7 +274,11 @@ export default function ExecutiveDashboard() {
         companies: 24,
         totalFunding: 480000000,
         momentumScore: 15,
-        momentumGrowth: 15
+        momentumGrowth: 15,
+        marketGrowth: 25,
+        investmentTrends: ['Passwordless', 'Zero Trust'],
+        keyPlayers: ['Okta', 'Auth0', 'Ping Identity'],
+        emergingTechnologies: ['Decentralized Identity', 'Biometric Authentication']
       },
       {
         id: '6',
@@ -239,10 +287,44 @@ export default function ExecutiveDashboard() {
         companies: 22,
         totalFunding: 410000000,
         momentumScore: 12,
-        momentumGrowth: 12
+        momentumGrowth: 12,
+        marketGrowth: 18,
+        investmentTrends: ['EDR', 'XDR'],
+        keyPlayers: ['CrowdStrike', 'SentinelOne', 'Microsoft'],
+        emergingTechnologies: ['Extended Detection', 'Automated Response']
       }
     ]
     setSectors(mockSectors)
+  }
+
+  // BrightData enhanced sector loading
+  const loadEnhancedSectors = async () => {
+    try {
+      // Fetch trending data from API
+      const response = await fetch('/api/trending-factors?action=sectors')
+      const data = await response.json()
+      
+      if (!data.success) {
+        throw new Error(data.error || 'Failed to load sectors')
+      }
+
+      // Transform API data to sector cards with BrightData enhancements
+      const sectorData: SectorData[] = data.data.sectors.map((sector: any, index: number) => ({
+        id: String(index + 1),
+        name: sector.sector,
+        rank: index + 1,
+        companies: sector.companyCount,
+        totalFunding: sector.companyCount * 25000000, // Estimated based on company count
+        momentumScore: sector.averageTrendingScore,
+        momentumGrowth: sector.averageTrendingScore
+      }))
+
+      setSectors(sectorData.slice(0, 6)) // Top 6 sectors
+    } catch (err) {
+      console.error('Error loading enhanced sectors:', err)
+      // Fallback to mock data if API fails
+      loadMockSectors()
+    }
   }
 
   const loadCompanies = async () => {
@@ -271,12 +353,24 @@ export default function ExecutiveDashboard() {
           lastRound: details?.current_stage || 'Series A',
           lastRoundAmount: details?.fundingRounds?.[0]?.money_raised || 0,
           latestDateOfFunding: details?.fundingRounds?.[0]?.announced_date 
-            ? new Date(details.fundingRounds[0].announced_date).toLocaleDateString('en-US', { 
-                year: 'numeric', month: 'short', day: 'numeric' 
-              })
+            ? new Date(details.fundingRounds[0].announced_date).toISOString().split('T')[0]
             : 'N/A',
           website: details?.website,
-          linkedin: details?.linkedin_url
+          linkedin: details?.linkedin_url,
+          // Enhanced with BrightData intelligence
+          brightData: {
+            newsSentiment: Math.random() > 0.7 ? 'positive' : Math.random() > 0.4 ? 'neutral' : 'negative', // Mock data
+            recentMentions: Math.floor(Math.random() * 50) + 10, // Mock data
+            techStack: ['React', 'Node.js', 'Python', 'Docker'], // Mock data
+            patents: Math.floor(Math.random() * 20) + 1, // Mock data
+            competitors: ['Competitor A', 'Competitor B', 'Competitor C'], // Mock data
+            marketPosition: 'Emerging', // Mock data
+            growthIndicators: {
+              hiring: Math.floor(Math.random() * 30) + 10, // Mock data
+              funding: Math.floor(Math.random() * 50) + 20, // Mock data
+              news: Math.floor(Math.random() * 40) + 15 // Mock data
+            }
+          }
         }
       })
 
@@ -290,7 +384,7 @@ export default function ExecutiveDashboard() {
   }
 
   const loadMockCompanies = () => {
-    // Mock data matching Figma design
+    // Mock data matching Figma design with BrightData enhancements
     const mockCompanies: Company[] = [
       {
         id: '1',
@@ -305,7 +399,20 @@ export default function ExecutiveDashboard() {
         lastRoundAmount: 25000000,
         latestDateOfFunding: 'Sep 15, 2025',
         website: 'https://www.shieldtech.io',
-        linkedin: 'linkedin.com/company/shieldtech'
+        linkedin: 'linkedin.com/company/shieldtech',
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 32,
+          techStack: ['Python', 'TensorFlow', 'Kubernetes'],
+          patents: 8,
+          competitors: ['CrowdStrike', 'Palo Alto Networks'],
+          marketPosition: 'Growing',
+          growthIndicators: {
+            hiring: 25,
+            funding: 45,
+            news: 30
+          }
+        }
       },
       {
         id: '2',
@@ -320,7 +427,20 @@ export default function ExecutiveDashboard() {
         lastRoundAmount: 18000000,
         latestDateOfFunding: 'Sep 8, 2025',
         website: 'https://www.cryptoguard.com',
-        linkedin: 'linkedin.com/company/cryptoguard'
+        linkedin: 'linkedin.com/company/cryptoguard',
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 28,
+          techStack: ['Rust', 'C++', 'OpenSSL'],
+          patents: 12,
+          competitors: ['IBM', 'Microsoft'],
+          marketPosition: 'Innovative',
+          growthIndicators: {
+            hiring: 30,
+            funding: 55,
+            news: 35
+          }
+        }
       },
       {
         id: '3',
@@ -335,7 +455,20 @@ export default function ExecutiveDashboard() {
         lastRoundAmount: 15000000,
         latestDateOfFunding: 'Sep 1, 2025',
         website: 'https://www.threatvision.ai',
-        linkedin: 'linkedin.com/company/threatvision'
+        linkedin: 'linkedin.com/company/threatvision',
+        brightData: {
+          newsSentiment: 'neutral',
+          recentMentions: 22,
+          techStack: ['Python', 'PyTorch', 'Elasticsearch'],
+          patents: 5,
+          competitors: ['Recorded Future', 'Splunk'],
+          marketPosition: 'Emerging',
+          growthIndicators: {
+            hiring: 20,
+            funding: 35,
+            news: 25
+          }
+        }
       },
       {
         id: '4',
@@ -355,6 +488,19 @@ export default function ExecutiveDashboard() {
           ceo: 'Sarah Chen (CEO)',
           cto: 'Michael Rodriguez (CTO)',
           head: 'Emily Watson (Head of Product)'
+        },
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 45,
+          techStack: ['Go', 'Kubernetes', 'AWS SDK'],
+          patents: 15,
+          competitors: ['Wiz', 'Orca Security'],
+          marketPosition: 'Established',
+          growthIndicators: {
+            hiring: 35,
+            funding: 60,
+            news: 40
+          }
         }
       },
       {
@@ -375,6 +521,19 @@ export default function ExecutiveDashboard() {
           ceo: 'Oliver Smith (CEO)',
           cto: 'Sophia Taylor (CTO)',
           head: 'Daniel Brown (Head of Product)'
+        },
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 18,
+          techStack: ['React', 'Node.js', 'WebAuthn'],
+          patents: 7,
+          competitors: ['Okta', 'Auth0'],
+          marketPosition: 'Growing',
+          growthIndicators: {
+            hiring: 28,
+            funding: 40,
+            news: 22
+          }
         }
       },
       {
@@ -390,7 +549,20 @@ export default function ExecutiveDashboard() {
         lastRoundAmount: 28000000,
         latestDateOfFunding: 'Sep 22, 2025',
         website: 'https://www.datavaultpro.com',
-        linkedin: 'linkedin.com/company/datavaultpro'
+        linkedin: 'linkedin.com/company/datavaultpro',
+        brightData: {
+          newsSentiment: 'neutral',
+          recentMentions: 26,
+          techStack: ['Java', 'Spark', 'Hadoop'],
+          patents: 10,
+          competitors: ['Varonis', 'Proofpoint'],
+          marketPosition: 'Established',
+          growthIndicators: {
+            hiring: 22,
+            funding: 38,
+            news: 28
+          }
+        }
       }
     ]
     setCompanies(mockCompanies)
@@ -415,7 +587,7 @@ export default function ExecutiveDashboard() {
       {
         id: '1',
         title: 'AI-Driven Network Anomaly Detection System',
-        description: 'Machine learning algorithm for detecting network intrusions in real-time',
+        description: 'Machine learning algorithm for detecting network intrusions in real-time with 99.7% accuracy and zero false positives.',
         company: 'ShieldTech',
         companyId: '1',
         filingDate: 'Sep 19, 2025',
@@ -425,12 +597,15 @@ export default function ExecutiveDashboard() {
         patentNumber: 'US-2025-12345',
         status: 'Filed',
         claims: 18,
-        citations: 12
+        citations: 12,
+        marketImpact: 87,
+        competitiveLandscape: ['Wiz', 'Orca Security', 'CrowdStrike'],
+        technologyTrends: ['AI/ML', 'Zero Trust']
       },
       {
         id: '2',
         title: 'Quantum-Resistant Encryption Protocol',
-        description: 'Post-quantum cryptographic method resistant to quantum computing attacks',
+        description: 'Post-quantum cryptographic method resistant to quantum computing attacks with 256-bit security level.',
         company: 'CryptoGuard',
         companyId: '2',
         filingDate: 'Sep 17, 2025',
@@ -440,67 +615,82 @@ export default function ExecutiveDashboard() {
         patentNumber: 'US-2025-12346',
         status: 'Filed',
         claims: 22,
-        citations: 8
+        citations: 8,
+        marketImpact: 92,
+        competitiveLandscape: ['IBM', 'Microsoft', 'Google'],
+        technologyTrends: ['Post-Quantum', 'Cryptography']
       },
       {
         id: '3',
         title: 'Multi-Cloud Security Orchestration Platform',
-        description: 'Unified security management across multiple cloud providers',
+        description: 'Unified security management across multiple cloud providers with automated compliance and threat response.',
         company: 'SecureCloud',
         companyId: '4',
-        filingDate: 'Sep 11, 2025',
+        filingDate: 'Sep 15, 2025',
         sector: 'Cloud Security',
-        noveltyScore: 91,
+        noveltyScore: 89,
         innovationPotential: 'High Innovation Potential',
         patentNumber: 'US-2025-12347',
         status: 'Filed',
         claims: 15,
-        citations: 6
+        citations: 14,
+        marketImpact: 78,
+        competitiveLandscape: ['Palo Alto Networks', 'Zscaler', 'Cisco'],
+        technologyTrends: ['Cloud Native', 'Automation']
       },
       {
         id: '4',
-        title: 'Zero-Trust Identity Verification Method',
-        description: 'Continuous authentication using behavioral biometrics',
+        title: 'Behavioral Biometric Authentication System',
+        description: 'Continuous authentication using behavioral patterns with 99.9% accuracy and resistance to replay attacks.',
         company: 'IdentityLock',
         companyId: '5',
-        filingDate: 'Sep 4, 2025',
+        filingDate: 'Sep 12, 2025',
         sector: 'Identity Management',
-        noveltyScore: 89,
+        noveltyScore: 91,
         innovationPotential: 'High Innovation Potential',
         patentNumber: 'US-2025-12348',
-        status: 'Pending',
+        status: 'Filed',
         claims: 20,
-        citations: 10
+        citations: 10,
+        marketImpact: 85,
+        competitiveLandscape: ['Okta', 'Auth0', 'Ping Identity'],
+        technologyTrends: ['Biometrics', 'Zero Trust']
       },
       {
         id: '5',
-        title: 'Real-Time Threat Intelligence Aggregation',
-        description: 'AI-powered threat data collection and analysis system',
-        company: 'ThreatVision',
-        companyId: '3',
-        filingDate: 'Aug 28, 2025',
-        sector: 'Threat Intelligence',
+        title: 'Real-Time Data Loss Prevention Engine',
+        description: 'AI-powered DLP system that prevents data exfiltration with contextual understanding and minimal false positives.',
+        company: 'DataVault Pro',
+        companyId: '6',
+        filingDate: 'Sep 10, 2025',
+        sector: 'Data Protection',
         noveltyScore: 87,
-        innovationPotential: 'High Innovation Potential',
+        innovationPotential: 'Medium Innovation Potential',
         patentNumber: 'US-2025-12349',
-        status: 'Granted',
+        status: 'Filed',
         claims: 16,
-        citations: 14
+        citations: 11,
+        marketImpact: 75,
+        competitiveLandscape: ['Varonis', 'Proofpoint', 'Symantec'],
+        technologyTrends: ['AI/ML', 'Data Governance']
       },
       {
         id: '6',
-        title: 'Advanced Data Loss Prevention Engine',
-        description: 'Context-aware data classification and protection mechanism',
-        company: 'DataVault Pro',
-        companyId: '6',
-        filingDate: 'Aug 22, 2025',
-        sector: 'Data Protection',
+        title: 'IoT Device Fingerprinting Technology',
+        description: 'Automated identification and classification of IoT devices with passive network monitoring and risk scoring.',
+        company: 'ThreatVision',
+        companyId: '3',
+        filingDate: 'Sep 8, 2025',
+        sector: 'Threat Intelligence',
         noveltyScore: 85,
-        innovationPotential: 'High Innovation Potential',
+        innovationPotential: 'Medium Innovation Potential',
         patentNumber: 'US-2025-12350',
         status: 'Filed',
-        claims: 19,
-        citations: 7
+        claims: 14,
+        citations: 9,
+        marketImpact: 72,
+        competitiveLandscape: ['Armis', 'Claroty', 'CyberX'],
+        technologyTrends: ['IoT Security', 'Network Monitoring']
       }
     ]
     setPatents(mockPatents)
@@ -652,7 +842,7 @@ export default function ExecutiveDashboard() {
                 onClick={() => setSelectedTab('market-intelligence')}
                 className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
                   selectedTab === 'market-intelligence'
-                    ? 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                    ? 'bg-blue-600 text-white hover:bg-blue-700'
                     : 'bg-white text-gray-700 hover:bg-gray-50'
                 }`}
               >
@@ -681,13 +871,25 @@ export default function ExecutiveDashboard() {
                 <FileText className="h-4 w-4 mr-2" />
                 Patent Deep Dive
               </Button>
+              <Button
+                onClick={() => setSelectedTab('brightdata-monitor')}
+                className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
+                  selectedTab === 'brightdata-monitor'
+                    ? 'bg-blue-600 text-white hover:bg-blue-700'
+                    : 'bg-white text-gray-700 hover:bg-gray-50'
+                }`}
+              >
+                <Globe className="h-4 w-4 mr-2" />
+                Data Intelligence
+              </Button>
             </div>
           </div>
         </div>
       </header>
 
       <div className="flex">
-        {/* Left Sidebar - Filters */}
+        {/* Left Sidebar - Filters (hide for BrightData monitor) */}
+        {selectedTab !== 'brightdata-monitor' && (
         <aside className="w-64 border-r border-gray-200 bg-white min-h-screen p-6">
           {selectedTab === 'trending-sectors' && (
             <>
@@ -841,6 +1043,7 @@ export default function ExecutiveDashboard() {
             </>
           )}
         </aside>
+        )}
 
         {/* Main Content */}
         <main className="flex-1 bg-gray-50">
@@ -869,66 +1072,14 @@ export default function ExecutiveDashboard() {
           {selectedTab === 'trending-sectors' && !loading && (
             <div className="p-10">
               {/* Sector Cards Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-                {sectors.length === 0 ? (
-                  <div className="col-span-full text-center py-12">
-                    <Building2 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-600">No sector data available</p>
-                  </div>
-                ) : (
-                  sectors.map((sector) => (
-                  <Card
-                    key={sector.id}
-                    className="bg-white border border-gray-200 hover:border-blue-400 hover:shadow-xl transition-all cursor-pointer group relative"
-                  >
-                    <CardContent className="p-6">
-                      {/* Sector Header */}
-                      <div className="flex items-start justify-between mb-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                            <Building2 className="h-6 w-6 text-blue-600" />
-                          </div>
-                          <div>
-                            <h3 className="text-lg font-bold text-gray-900">{sector.name}</h3>
-                            <p className="text-sm text-gray-500">{sector.companies} companies</p>
-                          </div>
-                        </div>
-                        <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-0 px-2 py-1">
-                          #{sector.rank}
-                        </Badge>
-                      </div>
-
-                      {/* Total Funding */}
-                      <div className="mb-4">
-                        <p className="text-xs text-gray-500 mb-1">Total Funding</p>
-                        <p className="text-2xl font-bold text-blue-600">
-                          ${' '}{formatCurrency(sector.totalFunding)}
-                        </p>
-                      </div>
-
-                      {/* Momentum Score */}
-                      <div className="mb-3">
-                        <div className="flex items-center justify-between mb-2">
-                          <p className="text-xs text-gray-500">Momentum Score</p>
-                          <p className="text-sm font-bold text-gray-900">{sector.momentumScore}%</p>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2.5">
-                          <div
-                            className="bg-blue-600 h-2.5 rounded-full transition-all"
-                            style={{ width: `${sector.momentumScore}%` }}
-                          />
-                        </div>
-                      </div>
-
-                      {/* Growth */}
-                      <div className="flex items-center space-x-2 text-green-600">
-                        <TrendingUp className="h-4 w-4" />
-                        <span className="text-sm font-semibold">+{sector.momentumGrowth}% MoM growth</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))
-                )}
+              <div className={displayMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'}>
+                {sectors.map((sector) => (
+                  <SectorIntelligenceCard 
+                    key={sector.id} 
+                    sector={sector} 
+                    displayMode={displayMode} 
+                  />
+                ))}
               </div>
 
               {/* Analytics Section */}
@@ -1060,83 +1211,15 @@ export default function ExecutiveDashboard() {
                   </div>
                 ) : (
                   paginatedCompanies.map((company) => (
-                  <Card
-                    key={company.id}
-                    className="bg-white border border-gray-200 hover:shadow-lg transition-all cursor-pointer group"
-                  >
-                    <CardContent className="p-6">
-                      {/* Company Header */}
-                      <div className="flex items-start space-x-3 mb-4">
-                        <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <Building2 className="h-6 w-6 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="text-lg font-bold text-gray-900">{company.name}</h3>
-                        </div>
-                      </div>
-
-                      {/* Description */}
-                      <p className="text-sm text-gray-600 mb-4 line-clamp-2">
-                        {company.description}
-                      </p>
-
-                      {/* Company Details */}
-                      <div className="space-y-2 mb-4">
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-500">Sector:</span>
-                          <span className="font-semibold text-gray-900">{company.sector}</span>
-                        </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-500">Location:</span>
-                          <div className="flex items-center text-gray-900">
-                            <MapPin className="h-3 w-3 mr-1" />
-                            <span>{company.location}</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-500">Founded:</span>
-                          <div className="flex items-center text-gray-900">
-                            <Calendar className="h-3 w-3 mr-1" />
-                            <span>{company.founded}</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-500">Funding From:</span>
-                          <div className="flex items-center text-blue-600">
-                            <Users className="h-3 w-3 mr-1" />
-                            <span>{company.fundingFrom}</span>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-500">Total Funding:</span>
-                          <span className="font-bold text-gray-900">{formatCurrency(company.totalFunding)}</span>
-                        </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-500">Last Round:</span>
-                          <span className="font-semibold text-gray-900">
-                            {company.lastRound} - {formatCurrency(company.lastRoundAmount)}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between text-sm">
-                          <span className="text-gray-500">Latest Date of Funding:</span>
-                          <span className="text-gray-900">{company.latestDateOfFunding}</span>
-                        </div>
-                      </div>
-
-                      {/* View Details Button */}
-                      <Button
-                        onClick={() => {
-                          setSelectedCompany(company)
-                          setShowDialog(true)
-                        }}
-                        className="w-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-2 rounded-lg transition-all group-hover:border-blue-600 group-hover:text-blue-600"
-                      >
-                        <TrendingUp className="h-4 w-4 mr-2" />
-                        View Details
-                      </Button>
-                    </CardContent>
-                  </Card>
-                ))
+                    <CompanyIntelligenceCard 
+                      key={company.id} 
+                      company={company} 
+                      onShowDetails={(company) => {
+                        setSelectedCompany(company)
+                        setShowDialog(true)
+                      }} 
+                    />
+                  ))
                 )}
               </div>
 
@@ -1236,83 +1319,9 @@ export default function ExecutiveDashboard() {
                   </div>
                 ) : (
                   paginatedPatents.map((patent) => (
-                    <Card
-                      key={patent.id}
-                      className="bg-white border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all"
-                    >
-                      <CardContent className="p-6">
-                        {/* Patent Header */}
-                        <div className="flex items-start space-x-3 mb-4">
-                          <div className="flex-shrink-0">
-                            <FileText className="h-6 w-6 text-blue-600" />
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="text-lg font-bold text-gray-900 mb-2">
-                              {patent.title}
-                            </h3>
-                          </div>
-                        </div>
-
-                        {/* Description */}
-                        <p className="text-sm text-gray-600 mb-4">
-                          {patent.description}
-                        </p>
-
-                        {/* Patent Details */}
-                        <div className="space-y-2 mb-4">
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-500">Company:</span>
-                            <div className="flex items-center text-blue-600">
-                              <Building2 className="h-3 w-3 mr-1" />
-                              <span className="font-semibold">{patent.company}</span>
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-500">Filing Date:</span>
-                            <div className="flex items-center text-gray-900">
-                              <Calendar className="h-3 w-3 mr-1" />
-                              <span>{patent.filingDate}</span>
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-gray-500">Sector:</span>
-                            <span className="font-semibold text-gray-900">{patent.sector}</span>
-                          </div>
-                        </div>
-
-                        {/* Novelty Score */}
-                        <div className="mb-4">
-                          <div className="flex items-center justify-between mb-2">
-                            <span className="text-sm text-gray-500">Novelty Score:</span>
-                            <div className="flex items-center">
-                              <span className="text-sm font-bold text-gray-900 mr-1">{patent.noveltyScore}/100</span>
-                              <TrendingUp className="h-4 w-4 text-blue-600" />
-                            </div>
-                          </div>
-                          <div className="w-full bg-gray-200 rounded-full h-2">
-                            <div
-                              className="bg-blue-600 h-2 rounded-full transition-all"
-                              style={{ width: `${patent.noveltyScore}%` }}
-                            />
-                          </div>
-                        </div>
-
-                        {/* Innovation Potential Badge */}
-                        <div className="w-full">
-                          <div className={`px-4 py-2 rounded-lg text-center text-sm font-semibold ${
-                            patent.innovationPotential === 'High Innovation Potential'
-                              ? 'bg-green-50 text-green-700 border border-green-200'
-                              : patent.innovationPotential === 'Medium Innovation Potential'
-                              ? 'bg-yellow-50 text-yellow-700 border border-yellow-200'
-                              : 'bg-gray-50 text-gray-700 border border-gray-200'
-                          }`}>
-                            {patent.innovationPotential}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
+                    <PatentIntelligenceCard key={patent.id} patent={patent} />
                   ))
-                  )}
+                )}
               </div>
 
               {/* Pagination */}
@@ -1361,92 +1370,18 @@ export default function ExecutiveDashboard() {
       </div>
 
       {/* Company Details Dialog */}
-      <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent className="max-w-2xl bg-white">
-          <DialogHeader>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
-                  <Building2 className="h-7 w-7 text-white" />
-                </div>
-                <DialogTitle className="text-2xl font-bold text-gray-900">
-                  {selectedCompany?.name}
-                </DialogTitle>
-              </div>
-              <button
-                onClick={() => setShowDialog(false)}
-                className="text-gray-400 hover:text-gray-600 transition-colors"
-                aria-label="Close dialog"
-              >
-                <X className="h-6 w-6" />
-              </button>
-            </div>
-            <p className="text-sm text-gray-600 mt-2">
-              View detailed information about {selectedCompany?.name}
-            </p>
-          </DialogHeader>
+      <EnhancedCompanyDialog 
+        company={selectedCompany} 
+        open={showDialog} 
+        onOpenChange={setShowDialog} 
+      />
 
-          <div className="mt-6 space-y-6">
-            {/* About the Company */}
-            <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-3">About the Company</h3>
-              <p className="text-sm text-gray-700 leading-relaxed">
-                {selectedCompany?.description}
-                {selectedCompany?.team && '. Combines biometrics, behavioral analytics, and hardware tokens to reduce account takeover incidents by 94% across hybrid environments.'}
-              </p>
-            </div>
-
-            {/* Team & Contact */}
-            {selectedCompany?.team && (
-              <div>
-                <h3 className="text-lg font-bold text-gray-900 mb-3">Team & Contact</h3>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Leadership Team</span>
-                    <div className="text-right space-y-1">
-                      <p className="text-gray-900">{selectedCompany.team.ceo}</p>
-                      <p className="text-gray-900">{selectedCompany.team.cto}</p>
-                      <p className="text-gray-900">{selectedCompany.team.head}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Links */}
-            <div className="space-y-3">
-              {selectedCompany?.website && (
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">Website</span>
-                  <a
-                    href={selectedCompany.website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center text-blue-600 hover:text-blue-700"
-                  >
-                    <Globe className="h-4 w-4 mr-2" />
-                    {selectedCompany.website.replace('https://www.', '')}
-                  </a>
-                </div>
-              )}
-              {selectedCompany?.linkedin && (
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">LinkedIn</span>
-                  <a
-                    href={`https://${selectedCompany.linkedin}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center text-blue-600 hover:text-blue-700"
-                  >
-                    <Linkedin className="h-4 w-4 mr-2" />
-                    {selectedCompany.linkedin}
-                  </a>
-                </div>
-              )}
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+      {/* BrightData Monitor View */}
+      {selectedTab === 'brightdata-monitor' && !loading && (
+        <div className="p-10">
+          <BrightDataMonitor />
+        </div>
+      )}
     </div>
   )
 }

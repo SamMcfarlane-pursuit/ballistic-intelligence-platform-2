@@ -9,6 +9,74 @@ import {
 } from '@/lib/trending-factors'
 
 /**
+ * Fetches and calculates trending data for all companies.
+ * This is the core data retrieval and processing function.
+ */
+async function getAndProcessTrendingData() {
+  // Fetch all companies with funding data
+  const companies = await db.cybersecurityStartup.findMany({
+    include: {
+      fundingRounds: {
+        orderBy: { announced_date: 'desc' },
+        take: 1
+      }
+    }
+  })
+
+  if (companies.length === 0) {
+    return null;
+  }
+
+  // Calculate trending factors for each company
+  const trendingData = companies.map(company => {
+    const latestFunding = company.fundingRounds[0]
+    
+    let investors: any[] = []
+    let leadInvestor: string | null = null
+
+    if (latestFunding) {
+      try {
+        investors = latestFunding.investors 
+          ? JSON.parse(latestFunding.investors as string)
+          : []
+      } catch (e) {
+        investors = []
+      }
+      leadInvestor = latestFunding.lead_investor
+    }
+
+    return calculateTrendingFactors(
+      {
+        id: company.id,
+        name: company.name,
+        primary_category: company.primary_category || 'General Security',
+        total_funding: company.total_funding || 0,
+        last_funding_date: company.last_funding_date,
+        funding_rounds_count: company.funding_rounds_count || 0,
+        founded_year: company.founded_year,
+        growth_rate: company.growth_rate || 0,
+        current_stage: company.current_stage || undefined
+      },
+      companies.map(c => ({
+        primary_category: c.primary_category || 'General Security',
+        total_funding: c.total_funding || 0
+      })),
+      { investors, lead_investor: leadInvestor }
+    )
+  })
+
+  // Rank companies
+  const rankedTrending = rankTrendingCompanies(trendingData)
+
+  return {
+    trending: rankedTrending,
+    totalCompanies: companies.length,
+    timestamp: new Date().toISOString()
+  }
+}
+
+
+/**
  * Trending Factors API Endpoint
  * Provides trending analysis and metrics for companies
  */
@@ -28,7 +96,7 @@ export async function GET(request: NextRequest) {
         return await getTopTrendingCompanies(limit)
       
       case 'category':
-        return await getTrendingByCategor(category, limit)
+        return await getTrendingByCategoryData(category, limit)
       
       case 'sectors':
         return await getTrendingSectorsData()
@@ -64,17 +132,9 @@ export async function GET(request: NextRequest) {
  */
 async function calculateAllTrending() {
   try {
-    // Fetch all companies with funding data
-    const companies = await db.cybersecurityStartup.findMany({
-      include: {
-        fundingRounds: {
-          orderBy: { announced_date: 'desc' },
-          take: 1
-        }
-      }
-    })
+    const data = await getAndProcessTrendingData();
 
-    if (companies.length === 0) {
+    if (!data) {
       return NextResponse.json({
         success: false,
         message: 'No companies found in database',
@@ -82,54 +142,9 @@ async function calculateAllTrending() {
       })
     }
 
-    // Calculate trending factors for each company
-    const trendingData = companies.map(company => {
-      const latestFunding = company.fundingRounds[0]
-      
-      let investors: any[] = []
-      let leadInvestor: string | null = null
-
-      if (latestFunding) {
-        try {
-          investors = latestFunding.investors 
-            ? JSON.parse(latestFunding.investors as string)
-            : []
-        } catch (e) {
-          investors = []
-        }
-        leadInvestor = latestFunding.lead_investor
-      }
-
-      return calculateTrendingFactors(
-        {
-          id: company.id,
-          name: company.name,
-          primary_category: company.primary_category || 'General Security',
-          total_funding: company.total_funding || 0,
-          last_funding_date: company.last_funding_date,
-          funding_rounds_count: company.funding_rounds_count || 0,
-          founded_year: company.founded_year,
-          growth_rate: company.growth_rate || 0,
-          current_stage: company.current_stage || undefined
-        },
-        companies.map(c => ({
-          primary_category: c.primary_category || 'General Security',
-          total_funding: c.total_funding || 0
-        })),
-        { investors, lead_investor: leadInvestor }
-      )
-    })
-
-    // Rank companies
-    const rankedTrending = rankTrendingCompanies(trendingData)
-
     return NextResponse.json({
       success: true,
-      data: {
-        trending: rankedTrending,
-        totalCompanies: companies.length,
-        timestamp: new Date().toISOString()
-      }
+      data
     })
   } catch (error) {
     throw error
@@ -141,7 +156,7 @@ async function calculateAllTrending() {
  */
 async function getTopTrendingCompanies(limit: number) {
   try {
-    const { data } = await calculateAllTrending().then(res => res.json())
+    const data = await getAndProcessTrendingData();
     
     if (!data || !data.trending) {
       return NextResponse.json({
@@ -188,7 +203,7 @@ async function getTopTrendingCompanies(limit: number) {
 /**
  * Get trending companies by category
  */
-async function getTrendingByCategor(category: string, limit: number) {
+async function getTrendingByCategoryData(category: string, limit: number) {
   try {
     if (!category) {
       return NextResponse.json({
@@ -197,7 +212,7 @@ async function getTrendingByCategor(category: string, limit: number) {
       }, { status: 400 })
     }
 
-    const { data } = await calculateAllTrending().then(res => res.json())
+    const data = await getAndProcessTrendingData();
     
     if (!data || !data.trending) {
       return NextResponse.json({
@@ -227,7 +242,7 @@ async function getTrendingByCategor(category: string, limit: number) {
  */
 async function getTrendingSectorsData() {
   try {
-    const { data } = await calculateAllTrending().then(res => res.json())
+    const data = await getAndProcessTrendingData();
     
     if (!data || !data.trending) {
       return NextResponse.json({
@@ -263,7 +278,7 @@ async function getCompanyTrending(companyId: string) {
       }, { status: 400 })
     }
 
-    const { data } = await calculateAllTrending().then(res => res.json())
+    const data = await getAndProcessTrendingData();
     
     if (!data || !data.trending) {
       return NextResponse.json({
@@ -298,7 +313,7 @@ async function getCompanyTrending(companyId: string) {
  */
 async function getTrendingStats() {
   try {
-    const { data } = await calculateAllTrending().then(res => res.json())
+    const data = await getAndProcessTrendingData();
     
     if (!data || !data.trending) {
       return NextResponse.json({
