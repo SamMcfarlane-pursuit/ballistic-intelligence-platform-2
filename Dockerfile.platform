@@ -1,0 +1,32 @@
+# Use Node.js 18 as the base image
+FROM node:18-alpine
+
+# Set the working directory
+WORKDIR /app
+
+# Copy package files
+COPY package.json pnpm-lock.yaml ./
+
+# Install pnpm globally
+RUN npm install -g pnpm
+
+# Install dependencies
+RUN pnpm install --frozen-lockfile
+
+# Copy the rest of the application code
+COPY . .
+
+# Generate Prisma client
+RUN pnpm dlx prisma generate
+
+# Build the Next.js application
+RUN pnpm build
+
+# Expose port 4000
+EXPOSE 4000
+
+# Create directory for SQLite database
+RUN mkdir -p db
+
+# Start the application with custom server
+CMD ["pnpm", "start:custom"]

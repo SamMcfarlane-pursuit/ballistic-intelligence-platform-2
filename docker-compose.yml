@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # Ballistic Intelligence Platform
+  ballistic-platform:
+    build:
+      context: .
+      dockerfile: Dockerfile.platform
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
+      - IS_DOCKER=true
+      - DATABASE_URL=file:./db/custom.db
+      - BRIGHTDATA_API_KEY=${BRIGHTDATA_API_KEY}
+      - BRIGHTDATA_PROXY_USERNAME=${BRIGHTDATA_PROXY_USERNAME}
+      - BRIGHTDATA_PROXY_PASSWORD=${BRIGHTDATA_PROXY_PASSWORD}
+      - BRIGHTDATA_PROXY_HOST=brd.superproxy.io
+      - BRIGHTDATA_PROXY_PORT=33335
+      - ENABLE_BRIGHTDATA=true
+    volumes:
+      - ./db:/app/db
+      - ./.env:/app/.env
+      - ./.certs:/app/.certs
+    networks:
+      - app-network
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:14
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=ballistic
+      - POSTGRES_PASSWORD=ballistic123
+      - POSTGRES_DB=ballistic_intelligence
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+    restart: unless-stopped
+
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
