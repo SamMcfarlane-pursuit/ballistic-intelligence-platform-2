@@ -79,16 +79,10 @@ export default function CompanyIntelligenceCard({ company, onShowDetails }: Comp
             <p className="text-sm text-gray-500">{company.sector}</p>
           </div>
           
-          {company.brightData?.newsSentiment && (
+          {company.brightData?.newsSentiment === 'negative' && (
             <Badge 
               variant="secondary" 
-              className={`text-xs ${
-                company.brightData.newsSentiment === 'positive' 
-                  ? 'bg-green-100 text-green-800' 
-                  : company.brightData.newsSentiment === 'negative' 
-                    ? 'bg-red-100 text-red-800' 
-                    : 'bg-gray-100 text-gray-800'
-              }`}
+              className="text-xs bg-red-100 text-red-800"
             >
               {company.brightData.newsSentiment}
             </Badge>

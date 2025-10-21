@@ -71,166 +71,145 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl bg-white">
-        <DialogHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
-                <Building2 className="h-7 w-7 text-white" />
-              </div>
-              <DialogTitle className="text-2xl font-bold text-gray-900">
+      <DialogContent className="max-w-4xl max-h-[90vh] bg-white overflow-y-auto">
+        <DialogHeader className="sticky top-0 bg-white z-10 pb-4 border-b border-gray-200">
+          <div className="flex items-center space-x-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
+              <Building2 className="h-8 w-8 text-white" />
+            </div>
+            <div className="flex-1">
+              <DialogTitle className="text-3xl font-bold text-gray-900 mb-1">
                 {company?.name}
               </DialogTitle>
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-gray-600">{company?.sector}</span>
+                <span className="text-sm text-gray-400">•</span>
+                <span className="text-sm text-gray-600">{company?.location}</span>
+                <span className="text-sm text-gray-400">•</span>
+                <span className="text-sm text-gray-600">Founded {company?.founded}</span>
+              </div>
             </div>
-            <button
-              onClick={() => onOpenChange(false)}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
-              aria-label="Close dialog"
-            >
-              <X className="h-6 w-6" />
-            </button>
           </div>
-          <p className="text-sm text-gray-600 mt-2">
-            View detailed information about {company?.name}
-          </p>
         </DialogHeader>
 
-        <div className="mt-6 space-y-6">
-          {loading && (
-            <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-              <span className="ml-2 text-gray-600">Loading enhanced intelligence...</span>
-            </div>
-          )}
-          
-          {!loading && intelligence && (
-            <>
-              {/* Web Intelligence Section */}
-              <div className="border border-blue-200 bg-blue-50 rounded-lg p-4">
-                <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center">
-                  <Globe className="h-5 w-5 text-blue-600 mr-2" />
-                  Web Intelligence
-                </h3>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-white p-3 rounded-lg">
-                    <div className="text-xs text-gray-500 mb-1">Online Mentions</div>
-                    <div className="font-bold text-lg text-gray-900">
-                      {intelligence.webIntelligence?.webPresence?.onlineMentions?.total || 'N/A'}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      {intelligence.webIntelligence?.webPresence?.onlineMentions?.positive || 0} positive
-                    </div>
+        <div className="mt-6 space-y-8">
+          {/* Company Overview */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Company Overview</h3>
+              <p className="text-gray-700 leading-relaxed">
+                {company?.description}
+              </p>
+              
+              {/* Key Metrics */}
+              <div className="grid grid-cols-2 gap-4 mt-6">
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="text-sm text-gray-500 mb-1">Total Funding</div>
+                  <div className="text-2xl font-bold text-gray-900">
+                    ${company?.totalFunding ? (company.totalFunding / 1000000).toFixed(1) : '0'}M
                   </div>
-                  
-                  <div className="bg-white p-3 rounded-lg">
-                    <div className="text-xs text-gray-500 mb-1">Technology Stack</div>
-                    <div className="text-sm text-gray-900 truncate">
-                      {intelligence.webIntelligence?.technologyStack?.frontend?.slice(0, 2).join(', ') || 'N/A'}
-                    </div>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <div className="text-sm text-gray-500 mb-1">Last Round</div>
+                  <div className="text-lg font-semibold text-gray-900">{company?.lastRound}</div>
+                  <div className="text-sm text-gray-600">
+                    ${company?.lastRoundAmount ? (company.lastRoundAmount / 1000000).toFixed(1) : '0'}M
                   </div>
                 </div>
               </div>
-              
-              {/* Market Intelligence Section */}
-              <div className="border border-green-200 bg-green-50 rounded-lg p-4">
-                <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center">
-                  <TrendingUp className="h-5 w-5 text-green-600 mr-2" />
-                  Market Intelligence
-                </h3>
-                
-                {intelligence.marketIntelligence?.competitiveLandscape && (
-                  <div className="mb-3">
-                    <div className="text-xs text-gray-500 mb-1">Competitive Landscape</div>
-                    <div className="flex flex-wrap gap-2">
-                      {intelligence.marketIntelligence.competitiveLandscape.slice(0, 3).map((competitor: any, index: number) => (
-                        <span 
-                          key={index} 
-                          className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800"
-                        >
-                          {competitor.name}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                {intelligence.marketIntelligence?.industryTrends && (
-                  <div>
-                    <div className="text-xs text-gray-500 mb-1">Industry Trends</div>
-                    <div className="flex flex-wrap gap-2">
-                      {intelligence.marketIntelligence.industryTrends.slice(0, 2).map((trend: any, index: number) => (
-                        <Badge key={index} variant="default" className="text-xs bg-green-100 text-green-800">
-                          {trend.trend}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
+            </div>
+
+            <div className="space-y-4">
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Funding Details</h3>
+              <div className="space-y-3">
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600">Funding Source</span>
+                  <span className="font-medium text-gray-900">{company?.fundingFrom}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600">Latest Funding Date</span>
+                  <span className="font-medium text-gray-900">{company?.latestDateOfFunding}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600">Website</span>
+                  <span className="font-medium text-blue-600 truncate max-w-48">
+                    {company?.website || 'N/A'}
+                  </span>
+                </div>
               </div>
-            </>
-          )}
-          
-          {/* About the Company */}
-          <div>
-            <h3 className="text-lg font-bold text-gray-900 mb-3">About the Company</h3>
-            <p className="text-sm text-gray-700 leading-relaxed">
-              {company?.description}
-            </p>
+            </div>
           </div>
 
-          {/* BrightData Intelligence */}
+          {loading && (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              <span className="ml-3 text-gray-600">Loading enhanced intelligence...</span>
+            </div>
+          )}
+
+          {/* Intelligence Insights */}
           {company?.brightData && (
-            <div className="border border-blue-200 bg-blue-50 rounded-lg p-4">
-              <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center">
-                <Globe className="h-5 w-5 text-blue-600 mr-2" />
-                BrightData Intelligence
+            <div className="space-y-6">
+              <h3 className="text-xl font-bold text-gray-900 flex items-center">
+                <Globe className="h-6 w-6 text-blue-600 mr-3" />
+                Intelligence Insights
               </h3>
               
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-white p-3 rounded-lg">
-                  <div className="text-xs text-gray-500 mb-1">Recent Mentions</div>
-                  <div className="font-bold text-lg text-gray-900">
-                    {company.brightData.recentMentions}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-200">
+                  <div className="text-sm text-blue-700 mb-2">Recent Mentions</div>
+                  <div className="text-2xl font-bold text-blue-900">
+                    {company.brightData.recentMentions || 0}
                   </div>
                 </div>
                 
-                <div className="bg-white p-3 rounded-lg">
-                  <div className="text-xs text-gray-500 mb-1">Patents</div>
-                  <div className="font-bold text-lg text-gray-900">
-                    {company.brightData.patents}
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-xl border border-purple-200">
+                  <div className="text-sm text-purple-700 mb-2">Patents Filed</div>
+                  <div className="text-2xl font-bold text-purple-900">
+                    {company.brightData.patents || 0}
                   </div>
                 </div>
                 
-                <div className="bg-white p-3 rounded-lg">
-                  <div className="text-xs text-gray-500 mb-1">News Sentiment</div>
-                  <div className={`font-bold text-sm ${
-                    company.brightData.newsSentiment === 'positive' 
-                      ? 'text-green-600' 
-                      : company.brightData.newsSentiment === 'negative' 
-                        ? 'text-red-600' 
-                        : 'text-gray-600'
-                  }`}>
-                    {company.brightData.newsSentiment}
+                {company.brightData.newsSentiment === 'negative' && (
+                  <div className="bg-gradient-to-br from-red-50 to-red-100 p-4 rounded-xl border border-red-200">
+                    <div className="text-sm text-red-700 mb-2">News Sentiment</div>
+                    <div className="text-lg font-bold text-red-900 capitalize">
+                      {company.brightData.newsSentiment}
+                    </div>
                   </div>
-                </div>
+                )}
                 
-                <div className="bg-white p-3 rounded-lg">
-                  <div className="text-xs text-gray-500 mb-1">Tech Stack</div>
-                  <div className="text-sm text-gray-900 truncate">
-                    {company.brightData.techStack?.slice(0, 2).join(', ')}
+                <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl border border-green-200">
+                  <div className="text-sm text-green-700 mb-2">Market Position</div>
+                  <div className="text-lg font-bold text-green-900">
+                    {company.brightData.marketPosition || 'Emerging'}
                   </div>
                 </div>
               </div>
               
+              {/* Technology Stack */}
+              {company.brightData.techStack && company.brightData.techStack.length > 0 && (
+                <div>
+                  <h4 className="text-lg font-semibold text-gray-900 mb-3">Technology Stack</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {company.brightData.techStack.map((tech: string, index: number) => (
+                      <Badge key={index} variant="outline" className="px-3 py-1 text-sm">
+                        {tech}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {/* Competitive Landscape */}
               {company.brightData.competitors && company.brightData.competitors.length > 0 && (
-                <div className="mt-3">
-                  <div className="text-xs text-gray-500 mb-1">Competitors</div>
+                <div>
+                  <h4 className="text-lg font-semibold text-gray-900 mb-3">Competitive Landscape</h4>
                   <div className="flex flex-wrap gap-2">
                     {company.brightData.competitors.map((competitor: string, index: number) => (
                       <span 
                         key={index} 
-                        className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800"
+                        className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800 border"
                       >
                         {competitor}
                       </span>
@@ -241,19 +220,29 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
             </div>
           )}
 
-          {/* Team & Contact */}
+          {/* Leadership Team */}
           {company?.team && (
             <div>
-              <h3 className="text-lg font-bold text-gray-900 mb-3">Team & Contact</h3>
-              <div className="space-y-2">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">Leadership Team</span>
-                  <div className="text-right space-y-1">
-                    <p className="text-gray-900">{company.team.ceo}</p>
-                    <p className="text-gray-900">{company.team.cto}</p>
-                    <p className="text-gray-900">{company.team.head}</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Leadership Team</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {company.team.ceo && (
+                  <div className="bg-gray-50 p-4 rounded-lg border">
+                    <div className="text-sm text-gray-500 mb-1">Chief Executive Officer</div>
+                    <div className="font-semibold text-gray-900">{company.team.ceo}</div>
                   </div>
-                </div>
+                )}
+                {company.team.cto && (
+                  <div className="bg-gray-50 p-4 rounded-lg border">
+                    <div className="text-sm text-gray-500 mb-1">Chief Technology Officer</div>
+                    <div className="font-semibold text-gray-900">{company.team.cto}</div>
+                  </div>
+                )}
+                {company.team.head && (
+                  <div className="bg-gray-50 p-4 rounded-lg border">
+                    <div className="text-sm text-gray-500 mb-1">Head of Product</div>
+                    <div className="font-semibold text-gray-900">{company.team.head}</div>
+                  </div>
+                )}
               </div>
             </div>
           )}

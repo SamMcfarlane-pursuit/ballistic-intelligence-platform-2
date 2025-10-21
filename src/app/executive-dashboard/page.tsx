@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { 
+import {
   BarChart3,
   TrendingUp,
   FileText,
@@ -130,6 +130,7 @@ export default function ExecutiveDashboard() {
   const [selectedStage, setSelectedStage] = useState('All Stages')
   const [selectedInvestor, setSelectedInvestor] = useState('All Investors')
   const [selectedPeriod, setSelectedPeriod] = useState('90 Days')
+
   const [displayMode, setDisplayMode] = useState<'grid' | 'list'>('grid')
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null)
   const [showDialog, setShowDialog] = useState(false)
@@ -165,10 +166,15 @@ export default function ExecutiveDashboard() {
     loadData()
   }, [selectedTab, selectedSector, selectedRegion, selectedStage, selectedInvestor, selectedPeriod])
 
+  // Reset page when filters change
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [selectedSector, selectedRegion, selectedStage, selectedInvestor, selectedPeriod, searchQuery])
+
   const loadData = async () => {
     setLoading(true)
     setError(null)
-    
+
     try {
       if (selectedTab === 'trending-sectors') {
         await loadSectors()
@@ -189,7 +195,7 @@ export default function ExecutiveDashboard() {
       // Fetch trending data from API
       const response = await fetch('/api/trending-factors?action=sectors')
       const data = await response.json()
-      
+
       if (!data.success) {
         throw new Error(data.error || 'Failed to load sectors')
       }
@@ -303,7 +309,7 @@ export default function ExecutiveDashboard() {
       // Fetch trending data from API
       const response = await fetch('/api/trending-factors?action=sectors')
       const data = await response.json()
-      
+
       if (!data.success) {
         throw new Error(data.error || 'Failed to load sectors')
       }
@@ -333,7 +339,7 @@ export default function ExecutiveDashboard() {
       const limit = selectedPeriod === '30 Days' ? 20 : selectedPeriod === '60 Days' ? 30 : 50
       const response = await fetch(`/api/trending-factors?action=top&limit=${limit}`)
       const data = await response.json()
-      
+
       if (!data.success) {
         throw new Error(data.error || 'Failed to load companies')
       }
@@ -352,7 +358,7 @@ export default function ExecutiveDashboard() {
           totalFunding: details?.total_funding || 0,
           lastRound: details?.current_stage || 'Series A',
           lastRoundAmount: details?.fundingRounds?.[0]?.money_raised || 0,
-          latestDateOfFunding: details?.fundingRounds?.[0]?.announced_date 
+          latestDateOfFunding: details?.fundingRounds?.[0]?.announced_date
             ? new Date(details.fundingRounds[0].announced_date).toISOString().split('T')[0]
             : 'N/A',
           website: details?.website,
@@ -573,7 +579,7 @@ export default function ExecutiveDashboard() {
       // In production, this would call a real API endpoint
       // const response = await fetch('/api/patents?action=recent&limit=50')
       // const data = await response.json()
-      
+
       // For now, use mock data matching Figma design
       loadMockPatents()
     } catch (err) {
@@ -709,22 +715,22 @@ export default function ExecutiveDashboard() {
       // Search filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase()
-        const matchesSearch = 
+        const matchesSearch =
           company.name.toLowerCase().includes(query) ||
           company.description.toLowerCase().includes(query) ||
           company.sector.toLowerCase().includes(query)
         if (!matchesSearch) return false
       }
-      
+
       // Sector filter
       if (selectedSector !== 'All Sectors' && company.sector !== selectedSector) return false
-      
+
       // Investor filter
       if (selectedInvestor !== 'All Investors' && company.fundingFrom !== selectedInvestor) return false
-      
+
       // Funding stage filter
       if (selectedStage !== 'All Stages' && company.lastRound !== selectedStage) return false
-      
+
       return true
     })
   }, [companies, searchQuery, selectedSector, selectedInvestor, selectedStage])
@@ -735,28 +741,28 @@ export default function ExecutiveDashboard() {
       // Search filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase()
-        const matchesSearch = 
+        const matchesSearch =
           patent.title.toLowerCase().includes(query) ||
           patent.description.toLowerCase().includes(query) ||
           patent.company.toLowerCase().includes(query) ||
           patent.sector.toLowerCase().includes(query)
         if (!matchesSearch) return false
       }
-      
+
       // Sector filter
       if (selectedSector !== 'All Sectors' && patent.sector !== selectedSector) return false
-      
+
       return true
     })
   }, [patents, searchQuery, selectedSector])
 
   // Pagination
   const totalPages = Math.ceil(
-    selectedTab === 'patent-deep-dive' 
+    selectedTab === 'patent-deep-dive'
       ? filteredPatents.length / itemsPerPage
       : filteredCompanies.length / itemsPerPage
   )
-  
+
   const paginatedCompanies = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage
     return filteredCompanies.slice(startIndex, startIndex + itemsPerPage)
@@ -787,7 +793,7 @@ export default function ExecutiveDashboard() {
 
   const FilterDropdown = ({ label, value, options, onChange }: any) => {
     const [open, setOpen] = useState(false)
-    
+
     return (
       <div className="mb-4">
         <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-2">
@@ -834,50 +840,46 @@ export default function ExecutiveDashboard() {
         <div className="px-8 py-6">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <h1 className="text-4xl font-bold text-gray-900">Balli-Intel</h1>
+            <h1 className="text-4xl font-bold text-gray-900">Ballistic Intel</h1>
 
             {/* Navigation Tabs */}
             <div className="flex items-center space-x-3">
               <Button
                 onClick={() => setSelectedTab('market-intelligence')}
-                className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
-                  selectedTab === 'market-intelligence'
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
-                    : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
+                className={`px-6 py-2.5 rounded-lg font-medium transition-all ${selectedTab === 'market-intelligence'
+                  ? 'bg-blue-600 text-white hover:bg-blue-700'
+                  : 'bg-white text-gray-700 hover:bg-gray-50'
+                  }`}
               >
                 <BarChart3 className="h-4 w-4 mr-2" />
                 Market Intelligence
               </Button>
               <Button
                 onClick={() => setSelectedTab('trending-sectors')}
-                className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
-                  selectedTab === 'trending-sectors'
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
-                    : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
+                className={`px-6 py-2.5 rounded-lg font-medium transition-all ${selectedTab === 'trending-sectors'
+                  ? 'bg-blue-600 text-white hover:bg-blue-700'
+                  : 'bg-white text-gray-700 hover:bg-gray-50'
+                  }`}
               >
                 <TrendingUp className="h-4 w-4 mr-2" />
                 Trending Sectors
               </Button>
               <Button
                 onClick={() => setSelectedTab('patent-deep-dive')}
-                className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
-                  selectedTab === 'patent-deep-dive'
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
-                    : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
+                className={`px-6 py-2.5 rounded-lg font-medium transition-all ${selectedTab === 'patent-deep-dive'
+                  ? 'bg-blue-600 text-white hover:bg-blue-700'
+                  : 'bg-white text-gray-700 hover:bg-gray-50'
+                  }`}
               >
                 <FileText className="h-4 w-4 mr-2" />
                 Patent Deep Dive
               </Button>
               <Button
                 onClick={() => setSelectedTab('brightdata-monitor')}
-                className={`px-6 py-2.5 rounded-lg font-medium transition-all ${
-                  selectedTab === 'brightdata-monitor'
-                    ? 'bg-blue-600 text-white hover:bg-blue-700'
-                    : 'bg-white text-gray-700 hover:bg-gray-50'
-                }`}
+                className={`px-6 py-2.5 rounded-lg font-medium transition-all ${selectedTab === 'brightdata-monitor'
+                  ? 'bg-blue-600 text-white hover:bg-blue-700'
+                  : 'bg-white text-gray-700 hover:bg-gray-50'
+                  }`}
               >
                 <Globe className="h-4 w-4 mr-2" />
                 Data Intelligence
@@ -890,159 +892,156 @@ export default function ExecutiveDashboard() {
       <div className="flex">
         {/* Left Sidebar - Filters (hide for BrightData monitor) */}
         {selectedTab !== 'brightdata-monitor' && (
-        <aside className="w-64 border-r border-gray-200 bg-white min-h-screen p-6">
-          {selectedTab === 'trending-sectors' && (
-            <>
-              <FilterDropdown
-                label="FUNDING STAGE"
-                value={selectedStage}
-                options={stages}
-                onChange={setSelectedStage}
-              />
+          <aside className="w-64 border-r border-gray-200 bg-white min-h-screen p-6">
+            {selectedTab === 'trending-sectors' && (
+              <>
+                <FilterDropdown
+                  label="FUNDING STAGE"
+                  value={selectedStage}
+                  options={stages}
+                  onChange={setSelectedStage}
+                />
 
-              <FilterDropdown
-                label="INVESTOR"
-                value={selectedInvestor}
-                options={investors}
-                onChange={setSelectedInvestor}
-              />
+                <FilterDropdown
+                  label="INVESTOR"
+                  value={selectedInvestor}
+                  options={investors}
+                  onChange={setSelectedInvestor}
+                />
 
-              <FilterDropdown
-                label="PERIOD"
-                value={selectedPeriod}
-                options={periods}
-                onChange={setSelectedPeriod}
-              />
+                <FilterDropdown
+                  label="PERIOD"
+                  value={selectedPeriod}
+                  options={periods}
+                  onChange={setSelectedPeriod}
+                />
 
-              {/* Display Mode */}
-              <div className="mt-8">
-                <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">
-                  DISPLAY
-                </label>
-                <div className="flex space-x-2">
-                  <Button
-                    onClick={() => setDisplayMode('grid')}
-                    className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-all flex items-center justify-center ${
-                      displayMode === 'grid'
+                {/* Display Mode */}
+                <div className="mt-8">
+                  <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">
+                    DISPLAY
+                  </label>
+                  <div className="flex space-x-2">
+                    <Button
+                      onClick={() => setDisplayMode('grid')}
+                      className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-all flex items-center justify-center ${displayMode === 'grid'
                         ? 'bg-blue-600 text-white hover:bg-blue-700'
                         : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                    }`}
-                  >
-                    <Grid className="h-4 w-4 mr-2" />
-                    Grid
-                  </Button>
-                  <Button
-                    onClick={() => setDisplayMode('list')}
-                    className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-all flex items-center justify-center ${
-                      displayMode === 'list'
+                        }`}
+                    >
+                      <Grid className="h-4 w-4 mr-2" />
+                      Grid
+                    </Button>
+                    <Button
+                      onClick={() => setDisplayMode('list')}
+                      className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-all flex items-center justify-center ${displayMode === 'list'
                         ? 'bg-blue-600 text-white hover:bg-blue-700'
                         : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                    }`}
-                  >
-                    <List className="h-4 w-4 mr-2" />
-                    List
-                  </Button>
+                        }`}
+                    >
+                      <List className="h-4 w-4 mr-2" />
+                      List
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </>
-          )}
+              </>
+            )}
 
-          {selectedTab === 'market-intelligence' && (
-            <>
-              <FilterDropdown
-                label="SECTOR"
-                value={selectedSector}
-                options={sectorOptions}
-                onChange={setSelectedSector}
-              />
+            {selectedTab === 'market-intelligence' && (
+              <>
+                <FilterDropdown
+                  label="SECTOR"
+                  value={selectedSector}
+                  options={sectorOptions}
+                  onChange={setSelectedSector}
+                />
 
-              <FilterDropdown
-                label="REGION"
-                value={selectedRegion}
-                options={regions}
-                onChange={setSelectedRegion}
-              />
+                <FilterDropdown
+                  label="REGION"
+                  value={selectedRegion}
+                  options={regions}
+                  onChange={setSelectedRegion}
+                />
 
-              <FilterDropdown
-                label="FUNDING STAGE"
-                value={selectedStage}
-                options={stages}
-                onChange={setSelectedStage}
-              />
+                <FilterDropdown
+                  label="FUNDING STAGE"
+                  value={selectedStage}
+                  options={stages}
+                  onChange={setSelectedStage}
+                />
 
-              <FilterDropdown
-                label="INVESTOR"
-                value={selectedInvestor}
-                options={investors}
-                onChange={setSelectedInvestor}
-              />
+                <FilterDropdown
+                  label="INVESTOR"
+                  value={selectedInvestor}
+                  options={investors}
+                  onChange={setSelectedInvestor}
+                />
 
-              <FilterDropdown
-                label="PERIOD"
-                value={selectedPeriod}
-                options={periods}
-                onChange={setSelectedPeriod}
-              />
+                <FilterDropdown
+                  label="PERIOD"
+                  value={selectedPeriod}
+                  options={periods}
+                  onChange={setSelectedPeriod}
+                />
 
-              {/* Display Mode */}
-              <div className="mt-8">
-                <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">
-                  DISPLAY
-                </label>
-                <div className="flex space-x-2">
-                  <Button
-                    onClick={() => setDisplayMode('grid')}
-                    className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-all flex items-center justify-center ${
-                      displayMode === 'grid'
+
+                {/* Display Mode */}
+                <div className="mt-8">
+                  <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">
+                    DISPLAY
+                  </label>
+                  <div className="flex space-x-2">
+                    <Button
+                      onClick={() => setDisplayMode('grid')}
+                      className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-all flex items-center justify-center ${displayMode === 'grid'
                         ? 'bg-blue-600 text-white hover:bg-blue-700'
                         : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                    }`}
-                  >
-                    <Grid className="h-4 w-4 mr-2" />
-                    Grid
-                  </Button>
-                  <Button
-                    onClick={() => setDisplayMode('list')}
-                    className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-all flex items-center justify-center ${
-                      displayMode === 'list'
+                        }`}
+                    >
+                      <Grid className="h-4 w-4 mr-2" />
+                      Grid
+                    </Button>
+                    <Button
+                      onClick={() => setDisplayMode('list')}
+                      className={`flex-1 px-4 py-2.5 rounded-lg font-medium transition-all flex items-center justify-center ${displayMode === 'list'
                         ? 'bg-blue-600 text-white hover:bg-blue-700'
                         : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                    }`}
-                  >
-                    <List className="h-4 w-4 mr-2" />
-                    List
-                  </Button>
+                        }`}
+                    >
+                      <List className="h-4 w-4 mr-2" />
+                      List
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </>
-          )}
+              </>
+            )}
 
-          {selectedTab === 'patent-deep-dive' && (
-            <>
-              <FilterDropdown
-                label="SECTOR"
-                value={selectedSector}
-                options={sectorOptions}
-                onChange={setSelectedSector}
-              />
+            {selectedTab === 'patent-deep-dive' && (
+              <>
+                <FilterDropdown
+                  label="SECTOR"
+                  value={selectedSector}
+                  options={sectorOptions}
+                  onChange={setSelectedSector}
+                />
 
-              <FilterDropdown
-                label="PERIOD"
-                value={selectedPeriod}
-                options={periods}
-                onChange={setSelectedPeriod}
-              />
+                <FilterDropdown
+                  label="PERIOD"
+                  value={selectedPeriod}
+                  options={periods}
+                  onChange={setSelectedPeriod}
+                />
 
-              {/* Patent-specific info */}
-              <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <p className="text-xs font-semibold text-blue-900 mb-2">Patent Insights</p>
-                <p className="text-xs text-blue-700">
-                  Discover innovative cybersecurity patents with high novelty scores
-                </p>
-              </div>
-            </>
-          )}
-        </aside>
+                {/* Patent-specific info */}
+                <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                  <p className="text-xs font-semibold text-blue-900 mb-2">Patent Insights</p>
+                  <p className="text-xs text-blue-700">
+                    Discover innovative cybersecurity patents with high novelty scores
+                  </p>
+                </div>
+              </>
+            )}
+          </aside>
         )}
 
         {/* Main Content */}
@@ -1074,10 +1073,10 @@ export default function ExecutiveDashboard() {
               {/* Sector Cards Grid */}
               <div className={displayMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'}>
                 {sectors.map((sector) => (
-                  <SectorIntelligenceCard 
-                    key={sector.id} 
-                    sector={sector} 
-                    displayMode={displayMode} 
+                  <SectorIntelligenceCard
+                    key={sector.id}
+                    sector={sector}
+                    displayMode={displayMode}
                   />
                 ))}
               </div>
@@ -1091,17 +1090,17 @@ export default function ExecutiveDashboard() {
                     <ResponsiveContainer width="100%" height={400}>
                       <BarChart data={sectorActivityData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                        <XAxis 
-                          dataKey="name" 
+                        <XAxis
+                          dataKey="name"
                           tick={{ fill: '#6b7280' }}
                           axisLine={{ stroke: '#e5e7eb' }}
                         />
-                        <YAxis 
+                        <YAxis
                           tick={{ fill: '#6b7280' }}
                           axisLine={{ stroke: '#e5e7eb' }}
                         />
-                        <Tooltip 
-                          contentStyle={{ 
+                        <Tooltip
+                          contentStyle={{
                             backgroundColor: '#ffffff',
                             border: '1px solid #e5e7eb',
                             borderRadius: '8px'
@@ -1121,17 +1120,17 @@ export default function ExecutiveDashboard() {
                     <ResponsiveContainer width="100%" height={400}>
                       <BarChart data={growthComparisonData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                        <XAxis 
-                          dataKey="name" 
+                        <XAxis
+                          dataKey="name"
                           tick={{ fill: '#6b7280' }}
                           axisLine={{ stroke: '#e5e7eb' }}
                         />
-                        <YAxis 
+                        <YAxis
                           tick={{ fill: '#6b7280' }}
                           axisLine={{ stroke: '#e5e7eb' }}
                         />
-                        <Tooltip 
-                          contentStyle={{ 
+                        <Tooltip
+                          contentStyle={{
                             backgroundColor: '#ffffff',
                             border: '1px solid #e5e7eb',
                             borderRadius: '8px'
@@ -1142,7 +1141,7 @@ export default function ExecutiveDashboard() {
                         <Bar dataKey="thisMonth" fill="#3b82f6" radius={[4, 4, 0, 0]} name="This Month" />
                       </BarChart>
                     </ResponsiveContainer>
-                    
+
                     {/* Growth Indicators */}
                     <div className="grid grid-cols-6 gap-4 mt-8">
                       {growthComparisonData.map((item) => (
@@ -1211,13 +1210,13 @@ export default function ExecutiveDashboard() {
                   </div>
                 ) : (
                   paginatedCompanies.map((company) => (
-                    <CompanyIntelligenceCard 
-                      key={company.id} 
-                      company={company} 
+                    <CompanyIntelligenceCard
+                      key={company.id}
+                      company={company}
                       onShowDetails={(company) => {
                         setSelectedCompany(company)
                         setShowDialog(true)
-                      }} 
+                      }}
                     />
                   ))
                 )}
@@ -1229,11 +1228,10 @@ export default function ExecutiveDashboard() {
                   <Button
                     disabled={currentPage === 1}
                     onClick={() => setCurrentPage(currentPage - 1)}
-                    className={`px-4 py-2 rounded-lg ${
-                      currentPage === 1
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                    }`}
+                    className={`px-4 py-2 rounded-lg ${currentPage === 1
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                      }`}
                   >
                     Previous
                   </Button>
@@ -1241,11 +1239,10 @@ export default function ExecutiveDashboard() {
                     <Button
                       key={page}
                       onClick={() => setCurrentPage(page)}
-                      className={`px-4 py-2 rounded-lg ${
-                        currentPage === page
-                          ? 'bg-blue-600 text-white hover:bg-blue-700'
-                          : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                      }`}
+                      className={`px-4 py-2 rounded-lg ${currentPage === page
+                        ? 'bg-blue-600 text-white hover:bg-blue-700'
+                        : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                        }`}
                     >
                       {page}
                     </Button>
@@ -1253,11 +1250,10 @@ export default function ExecutiveDashboard() {
                   <Button
                     disabled={currentPage === totalPages}
                     onClick={() => setCurrentPage(currentPage + 1)}
-                    className={`px-4 py-2 rounded-lg ${
-                      currentPage === totalPages
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                    }`}
+                    className={`px-4 py-2 rounded-lg ${currentPage === totalPages
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                      }`}
                   >
                     Next
                   </Button>
@@ -1330,11 +1326,10 @@ export default function ExecutiveDashboard() {
                   <Button
                     disabled={currentPage === 1}
                     onClick={() => setCurrentPage(currentPage - 1)}
-                    className={`px-4 py-2 rounded-lg ${
-                      currentPage === 1
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                    }`}
+                    className={`px-4 py-2 rounded-lg ${currentPage === 1
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                      }`}
                   >
                     Previous
                   </Button>
@@ -1342,11 +1337,10 @@ export default function ExecutiveDashboard() {
                     <Button
                       key={page}
                       onClick={() => setCurrentPage(page)}
-                      className={`px-4 py-2 rounded-lg ${
-                        currentPage === page
-                          ? 'bg-blue-600 text-white hover:bg-blue-700'
-                          : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                      }`}
+                      className={`px-4 py-2 rounded-lg ${currentPage === page
+                        ? 'bg-blue-600 text-white hover:bg-blue-700'
+                        : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                        }`}
                     >
                       {page}
                     </Button>
@@ -1354,11 +1348,10 @@ export default function ExecutiveDashboard() {
                   <Button
                     disabled={currentPage === totalPages}
                     onClick={() => setCurrentPage(currentPage + 1)}
-                    className={`px-4 py-2 rounded-lg ${
-                      currentPage === totalPages
-                        ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                        : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
-                    }`}
+                    className={`px-4 py-2 rounded-lg ${currentPage === totalPages
+                      ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                      : 'bg-white border border-gray-300 text-gray-700 hover:bg-gray-50'
+                      }`}
                   >
                     Next
                   </Button>
@@ -1370,10 +1363,10 @@ export default function ExecutiveDashboard() {
       </div>
 
       {/* Company Details Dialog */}
-      <EnhancedCompanyDialog 
-        company={selectedCompany} 
-        open={showDialog} 
-        onOpenChange={setShowDialog} 
+      <EnhancedCompanyDialog
+        company={selectedCompany}
+        open={showDialog}
+        onOpenChange={setShowDialog}
       />
 
       {/* BrightData Monitor View */}
