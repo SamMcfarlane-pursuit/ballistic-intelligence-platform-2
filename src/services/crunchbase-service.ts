@@ -979,6 +979,17 @@ class CrunchbaseService {
     apiCalls: number
   }> {
     try {
+      // Check if API key is configured
+      if (!this.apiKey || this.apiKey === 'demo-key' || this.apiKey === 'your_crunchbase_api_key_here') {
+        return {
+          status: 'degraded',
+          lastSync: new Date().toISOString(),
+          totalOrganizations: 0,
+          errorRate: 0,
+          apiCalls: 0
+        }
+      }
+
       // Simulate health check
       await new Promise(resolve => setTimeout(resolve, 300))
       
