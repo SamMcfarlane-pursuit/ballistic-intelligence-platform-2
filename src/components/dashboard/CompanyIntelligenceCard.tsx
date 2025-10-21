@@ -65,15 +65,15 @@ export default function CompanyIntelligenceCard({ company, onShowDetails }: Comp
   }
 
   return (
-    <Card className="bg-white border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all group">
+    <Card className="bg-white border border-gray-200 hover:border-orange-300 hover:shadow-lg transition-all group">
       <CardContent className="p-6">
         {/* Company Header */}
         <div className="flex items-start space-x-3 mb-4">
-          <div className="flex-shrink-0 w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+          <div className="flex-shrink-0 w-12 h-12 bg-orange-600 rounded-lg flex items-center justify-center">
             <Building2 className="h-6 w-6 text-white" />
           </div>
           <div className="flex-1">
-            <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
+            <h3 className="text-lg font-bold text-gray-900 group-hover:text-orange-600 transition-colors">
               {company.name}
             </h3>
             <p className="text-sm text-gray-500">{company.sector}</p>
@@ -112,7 +112,7 @@ export default function CompanyIntelligenceCard({ company, onShowDetails }: Comp
           </div>
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-500">Funding From:</span>
-            <div className="flex items-center text-blue-600">
+            <div className="flex items-center text-orange-600">
               <Users className="h-3 w-3 mr-1" />
               <span>{company.fundingFrom}</span>
             </div>
@@ -137,7 +137,7 @@ export default function CompanyIntelligenceCard({ company, onShowDetails }: Comp
         {company.brightData && (
           <div className="border-t border-gray-200 pt-4 mt-4">
             <h4 className="text-sm font-bold text-gray-900 mb-3 flex items-center">
-              <Globe className="h-4 w-4 text-blue-600 mr-2" />
+              <Globe className="h-4 w-4 text-orange-600 mr-2" />
               Intelligence Insights
             </h4>
             
@@ -194,7 +194,7 @@ export default function CompanyIntelligenceCard({ company, onShowDetails }: Comp
         {/* View Details Button */}
         <Button
           onClick={() => onShowDetails(company)}
-          className="w-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-2 rounded-lg transition-all group-hover:border-blue-600 group-hover:text-blue-600"
+          className="w-full bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-2 rounded-lg transition-all group-hover:border-blue-600 group-hover:text-orange-600"
         >
           <BarChart3 className="h-4 w-4 mr-2" />
           View Details

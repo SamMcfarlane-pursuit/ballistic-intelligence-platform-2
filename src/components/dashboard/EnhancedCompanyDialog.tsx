@@ -74,7 +74,7 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
       <DialogContent className="max-w-4xl max-h-[90vh] bg-white overflow-y-auto">
         <DialogHeader className="sticky top-0 bg-white z-10 pb-4 border-b border-gray-200">
           <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-16 h-16 bg-gradient-to-br from-orange-600 to-red-600 rounded-xl flex items-center justify-center shadow-lg">
               <Building2 className="h-8 w-8 text-white" />
             </div>
             <div className="flex-1">
@@ -132,7 +132,7 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <span className="text-gray-600">Website</span>
-                  <span className="font-medium text-blue-600 truncate max-w-48">
+                  <span className="font-medium text-orange-600 truncate max-w-48">
                     {company?.website || 'N/A'}
                   </span>
                 </div>
@@ -142,7 +142,7 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
 
           {loading && (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+              <Loader2 className="h-8 w-8 animate-spin text-orange-600" />
               <span className="ml-3 text-gray-600">Loading enhanced intelligence...</span>
             </div>
           )}
@@ -151,7 +151,7 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
           {company?.brightData && (
             <div className="space-y-6">
               <h3 className="text-xl font-bold text-gray-900 flex items-center">
-                <Globe className="h-6 w-6 text-blue-600 mr-3" />
+                <Globe className="h-6 w-6 text-orange-600 mr-3" />
                 Intelligence Insights
               </h3>
               

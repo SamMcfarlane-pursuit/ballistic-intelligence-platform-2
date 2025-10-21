@@ -801,6 +801,15 @@ class BrightDataService {
    */
   async healthCheck(): Promise<{ healthy: boolean; message: string; metrics: BrightDataMetrics }> {
     try {
+      // Check if API key is configured
+      if (!this.config.apiKey || this.config.apiKey === 'your_brightdata_api_key_here') {
+        return {
+          healthy: false,
+          message: 'BrightData API key not configured - using mock data',
+          metrics: this.getMetrics()
+        }
+      }
+
       const testResponse = await this.proxyRequest({
         url: 'https://httpbin.org/get',
         timeout: 5000
@@ -808,13 +817,13 @@ class BrightDataService {
 
       return {
         healthy: testResponse.success,
-        message: testResponse.success ? 'BrightData service is operational' : 'Service degraded',
+        message: testResponse.success ? 'BrightData service is operational' : 'Service degraded - using mock data',
         metrics: this.getMetrics()
       }
     } catch (error) {
       return {
         healthy: false,
-        message: 'BrightData service is unavailable',
+        message: 'BrightData service is unavailable - using mock data',
         metrics: this.getMetrics()
       }
     }
