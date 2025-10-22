@@ -3,7 +3,6 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import TechStack from '@/components/ui/tech-stack'
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -212,11 +211,11 @@ export default function TechnologyTrendsCard({ trend, rank, onViewDetails }: Tec
         {/* Related Technologies */}
         {trend.relatedTechnologies && trend.relatedTechnologies.length > 0 && (
           <div className="mb-4">
-            <TechStack 
-              technologies={trend.relatedTechnologies} 
-              variant="minimal"
-              className="text-xs"
-            />
+            <div className="text-xs font-medium text-gray-700 mb-2">Related Technologies</div>
+            <div className="text-xs text-gray-600">
+              {trend.relatedTechnologies.slice(0, 3).join(', ')}
+              {trend.relatedTechnologies.length > 3 && ` +${trend.relatedTechnologies.length - 3} more`}
+            </div>
           </div>
         )}
 

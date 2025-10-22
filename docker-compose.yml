@@ -69,11 +69,11 @@ services:
       - PORT=3000
       - NEXT_TELEMETRY_DISABLED=1
       # BrightData Configuration
-      - BRIGHTDATA_API_KEY=${BRIGHTDATA_API_KEY:-demo-key}
+      - BRIGHTDATA_API_KEY=${BRIGHTDATA_API_KEY:-1gexjh51ct68}
       - BRIGHTDATA_PROXY_HOST=${BRIGHTDATA_PROXY_HOST:-brd.superproxy.io}
-      - BRIGHTDATA_PROXY_PORT=${BRIGHTDATA_PROXY_PORT:-22225}
-      - BRIGHTDATA_PROXY_USERNAME=${BRIGHTDATA_PROXY_USERNAME:-demo}
-      - BRIGHTDATA_PROXY_PASSWORD=${BRIGHTDATA_PROXY_PASSWORD:-demo}
+      - BRIGHTDATA_PROXY_PORT=${BRIGHTDATA_PROXY_PORT:-33335}
+      - BRIGHTDATA_PROXY_USERNAME=${BRIGHTDATA_PROXY_USERNAME:-brd-customer-hl_7e9f775b-zone-ballistic_intelligence}
+      - BRIGHTDATA_PROXY_PASSWORD=${BRIGHTDATA_PROXY_PASSWORD:-1gexjh51ct68}
       # Crunchbase Configuration
       - CRUNCHBASE_API_KEY=${CRUNCHBASE_API_KEY:-demo-key}
       - CRUNCHBASE_BASE_URL=${CRUNCHBASE_BASE_URL:-https://api.crunchbase.com/api/v4}
@@ -141,10 +141,12 @@ services:
     image: brightdata/proxy-manager:latest
     container_name: ballistic-brightdata-proxy
     ports:
-      - "22999:22999"
+      - "33335:33335"
     environment:
-      - BRIGHTDATA_API_KEY=${BRIGHTDATA_API_KEY:-demo-key}
-      - BRIGHTDATA_ZONE=${BRIGHTDATA_ZONE:-static}
+      - BRIGHTDATA_API_KEY=${BRIGHTDATA_API_KEY:-1gexjh51ct68}
+      - BRIGHTDATA_ZONE=${BRIGHTDATA_ZONE:-ballistic_intelligence}
+      - BRIGHTDATA_USERNAME=${BRIGHTDATA_PROXY_USERNAME:-brd-customer-hl_7e9f775b-zone-ballistic_intelligence}
+      - BRIGHTDATA_PASSWORD=${BRIGHTDATA_PROXY_PASSWORD:-1gexjh51ct68}
     networks:
       - ballistic-network
     restart: unless-stopped

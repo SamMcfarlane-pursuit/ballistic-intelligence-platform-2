@@ -3,7 +3,6 @@
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import TechStack from '@/components/ui/tech-stack'
 import { 
   Building2, 
   MapPin, 
@@ -167,13 +166,15 @@ export default function CompanyIntelligenceCard({ company, onShowDetails }: Comp
               )}
             </div>
             
-            <TechStack 
-              technologies={company.brightData.techStack || []} 
-              variant="compact" 
-              maxVisible={3}
-              showIcons={true}
-              className="mb-3"
-            />
+            {company.brightData.techStack && company.brightData.techStack.length > 0 && (
+              <div className="mb-3">
+                <div className="text-xs text-gray-500 mb-1">Tech Stack</div>
+                <div className="text-xs text-gray-700">
+                  {company.brightData.techStack.slice(0, 3).join(', ')}
+                  {company.brightData.techStack.length > 3 && ` +${company.brightData.techStack.length - 3} more`}
+                </div>
+              </div>
+            )}
             
             {company.brightData.competitors && company.brightData.competitors.length > 0 && (
               <div>

@@ -10,6 +10,7 @@
  */
 
 import axios, { AxiosInstance, AxiosError } from 'axios'
+import https from 'https'
 
 // ============================================================================
 // TypeScript Interfaces
@@ -198,11 +199,11 @@ class BrightDataService {
 
   constructor(config?: Partial<BrightDataConfig>) {
     this.config = {
-      apiKey: process.env.BRIGHTDATA_API_KEY || '',
+      apiKey: process.env.BRIGHTDATA_API_KEY || '1gexjh51ct68',
       proxyHost: process.env.BRIGHTDATA_PROXY_HOST || 'brd.superproxy.io',
       proxyPort: parseInt(process.env.BRIGHTDATA_PROXY_PORT || '33335'),
-      proxyUsername: process.env.BRIGHTDATA_PROXY_USERNAME || '',
-      proxyPassword: process.env.BRIGHTDATA_PROXY_PASSWORD || '',
+      proxyUsername: process.env.BRIGHTDATA_PROXY_USERNAME || 'brd-customer-hl_7e9f775b-zone-ballistic_intelligence',
+      proxyPassword: process.env.BRIGHTDATA_PROXY_PASSWORD || '1gexjh51ct68',
       timeout: 30000,
       maxRetries: 3,
       rateLimitPerMinute: 60,
@@ -214,7 +215,11 @@ class BrightDataService {
       headers: {
         'Authorization': `Bearer ${this.config.apiKey}`,
         'Content-Type': 'application/json'
-      }
+      },
+      // Handle SSL issues with BrightData proxy
+      httpsAgent: new https.Agent({
+        rejectUnauthorized: false
+      })
     })
 
     this.rateLimitTracker = new Map()

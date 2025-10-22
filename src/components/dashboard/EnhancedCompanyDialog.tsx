@@ -8,7 +8,6 @@ import {
   DialogTitle 
 } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
-import TechStack from '@/components/ui/tech-stack'
 import { Building2, Globe, TrendingUp, X, Loader2 } from 'lucide-react'
 
 interface EnhancedCompanyDialogProps {
@@ -191,11 +190,17 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
               {/* Technology Stack */}
               {company.brightData.techStack && company.brightData.techStack.length > 0 && (
                 <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
-                  <TechStack 
-                    technologies={company.brightData.techStack} 
-                    variant="detailed" 
-                    showIcons={true}
-                  />
+                  <h4 className="text-lg font-semibold text-gray-900 mb-3">Technology Stack</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {company.brightData.techStack.map((tech: string, index: number) => (
+                      <Badge key={index} variant="outline" className="px-3 py-1 text-sm">
+                        {tech}
+                      </Badge>
+                    ))}
+                  </div>
+                  <div className="mt-3 text-xs text-blue-600">
+                    {company.brightData.techStack.length} technologies identified
+                  </div>
                 </div>
               )}
               
