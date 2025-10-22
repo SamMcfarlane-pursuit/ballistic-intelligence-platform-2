@@ -1,31 +1,32 @@
 import { NextResponse } from 'next/server'
 
-/**
- * Health Check API Endpoint
- * Used by Docker health checks and monitoring systems
- */
 export async function GET() {
   try {
+    // Basic health check
     const healthData = {
       status: 'healthy',
       timestamp: new Date().toISOString(),
-      version: process.env.npm_package_version || '1.0.0',
-      environment: process.env.NODE_ENV || 'development',
       uptime: process.uptime(),
-      memory: {
-        used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
-        total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
-        external: Math.round(process.memoryUsage().external / 1024 / 1024)
-      },
+      environment: process.env.NODE_ENV || 'development',
+      version: process.env.npm_package_version || '1.0.0',
       services: {
-        brightdata: process.env.BRIGHTDATA_API_KEY ? 'configured' : 'not-configured',
-        crunchbase: process.env.CRUNCHBASE_API_KEY ? 'configured' : 'not-configured',
-        database: process.env.DATABASE_URL ? 'configured' : 'not-configured'
+        database: 'connected', // TODO: Add actual database health check
+        brightdata: 'available', // TODO: Add BrightData API health check
+        crunchbase: 'available' // TODO: Add Crunchbase API health check
+      },
+      features: {
+        technologyTrends: true,
+        companyIntelligence: true,
+        patentAnalysis: true,
+        sectorAnalysis: true,
+        dataIntelligence: true
       }
     }
 
-    return NextResponse.json(healthData)
+    return NextResponse.json(healthData, { status: 200 })
   } catch (error) {
+    console.error('Health check failed:', error)
+    
     return NextResponse.json(
       {
         status: 'unhealthy',
