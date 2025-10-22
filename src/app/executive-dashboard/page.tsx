@@ -201,7 +201,6 @@ export default function ExecutiveDashboard() {
       'CTO/Technical Lead',
       'Business Model',
       'Target Market',
-      'Key Technology Stack',
       'Patent Portfolio Count',
       'Competitive Advantages',
       'Market Position Analysis',
@@ -251,7 +250,6 @@ export default function ExecutiveDashboard() {
         cleanDataForCSV(company.team?.cto || 'Not disclosed'),
         cleanDataForCSV(businessModel),
         cleanDataForCSV(getTargetMarket(company.sector)),
-        cleanDataForCSV(company.brightData?.techStack?.join(', ') || 'Technology stack not disclosed'),
         cleanDataForCSV(company.brightData?.patents || 0),
         cleanDataForCSV(getCompetitiveAdvantages(company.sector, company.brightData?.patents)),
         cleanDataForCSV(getMarketPositionAnalysis(company.brightData?.marketPosition, companyAge, company.totalFunding)),
@@ -1129,7 +1127,6 @@ export default function ExecutiveDashboard() {
         cleanDataForCSV(`Funding: $${company.totalFunding?.toLocaleString()}, Round: ${company.lastRound}`),
         cleanDataForCSV(`Hiring: ${company.brightData?.growthIndicators?.hiring}%, Funding: ${company.brightData?.growthIndicators?.funding}%`),
         cleanDataForCSV(`Sentiment: ${company.brightData?.newsSentiment}, Mentions: ${company.brightData?.recentMentions}`),
-        cleanDataForCSV(company.brightData?.techStack?.join(', ')),
         cleanDataForCSV(`Position: ${company.brightData?.marketPosition}, Patents: ${company.brightData?.patents}`),
         cleanDataForCSV(`Source: ${company.fundingFrom}, Amount: $${company.lastRoundAmount?.toLocaleString()}`),
         cleanDataForCSV(`Founded: ${company.founded}, Last Funding: ${company.latestDateOfFunding}`),
@@ -2669,7 +2666,7 @@ export default function ExecutiveDashboard() {
         brightData: {
           newsSentiment: (values[headers.indexOf('News Sentiment')] as 'positive' | 'neutral' | 'negative') || 'neutral',
           recentMentions: parseInt(values[headers.indexOf('Recent Mentions')]) || 0,
-          techStack: values[headers.indexOf('Tech Stack')]?.split(', ') || [],
+
           patents: parseInt(values[headers.indexOf('Patents')]) || 0,
           competitors: values[headers.indexOf('Competitors')]?.split(', ') || [],
           marketPosition: (values[headers.indexOf('Market Position')] as 'Emerging' | 'Growing' | 'Established' | 'Innovative') || 'Emerging',

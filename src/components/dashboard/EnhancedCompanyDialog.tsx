@@ -187,22 +187,7 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
                 </div>
               </div>
               
-              {/* Technology Stack */}
-              {company.brightData.techStack && company.brightData.techStack.length > 0 && (
-                <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-lg border border-blue-200">
-                  <h4 className="text-lg font-semibold text-gray-900 mb-3">Technology Stack</h4>
-                  <div className="flex flex-wrap gap-2">
-                    {company.brightData.techStack.map((tech: string, index: number) => (
-                      <Badge key={index} variant="outline" className="px-3 py-1 text-sm">
-                        {tech}
-                      </Badge>
-                    ))}
-                  </div>
-                  <div className="mt-3 text-xs text-blue-600">
-                    {company.brightData.techStack.length} technologies identified
-                  </div>
-                </div>
-              )}
+
               
               {/* Competitive Landscape */}
               {company.brightData.competitors && company.brightData.competitors.length > 0 && (

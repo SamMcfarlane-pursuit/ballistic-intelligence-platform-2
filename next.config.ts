@@ -13,6 +13,9 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   
+  // Skip static generation for API routes and dynamic pages
+  trailingSlash: false,
+  
   // Enable React strict mode for better development experience
   reactStrictMode: true,
   
@@ -80,6 +83,11 @@ const nextConfig: NextConfig = {
     }
     
     return config
+  },
+  
+  // Build configuration
+  generateBuildId: async () => {
+    return 'ballistic-intelligence-' + Date.now()
   },
   
   turbopack: {

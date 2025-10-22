@@ -166,15 +166,7 @@ export default function CompanyIntelligenceCard({ company, onShowDetails }: Comp
               )}
             </div>
             
-            {company.brightData.techStack && company.brightData.techStack.length > 0 && (
-              <div className="mb-3">
-                <div className="text-xs text-gray-500 mb-1">Tech Stack</div>
-                <div className="text-xs text-gray-700">
-                  {company.brightData.techStack.slice(0, 3).join(', ')}
-                  {company.brightData.techStack.length > 3 && ` +${company.brightData.techStack.length - 3} more`}
-                </div>
-              </div>
-            )}
+
             
             {company.brightData.competitors && company.brightData.competitors.length > 0 && (
               <div>
