@@ -37,6 +37,7 @@ import PatentIntelligenceCard from '@/components/dashboard/PatentIntelligenceCar
 import SectorIntelligenceCard from '@/components/dashboard/SectorIntelligenceCard'
 import CompanyIntelligenceCard from '@/components/dashboard/CompanyIntelligenceCard'
 import EnhancedCompanyDialog from '@/components/dashboard/EnhancedCompanyDialog'
+import TechnologyTrendsCard from '@/components/dashboard/TechnologyTrendsCard'
 
 interface SectorData {
   id: string
@@ -126,6 +127,21 @@ interface TrendingCompany {
   percentageChange: number
   rank: number
   companyDetails?: any
+}
+
+interface TechnologyTrend {
+  id: string
+  name: string
+  category: string
+  adoptionCount: number
+  growthRate: number
+  avgFunding: number
+  trendDirection: 'up' | 'down' | 'stable'
+  maturityLevel: 'emerging' | 'growing' | 'stable' | 'mature' | 'declining'
+  popularityScore: number
+  successRate: number
+  topCompanies: string[]
+  relatedTechnologies: string[]
 }
 
 export default function ExecutiveDashboard() {
@@ -1195,6 +1211,7 @@ export default function ExecutiveDashboard() {
   const [error, setError] = useState<string | null>(null)
   const [trendingData, setTrendingData] = useState<TrendingCompany[]>([])
   const [patents, setPatents] = useState<Patent[]>([])
+  const [technologyTrends, setTechnologyTrends] = useState<TechnologyTrend[]>([])
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 9
 
@@ -1241,7 +1258,44 @@ export default function ExecutiveDashboard() {
     loadData()
   }, [selectedTab, selectedSector, selectedRegion, selectedStage, selectedInvestor, selectedPeriod])
 
-  // Initial data load with health check
+  // BrightData real-time enrichment
+  const enrichCompanyWithBrightData = async (company: Company) => {
+    try {
+      const response = await fetch(`/api/brightdata?action=enrich&company=${encodeURIComponent(company.name)}`)
+      if (response.ok) {
+        const enrichmentData = await response.json()
+        if (enrichmentData.success && enrichmentData.data) {
+          return {
+            ...company,
+            brightData: {
+              ...company.brightData,
+              newsSentiment: enrichmentData.data.news?.sentiment || company.brightData?.newsSentiment,
+              recentMentions: enrichmentData.data.news?.recentMentions || company.brightData?.recentMentions,
+              techStack: enrichmentData.data.technology?.techStack || company.brightData?.techStack,
+              competitors: enrichmentData.data.competitors || company.brightData?.competitors,
+              marketPosition: enrichmentData.data.marketPosition || company.brightData?.marketPosition
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('BrightData enrichment failed for', company.name)
+    }
+    return company
+  }
+
+  // Enhanced data loading with BrightData enrichment
+  const enrichAllCompaniesWithBrightData = async () => {
+    if (companies.length > 0) {
+      console.log('Enriching companies with BrightData...')
+      const enrichedCompanies = await Promise.all(
+        companies.map(company => enrichCompanyWithBrightData(company))
+      )
+      setCompanies(enrichedCompanies)
+    }
+  }
+
+  // Initial data load with health check and BrightData enrichment
   useEffect(() => {
     const initializeData = async () => {
       const apiHealthy = await checkAPIHealth()
@@ -1250,11 +1304,29 @@ export default function ExecutiveDashboard() {
         loadMockSectors()
         loadMockCompanies()
         loadMockPatents()
+        loadMockTechnologyTrends()
       }
+      
+      // Try to enrich with BrightData after initial load
+      setTimeout(() => {
+        enrichAllCompaniesWithBrightData()
+      }, 2000)
     }
     
     initializeData()
   }, [])
+
+  // Periodic BrightData enrichment (every 5 minutes)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (companies.length > 0) {
+        console.log('Periodic BrightData enrichment...')
+        enrichAllCompaniesWithBrightData()
+      }
+    }, 300000) // 5 minutes
+
+    return () => clearInterval(interval)
+  }, [companies])
 
   // Reset page when filters change
   useEffect(() => {
@@ -1274,6 +1346,9 @@ export default function ExecutiveDashboard() {
         await loadCompanies()
       } else if (selectedTab === 'patent-deep-dive') {
         await loadPatents()
+      } else if (selectedTab === 'technology-trends') {
+        // For now, load mock data directly since we don't have a real API yet
+        loadMockTechnologyTrends()
       } else if (selectedTab === 'data-intelligence') {
         await loadDataIntelligence()
       }
@@ -1291,6 +1366,8 @@ export default function ExecutiveDashboard() {
         loadMockCompanies()
       } else if (selectedTab === 'patent-deep-dive') {
         loadMockPatents()
+      } else if (selectedTab === 'technology-trends') {
+        loadMockTechnologyTrends()
       }
     } finally {
       setLoading(false)
@@ -1950,6 +2027,209 @@ export default function ExecutiveDashboard() {
             news: 24
           }
         }
+      },
+      {
+        id: '12',
+        name: 'SecureFlow',
+        description: 'AI-powered network traffic analysis and threat detection for enterprise networks',
+        sector: 'Network Security',
+        location: 'Austin, TX, USA',
+        region: 'North America',
+        founded: 2022,
+        fundingFrom: 'Ballistic Ventures',
+        totalFunding: 15000000,
+        lastRound: 'Series A',
+        lastRoundAmount: 12000000,
+        latestDateOfFunding: 'Sep 20, 2025',
+        website: 'https://www.secureflow.ai',
+        linkedin: 'linkedin.com/company/secureflow',
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 35,
+          techStack: ['Python', 'TensorFlow', 'Apache Kafka', 'Redis'],
+          patents: 4,
+          competitors: ['Darktrace', 'Vectra AI', 'ExtraHop'],
+          marketPosition: 'Emerging',
+          growthIndicators: {
+            hiring: 45,
+            funding: 60,
+            news: 38
+          }
+        }
+      },
+      {
+        id: '13',
+        name: 'CloudGuard Pro',
+        description: 'Multi-cloud security posture management with automated compliance monitoring',
+        sector: 'Cloud Security',
+        location: 'Seattle, WA, USA',
+        region: 'North America',
+        founded: 2021,
+        fundingFrom: 'CyberForge Capital',
+        totalFunding: 28000000,
+        lastRound: 'Series A',
+        lastRoundAmount: 18000000,
+        latestDateOfFunding: 'Aug 25, 2025',
+        website: 'https://www.cloudguardpro.com',
+        linkedin: 'linkedin.com/company/cloudguard-pro',
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 42,
+          techStack: ['Go', 'Kubernetes', 'Terraform', 'AWS'],
+          patents: 6,
+          competitors: ['Prisma Cloud', 'Aqua Security', 'Sysdig'],
+          marketPosition: 'Growing',
+          growthIndicators: {
+            hiring: 38,
+            funding: 55,
+            news: 45
+          }
+        }
+      },
+      {
+        id: '14',
+        name: 'ZeroTrust Systems',
+        description: 'Zero-trust network access platform for remote workforce security',
+        sector: 'Identity Management',
+        location: 'London, UK',
+        region: 'Western Europe',
+        founded: 2020,
+        fundingFrom: 'Guardian Capital',
+        totalFunding: 35000000,
+        lastRound: 'Series B',
+        lastRoundAmount: 22000000,
+        latestDateOfFunding: 'Sep 12, 2025',
+        website: 'https://www.zerotrustsystems.com',
+        linkedin: 'linkedin.com/company/zerotrust-systems',
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 38,
+          techStack: ['Node.js', 'React', 'PostgreSQL', 'Docker'],
+          patents: 8,
+          competitors: ['Zscaler', 'Okta', 'Ping Identity'],
+          marketPosition: 'Growing',
+          growthIndicators: {
+            hiring: 32,
+            funding: 48,
+            news: 35
+          }
+        }
+      },
+      {
+        id: '15',
+        name: 'ThreatHunter AI',
+        description: 'Machine learning-powered threat hunting and incident response automation',
+        sector: 'Threat Intelligence',
+        location: 'Tel Aviv, Israel',
+        region: 'Middle East',
+        founded: 2021,
+        fundingFrom: 'MENA Ventures',
+        totalFunding: 20000000,
+        lastRound: 'Series A',
+        lastRoundAmount: 15000000,
+        latestDateOfFunding: 'Sep 8, 2025',
+        website: 'https://www.threathunterai.com',
+        linkedin: 'linkedin.com/company/threathunter-ai',
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 31,
+          techStack: ['Python', 'PyTorch', 'Elasticsearch', 'Kibana'],
+          patents: 5,
+          competitors: ['Recorded Future', 'Anomali', 'ThreatConnect'],
+          marketPosition: 'Emerging',
+          growthIndicators: {
+            hiring: 40,
+            funding: 52,
+            news: 33
+          }
+        }
+      },
+      {
+        id: '16',
+        name: 'DataVault Enterprise',
+        description: 'Enterprise data loss prevention with advanced encryption and monitoring',
+        sector: 'Data Protection',
+        location: 'Toronto, Canada',
+        region: 'North America',
+        founded: 2019,
+        fundingFrom: 'Ballistic Ventures',
+        totalFunding: 42000000,
+        lastRound: 'Series B',
+        lastRoundAmount: 25000000,
+        latestDateOfFunding: 'Sep 15, 2025',
+        website: 'https://www.datavault-enterprise.com',
+        linkedin: 'linkedin.com/company/datavault-enterprise',
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 29,
+          techStack: ['Java', 'Spring Boot', 'Apache Cassandra', 'Kafka'],
+          patents: 12,
+          competitors: ['Varonis', 'Forcepoint', 'Digital Guardian'],
+          marketPosition: 'Growing',
+          growthIndicators: {
+            hiring: 28,
+            funding: 45,
+            news: 31
+          }
+        }
+      },
+      {
+        id: '17',
+        name: 'MobileShield',
+        description: 'Mobile device security and management for enterprise BYOD environments',
+        sector: 'Endpoint Security',
+        location: 'Sydney, Australia',
+        region: 'Asia Pacific',
+        founded: 2020,
+        fundingFrom: 'APAC Innovation Fund',
+        totalFunding: 18000000,
+        lastRound: 'Series A',
+        lastRoundAmount: 12000000,
+        latestDateOfFunding: 'Aug 28, 2025',
+        website: 'https://www.mobileshield.com.au',
+        linkedin: 'linkedin.com/company/mobileshield',
+        brightData: {
+          newsSentiment: 'neutral',
+          recentMentions: 22,
+          techStack: ['Swift', 'Kotlin', 'React Native', 'Firebase'],
+          patents: 3,
+          competitors: ['VMware Workspace ONE', 'Microsoft Intune', 'Citrix'],
+          marketPosition: 'Emerging',
+          growthIndicators: {
+            hiring: 25,
+            funding: 35,
+            news: 28
+          }
+        }
+      },
+      {
+        id: '18',
+        name: 'CryptoSecure Labs',
+        description: 'Quantum-resistant encryption solutions for next-generation security',
+        sector: 'Encryption',
+        location: 'Zurich, Switzerland',
+        region: 'Western Europe',
+        founded: 2021,
+        fundingFrom: 'European Tech Fund',
+        totalFunding: 25000000,
+        lastRound: 'Series A',
+        lastRoundAmount: 18000000,
+        latestDateOfFunding: 'Sep 5, 2025',
+        website: 'https://www.cryptosecurelabs.ch',
+        linkedin: 'linkedin.com/company/cryptosecure-labs',
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 26,
+          techStack: ['C++', 'Rust', 'OpenSSL', 'NIST'],
+          patents: 15,
+          competitors: ['IBM Quantum Safe', 'ISARA', 'PQShield'],
+          marketPosition: 'Innovative',
+          growthIndicators: {
+            hiring: 35,
+            funding: 58,
+            news: 42
+          }
+        }
       }
     ]
     setCompanies(mockCompanies)
@@ -2078,6 +2358,152 @@ export default function ExecutiveDashboard() {
       }
     ]
     setPatents(mockPatents)
+  }
+
+  const loadMockTechnologyTrends = () => {
+    const mockTechnologyTrends: TechnologyTrend[] = [
+      {
+        id: '1',
+        name: 'Python',
+        category: 'Backend',
+        adoptionCount: 12,
+        growthRate: 25.5,
+        avgFunding: 45000000,
+        trendDirection: 'up',
+        maturityLevel: 'stable',
+        popularityScore: 92,
+        successRate: 78,
+        topCompanies: ['SecureFlow', 'ThreatHunter AI', 'DataVault Enterprise'],
+        relatedTechnologies: ['TensorFlow', 'Django', 'FastAPI', 'PostgreSQL']
+      },
+      {
+        id: '2',
+        name: 'React',
+        category: 'Frontend',
+        adoptionCount: 10,
+        growthRate: 18.3,
+        avgFunding: 38000000,
+        trendDirection: 'up',
+        maturityLevel: 'stable',
+        popularityScore: 88,
+        successRate: 72,
+        topCompanies: ['CloudGuard Pro', 'ZeroTrust Systems', 'MobileShield'],
+        relatedTechnologies: ['Next.js', 'TypeScript', 'Node.js', 'Tailwind CSS']
+      },
+      {
+        id: '3',
+        name: 'Kubernetes',
+        category: 'DevOps',
+        adoptionCount: 9,
+        growthRate: 32.1,
+        avgFunding: 52000000,
+        trendDirection: 'up',
+        maturityLevel: 'growing',
+        popularityScore: 85,
+        successRate: 81,
+        topCompanies: ['CloudGuard Pro', 'SecureFlow', 'CryptoSecure Labs'],
+        relatedTechnologies: ['Docker', 'Terraform', 'Prometheus', 'Istio']
+      },
+      {
+        id: '4',
+        name: 'TensorFlow',
+        category: 'AI/ML',
+        adoptionCount: 8,
+        growthRate: 45.2,
+        avgFunding: 62000000,
+        trendDirection: 'up',
+        maturityLevel: 'growing',
+        popularityScore: 82,
+        successRate: 85,
+        topCompanies: ['ThreatHunter AI', 'SecureFlow', 'AI Security Labs'],
+        relatedTechnologies: ['Python', 'PyTorch', 'Jupyter', 'Pandas']
+      },
+      {
+        id: '5',
+        name: 'PostgreSQL',
+        category: 'Database',
+        adoptionCount: 11,
+        growthRate: 12.8,
+        avgFunding: 41000000,
+        trendDirection: 'up',
+        maturityLevel: 'mature',
+        popularityScore: 79,
+        successRate: 74,
+        topCompanies: ['DataVault Enterprise', 'SecureFlow', 'CloudGuard Pro'],
+        relatedTechnologies: ['Python', 'Node.js', 'Redis', 'GraphQL']
+      },
+      {
+        id: '6',
+        name: 'Go',
+        category: 'Backend',
+        adoptionCount: 7,
+        growthRate: 28.7,
+        avgFunding: 48000000,
+        trendDirection: 'up',
+        maturityLevel: 'growing',
+        popularityScore: 76,
+        successRate: 79,
+        topCompanies: ['CloudGuard Pro', 'Network Defense Pro', 'SecureFlow'],
+        relatedTechnologies: ['Kubernetes', 'Docker', 'gRPC', 'Prometheus']
+      },
+      {
+        id: '7',
+        name: 'Rust',
+        category: 'Backend',
+        adoptionCount: 5,
+        growthRate: 67.3,
+        avgFunding: 55000000,
+        trendDirection: 'up',
+        maturityLevel: 'emerging',
+        popularityScore: 73,
+        successRate: 88,
+        topCompanies: ['CryptoSecure Labs', 'Quantum Shield', 'SecureFlow'],
+        relatedTechnologies: ['WebAssembly', 'C++', 'OpenSSL', 'Tokio']
+      },
+      {
+        id: '8',
+        name: 'Node.js',
+        category: 'Backend',
+        adoptionCount: 9,
+        growthRate: 15.4,
+        avgFunding: 39000000,
+        trendDirection: 'stable',
+        maturityLevel: 'stable',
+        popularityScore: 84,
+        successRate: 71,
+        topCompanies: ['MobileShield', 'ZeroTrust Systems', 'CloudGuard Pro'],
+        relatedTechnologies: ['React', 'Express.js', 'MongoDB', 'TypeScript']
+      },
+      {
+        id: '9',
+        name: 'Docker',
+        category: 'DevOps',
+        adoptionCount: 13,
+        growthRate: 22.1,
+        avgFunding: 43000000,
+        trendDirection: 'up',
+        maturityLevel: 'stable',
+        popularityScore: 87,
+        successRate: 76,
+        topCompanies: ['SecureFlow', 'CloudGuard Pro', 'DataVault Enterprise'],
+        relatedTechnologies: ['Kubernetes', 'Linux', 'CI/CD', 'Microservices']
+      },
+      {
+        id: '10',
+        name: 'TypeScript',
+        category: 'Frontend',
+        adoptionCount: 8,
+        growthRate: 35.6,
+        avgFunding: 42000000,
+        trendDirection: 'up',
+        maturityLevel: 'growing',
+        popularityScore: 81,
+        successRate: 77,
+        topCompanies: ['ZeroTrust Systems', 'MobileShield', 'CloudGuard Pro'],
+        relatedTechnologies: ['React', 'Node.js', 'Angular', 'Vue.js']
+      }
+    ]
+    setTechnologyTrends(mockTechnologyTrends)
   }
 
   const formatCurrency = (amount: number) => {
@@ -2362,6 +2788,10 @@ export default function ExecutiveDashboard() {
                     if (selectedTab === 'market-intelligence') exportCompaniesToCSV()
                     else if (selectedTab === 'trending-sectors') exportSectorsToCSV()
                     else if (selectedTab === 'patent-deep-dive') exportPatentsToCSV()
+                    else if (selectedTab === 'technology-trends') {
+                      // TODO: Implement technology trends export
+                      console.log('Exporting technology trends...')
+                    }
                     else if (selectedTab === 'data-intelligence') exportAllDataToCSV()
                   }}
                   variant="outline"
@@ -2413,6 +2843,16 @@ export default function ExecutiveDashboard() {
               >
                 <FileText className="h-4 w-4 mr-2" />
                 Patent Deep Dive
+              </Button>
+              <Button
+                onClick={() => setSelectedTab('technology-trends')}
+                className={`px-6 py-2.5 rounded-lg font-medium transition-all border ${selectedTab === 'technology-trends'
+                  ? 'bg-gray-800 text-white hover:bg-black shadow-md border-blue-600 shadow-lg'
+                  : 'bg-white text-gray-800 hover:bg-gray-100 border-gray-300 hover:border-blue-400'
+                  }`}
+              >
+                <BarChart3 className="h-4 w-4 mr-2" />
+                Tech Trends
               </Button>
               <Button
                 onClick={() => setSelectedTab('data-intelligence')}
@@ -2556,7 +2996,7 @@ export default function ExecutiveDashboard() {
               </>
             )}
 
-            {(selectedTab === 'patent-deep-dive' || selectedTab === 'data-intelligence') && (
+            {(selectedTab === 'patent-deep-dive' || selectedTab === 'data-intelligence' || selectedTab === 'technology-trends') && (
               <>
                 <FilterDropdown
                   label="SECTOR"
@@ -3278,6 +3718,165 @@ export default function ExecutiveDashboard() {
                         <p className="text-xs text-blue-600">{patent.filingDate}</p>
                       </div>
                     ))}
+                  </div>
+                </Card>
+              </div>
+            </div>
+          )}
+
+          {/* Technology Trends View */}
+          {selectedTab === 'technology-trends' && !loading && (
+            <div className="p-8">
+              {/* Technology Trends Header */}
+              <div className="mb-8">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h2 className="text-3xl font-bold text-gray-900 mb-2">Technology Trends Analysis</h2>
+                    <p className="text-gray-600">Real-time insights into technology adoption and investment patterns</p>
+                  </div>
+                  <div className="flex items-center space-x-4">
+                    <Badge variant="outline" className="px-3 py-1">
+                      Live Data
+                    </Badge>
+                    <Button
+                      onClick={() => {/* TODO: Export tech trends */}}
+                      variant="outline"
+                      className="border-blue-600 text-blue-700 hover:bg-blue-50 hover:border-blue-700"
+                    >
+                      <Download className="h-4 w-4 mr-2" />
+                      Export Trends
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Key Metrics Overview */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <Card className="p-6 border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-white">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-blue-600">Trending Technologies</p>
+                      <p className="text-2xl font-bold text-gray-900">{technologyTrends.filter(t => t.trendDirection === 'up').length}</p>
+                    </div>
+                    <TrendingUp className="h-8 w-8 text-blue-600" />
+                  </div>
+                </Card>
+                <Card className="p-6 border-2 border-green-200 bg-gradient-to-br from-green-50 to-white">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-green-600">High Growth Rate</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {technologyTrends.filter(t => t.growthRate > 30).length}
+                      </p>
+                    </div>
+                    <BarChart3 className="h-8 w-8 text-green-600" />
+                  </div>
+                </Card>
+                <Card className="p-6 border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-white">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-purple-600">Avg Success Rate</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {Math.round(technologyTrends.reduce((acc, t) => acc + t.successRate, 0) / technologyTrends.length)}%
+                      </p>
+                    </div>
+                    <Users className="h-8 w-8 text-purple-600" />
+                  </div>
+                </Card>
+                <Card className="p-6 border-2 border-orange-200 bg-gradient-to-br from-orange-50 to-white">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-orange-600">Total Adoption</p>
+                      <p className="text-2xl font-bold text-gray-900">
+                        {technologyTrends.reduce((acc, t) => acc + t.adoptionCount, 0)}
+                      </p>
+                    </div>
+                    <Building2 className="h-8 w-8 text-orange-600" />
+                  </div>
+                </Card>
+              </div>
+
+              {/* Technology Trends Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                {technologyTrends
+                  .sort((a, b) => b.popularityScore - a.popularityScore)
+                  .map((trend, index) => (
+                    <TechnologyTrendsCard
+                      key={trend.id}
+                      trend={trend}
+                      rank={index + 1}
+                      onViewDetails={(trend) => {
+                        console.log('View details for:', trend.name)
+                        // TODO: Implement detailed view
+                      }}
+                    />
+                  ))}
+              </div>
+
+              {/* Technology Categories Analysis */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                {/* Category Distribution */}
+                <Card className="p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Technology Categories</h3>
+                  <div className="space-y-4">
+                    {Array.from(new Set(technologyTrends.map(t => t.category))).map((category) => {
+                      const categoryTrends = technologyTrends.filter(t => t.category === category)
+                      const avgGrowth = Math.round(categoryTrends.reduce((acc, t) => acc + t.growthRate, 0) / categoryTrends.length)
+                      const totalAdoption = categoryTrends.reduce((acc, t) => acc + t.adoptionCount, 0)
+                      
+                      return (
+                        <div key={category} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                          <div>
+                            <p className="font-medium text-gray-900">{category}</p>
+                            <p className="text-sm text-gray-600">{categoryTrends.length} technologies</p>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-sm font-medium text-gray-900">+{avgGrowth}% avg growth</p>
+                            <p className="text-xs text-gray-600">{totalAdoption} total adoptions</p>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </Card>
+
+                {/* Investment Correlation */}
+                <Card className="p-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Investment Insights</h3>
+                  <div className="space-y-4">
+                    <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                      <h4 className="font-medium text-green-900 mb-2">Highest Funded Technologies</h4>
+                      <div className="space-y-2">
+                        {technologyTrends
+                          .sort((a, b) => b.avgFunding - a.avgFunding)
+                          .slice(0, 3)
+                          .map((tech, index) => (
+                            <div key={tech.id} className="flex items-center justify-between">
+                              <span className="text-sm text-green-800">{tech.name}</span>
+                              <span className="text-sm font-medium text-green-900">
+                                ${(tech.avgFunding / 1000000).toFixed(1)}M avg
+                              </span>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
+                    
+                    <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                      <h4 className="font-medium text-blue-900 mb-2">Highest Success Rates</h4>
+                      <div className="space-y-2">
+                        {technologyTrends
+                          .sort((a, b) => b.successRate - a.successRate)
+                          .slice(0, 3)
+                          .map((tech, index) => (
+                            <div key={tech.id} className="flex items-center justify-between">
+                              <span className="text-sm text-blue-800">{tech.name}</span>
+                              <span className="text-sm font-medium text-blue-900">
+                                {tech.successRate}% success
+                              </span>
+                            </div>
+                          ))}
+                      </div>
+                    </div>
                   </div>
                 </Card>
               </div>

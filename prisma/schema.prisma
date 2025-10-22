@@ -429,3 +429,165 @@ model VerificationStats {
 
   @@map("verification_stats")
 }
+
+// Technology Tracking Models
+model Technology {
+  id                String   @id @default(cuid())
+  name              String   @unique
+  category          String   // Frontend, Backend, Database, DevOps, AI/ML, Mobile, etc.
+  subcategory       String?  // React (Frontend/Framework), PostgreSQL (Database/SQL), etc.
+  description       String?
+  website           String?
+  github_url        String?
+  
+  // Popularity metrics
+  adoption_score    Float    @default(0)    // 0-100 based on usage across companies
+  trending_score    Float    @default(0)    // Recent growth in adoption
+  maturity_level    String   @default("stable") // emerging, growing, stable, mature, declining
+  
+  // Market data
+  job_postings      Int      @default(0)    // Number of job postings mentioning this tech
+  github_stars      Int?                    // GitHub stars if applicable
+  stack_overflow_questions Int @default(0) // Questions on Stack Overflow
+  
+  // Investment correlation
+  avg_funding_companies Float @default(0)  // Average funding of companies using this tech
+  success_rate      Float    @default(0)   // Percentage of companies with successful exits
+  
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  
+  // Relations
+  companyTechnologies CompanyTechnology[]
+  technologyTrends    TechnologyTrend[]
+  sectorTechnologies  SectorTechnology[]
+  technologyInsights  TechnologyInsight[]
+  
+  @@map("technologies")
+}
+
+model CompanyTechnology {
+  id            String   @id @default(cuid())
+  company_id    String   // References company from main dashboard data
+  company_name  String   // Denormalized for easier queries
+  technology_id String
+  
+  // Usage details
+  usage_type    String   // primary, secondary, experimental
+  adoption_date DateTime?
+  confidence    Float    @default(1.0) // 0-1, how confident we are about this tech usage
+  source        String   @default("brightdata") // brightdata, manual, crunchbase, etc.
+  
+  // Performance impact
+  performance_impact String? // positive, neutral, negative, unknown
+  notes         String?
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  technology    Technology @relation(fields: [technology_id], references: [id], onDelete: Cascade)
+  
+  @@unique([company_id, technology_id])
+  @@map("company_technologies")
+}
+
+model TechnologyTrend {
+  id              String   @id @default(cuid())
+  technology_id   String
+  period          String   // 2024-Q1, 2024-Q2, etc.
+  adoption_count  Int      // Number of companies using this tech
+  new_adoptions   Int      // New companies that started using this tech
+  funding_total   Float    // Total funding of companies using this tech
+  avg_funding     Float    // Average funding per company
+  
+  // Trend metrics
+  growth_rate     Float    @default(0) // Percentage growth from previous period
+  momentum_score  Float    @default(0) // Overall momentum indicator
+  
+  // Geographic distribution
+  north_america   Int      @default(0)
+  europe          Int      @default(0)
+  asia_pacific    Int      @default(0)
+  middle_east     Int      @default(0)
+  latin_america   Int      @default(0)
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  technology      Technology @relation(fields: [technology_id], references: [id], onDelete: Cascade)
+  
+  @@unique([technology_id, period])
+  @@map("technology_trends")
+}
+
+model SectorTechnology {
+  id              String   @id @default(cuid())
+  sector_name     String   // Network Security, Cloud Security, etc.
+  technology_id   String
+  
+  // Sector-specific metrics
+  adoption_rate   Float    @default(0) // Percentage of companies in sector using this tech
+  importance      String   @default("medium") // high, medium, low
+  trend_direction String   @default("stable") // growing, stable, declining
+  
+  // Investment correlation within sector
+  avg_funding     Float    @default(0)
+  success_stories Int      @default(0) // Number of successful companies using this tech
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  technology      Technology @relation(fields: [technology_id], references: [id], onDelete: Cascade)
+  
+  @@unique([sector_name, technology_id])
+  @@map("sector_technologies")
+}
+
+model TechnologyStack {
+  id              String   @id @default(cuid())
+  name            String   // e.g., "Modern Web Stack", "AI/ML Pipeline", "Cloud-Native Security"
+  description     String?
+  category        String   // web, mobile, ai, security, devops, etc.
+  
+  // Stack composition (JSON array of technology IDs)
+  technologies    Json     // [{"id": "tech1", "role": "frontend"}, {"id": "tech2", "role": "backend"}]
+  
+  // Popularity and success metrics
+  adoption_count  Int      @default(0)
+  success_rate    Float    @default(0)
+  avg_funding     Float    @default(0)
+  
+  // Trend data
+  trending_score  Float    @default(0)
+  maturity_level  String   @default("emerging") // emerging, growing, mature
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  @@map("technology_stacks")
+}
+
+model TechnologyInsight {
+  id              String   @id @default(cuid())
+  technology_id   String?  // Optional - can be general insights
+  insight_type    String   // trend, prediction, correlation, recommendation
+  title           String
+  description     String
+  confidence      Float    @default(0.5) // 0-1
+  
+  // Supporting data
+  data_points     Json?    // Supporting metrics and data
+  time_period     String?  // When this insight applies
+  geographic_scope String? // Global, North America, etc.
+  
+  // Actionability
+  actionable      Boolean  @default(false)
+  recommendations Json?    // Specific recommendations
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  technology      Technology? @relation(fields: [technology_id], references: [id], onDelete: Cascade)
+  
+  @@map("technology_insights")
+}
