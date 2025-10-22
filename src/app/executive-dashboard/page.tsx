@@ -78,7 +78,6 @@ interface Company {
   brightData?: {
     newsSentiment?: 'positive' | 'neutral' | 'negative'
     recentMentions?: number
-    techStack?: string[]
     patents?: number
     competitors?: string[]
     marketPosition?: 'Emerging' | 'Growing' | 'Established' | 'Innovative'
@@ -425,10 +424,7 @@ export default function ExecutiveDashboard() {
     else if (company.brightData?.patents && company.brightData.patents > 5) index += 15
     else if (company.brightData?.patents && company.brightData.patents > 0) index += 10
     
-    // Technology stack sophistication
-    const techStack = company.brightData?.techStack || []
-    if (techStack.some(tech => tech.toLowerCase().includes('ai') || tech.toLowerCase().includes('ml'))) index += 15
-    if (techStack.some(tech => tech.toLowerCase().includes('blockchain') || tech.toLowerCase().includes('quantum'))) index += 10
+    // Innovation based on patents and company characteristics
     
     // Company age (newer companies often more innovative)
     const age = new Date().getFullYear() - company.founded
@@ -955,7 +951,7 @@ export default function ExecutiveDashboard() {
     if (company.website) score += 5
     if (company.linkedin) score += 5
     if (company.team?.ceo) score += 5
-    if (company.brightData?.techStack && company.brightData.techStack.length > 0) score += 5
+
     if (company.totalFunding > 0) score += 5
     if (company.latestDateOfFunding !== 'Unknown') score += 5
     
@@ -1268,7 +1264,7 @@ export default function ExecutiveDashboard() {
               ...company.brightData,
               newsSentiment: enrichmentData.data.news?.sentiment || company.brightData?.newsSentiment,
               recentMentions: enrichmentData.data.news?.recentMentions || company.brightData?.recentMentions,
-              techStack: enrichmentData.data.technology?.techStack || company.brightData?.techStack,
+
               competitors: enrichmentData.data.competitors || company.brightData?.competitors,
               marketPosition: enrichmentData.data.marketPosition || company.brightData?.marketPosition
             }
@@ -1643,7 +1639,7 @@ export default function ExecutiveDashboard() {
           brightData: {
             newsSentiment: brightDataMatch?.sentiment || (Math.random() > 0.7 ? 'positive' : Math.random() > 0.4 ? 'neutral' : 'negative'),
             recentMentions: brightDataMatch?.mentions || Math.floor(Math.random() * 50) + 10,
-            techStack: brightDataMatch?.techStack || ['React', 'Node.js', 'Python', 'Docker'],
+
             patents: brightDataMatch?.patents || Math.floor(Math.random() * 20) + 1,
             competitors: brightDataMatch?.competitors || ['Competitor A', 'Competitor B', 'Competitor C'],
             marketPosition: brightDataMatch?.marketPosition || 'Emerging',
@@ -1714,7 +1710,7 @@ export default function ExecutiveDashboard() {
         brightData: {
           newsSentiment: 'positive',
           recentMentions: 32,
-          techStack: ['Python', 'TensorFlow', 'Kubernetes'],
+
           patents: 8,
           competitors: ['CrowdStrike', 'Palo Alto Networks'],
           marketPosition: 'Growing',
@@ -1743,7 +1739,7 @@ export default function ExecutiveDashboard() {
         brightData: {
           newsSentiment: 'positive',
           recentMentions: 28,
-          techStack: ['Rust', 'C++', 'OpenSSL'],
+
           patents: 12,
           competitors: ['IBM', 'Microsoft'],
           marketPosition: 'Innovative',
@@ -1772,7 +1768,7 @@ export default function ExecutiveDashboard() {
         brightData: {
           newsSentiment: 'neutral',
           recentMentions: 22,
-          techStack: ['Python', 'PyTorch', 'Elasticsearch'],
+
           patents: 5,
           competitors: ['Recorded Future', 'Splunk'],
           marketPosition: 'Emerging',
@@ -1806,7 +1802,7 @@ export default function ExecutiveDashboard() {
         brightData: {
           newsSentiment: 'positive',
           recentMentions: 45,
-          techStack: ['Go', 'Kubernetes', 'AWS SDK'],
+
           patents: 15,
           competitors: ['Wiz', 'Orca Security'],
           marketPosition: 'Established',
@@ -1840,7 +1836,7 @@ export default function ExecutiveDashboard() {
         brightData: {
           newsSentiment: 'positive',
           recentMentions: 18,
-          techStack: ['React', 'Node.js', 'WebAuthn'],
+
           patents: 7,
           competitors: ['Okta', 'Auth0'],
           marketPosition: 'Growing',
@@ -1869,7 +1865,7 @@ export default function ExecutiveDashboard() {
         brightData: {
           newsSentiment: 'neutral',
           recentMentions: 26,
-          techStack: ['Java', 'Spark', 'Hadoop'],
+
           patents: 10,
           competitors: ['Varonis', 'Proofpoint'],
           marketPosition: 'Established',
@@ -1898,7 +1894,7 @@ export default function ExecutiveDashboard() {
         brightData: {
           newsSentiment: 'positive',
           recentMentions: 18,
-          techStack: ['Java', 'Spring Boot', 'Redis'],
+
           patents: 3,
           competitors: ['Regional Security Co', 'Gulf Cyber'],
           marketPosition: 'Emerging',
@@ -1927,7 +1923,7 @@ export default function ExecutiveDashboard() {
         brightData: {
           newsSentiment: 'positive',
           recentMentions: 24,
-          techStack: ['Python', 'Django', 'PostgreSQL'],
+
           patents: 6,
           competitors: ['Banking Security Inc', 'FinTech Guard'],
           marketPosition: 'Growing',
@@ -1956,7 +1952,7 @@ export default function ExecutiveDashboard() {
         brightData: {
           newsSentiment: 'neutral',
           recentMentions: 12,
-          techStack: ['Node.js', 'React', 'MongoDB'],
+
           patents: 2,
           competitors: ['Gov Security Solutions', 'Enterprise Guard'],
           marketPosition: 'Emerging',
@@ -1985,7 +1981,7 @@ export default function ExecutiveDashboard() {
         brightData: {
           newsSentiment: 'positive',
           recentMentions: 28,
-          techStack: ['Go', 'Kubernetes', 'PostgreSQL'],
+
           patents: 7,
           competitors: ['European Data Guard', 'Privacy Shield'],
           marketPosition: 'Growing',
@@ -2014,7 +2010,7 @@ export default function ExecutiveDashboard() {
         brightData: {
           newsSentiment: 'positive',
           recentMentions: 21,
-          techStack: ['Python', 'TensorFlow', 'Apache Kafka'],
+
           patents: 4,
           competitors: ['Regional Threat Intel', 'APAC Security'],
           marketPosition: 'Emerging',
@@ -2043,7 +2039,7 @@ export default function ExecutiveDashboard() {
         brightData: {
           newsSentiment: 'positive',
           recentMentions: 35,
-          techStack: ['Python', 'TensorFlow', 'Apache Kafka', 'Redis'],
+
           patents: 4,
           competitors: ['Darktrace', 'Vectra AI', 'ExtraHop'],
           marketPosition: 'Emerging',
@@ -2072,7 +2068,7 @@ export default function ExecutiveDashboard() {
         brightData: {
           newsSentiment: 'positive',
           recentMentions: 42,
-          techStack: ['Go', 'Kubernetes', 'Terraform', 'AWS'],
+
           patents: 6,
           competitors: ['Prisma Cloud', 'Aqua Security', 'Sysdig'],
           marketPosition: 'Growing',
@@ -2101,7 +2097,7 @@ export default function ExecutiveDashboard() {
         brightData: {
           newsSentiment: 'positive',
           recentMentions: 38,
-          techStack: ['Node.js', 'React', 'PostgreSQL', 'Docker'],
+
           patents: 8,
           competitors: ['Zscaler', 'Okta', 'Ping Identity'],
           marketPosition: 'Growing',
@@ -2130,7 +2126,7 @@ export default function ExecutiveDashboard() {
         brightData: {
           newsSentiment: 'positive',
           recentMentions: 31,
-          techStack: ['Python', 'PyTorch', 'Elasticsearch', 'Kibana'],
+
           patents: 5,
           competitors: ['Recorded Future', 'Anomali', 'ThreatConnect'],
           marketPosition: 'Emerging',
@@ -2159,7 +2155,7 @@ export default function ExecutiveDashboard() {
         brightData: {
           newsSentiment: 'positive',
           recentMentions: 29,
-          techStack: ['Java', 'Spring Boot', 'Apache Cassandra', 'Kafka'],
+
           patents: 12,
           competitors: ['Varonis', 'Forcepoint', 'Digital Guardian'],
           marketPosition: 'Growing',
@@ -2188,7 +2184,7 @@ export default function ExecutiveDashboard() {
         brightData: {
           newsSentiment: 'neutral',
           recentMentions: 22,
-          techStack: ['Swift', 'Kotlin', 'React Native', 'Firebase'],
+
           patents: 3,
           competitors: ['VMware Workspace ONE', 'Microsoft Intune', 'Citrix'],
           marketPosition: 'Emerging',
@@ -2217,7 +2213,7 @@ export default function ExecutiveDashboard() {
         brightData: {
           newsSentiment: 'positive',
           recentMentions: 26,
-          techStack: ['C++', 'Rust', 'OpenSSL', 'NIST'],
+
           patents: 15,
           competitors: ['IBM Quantum Safe', 'ISARA', 'PQShield'],
           marketPosition: 'Innovative',

@@ -38,7 +38,6 @@ interface CompanyIntelligenceCardProps {
     brightData?: {
       newsSentiment?: 'positive' | 'neutral' | 'negative'
       recentMentions?: number
-      techStack?: string[]
       patents?: number
       competitors?: string[]
       marketPosition?: string

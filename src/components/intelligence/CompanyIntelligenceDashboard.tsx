@@ -32,7 +32,6 @@ interface CompanyData {
   brightData?: {
     newsSentiment?: 'positive' | 'neutral' | 'negative'
     recentMentions?: number
-    techStack?: string[]
     patents?: number
     competitors?: string[]
     marketPosition?: string
@@ -58,7 +57,6 @@ export default function CompanyIntelligenceDashboard({ companyId }: CompanyIntel
       brightData: {
         newsSentiment: 'positive',
         recentMentions: 32,
-        techStack: ['Python', 'TensorFlow', 'Kubernetes', 'React'],
         patents: 8,
         competitors: ['CrowdStrike', 'Palo Alto Networks', 'Darktrace'],
         marketPosition: 'Growing'
