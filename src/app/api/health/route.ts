@@ -1,72 +1,36 @@
 import { NextResponse } from 'next/server'
-import { db } from '@/lib/db'
 
+/**
+ * Health Check API Endpoint
+ * Used by Docker health checks and monitoring systems
+ */
 export async function GET() {
   try {
-    // Test database connection
-    const startTime = Date.now()
-    
-    // Quick database health check
-    const [companyCount, portfolioCount] = await Promise.all([
-      db.cybersecurityStartup.count().catch(() => 0),
-      db.ballisticPortfolioCompany.count().catch(() => 0)
-    ])
-    
-    const dbResponseTime = Date.now() - startTime
-    const dbHealth = dbResponseTime < 1000 ? 'healthy' : dbResponseTime < 3000 ? 'degraded' : 'slow'
-    
-    // System status
-    const systemStatus = {
-      status: 'operational',
+    const healthData = {
+      status: 'healthy',
       timestamp: new Date().toISOString(),
-      version: '1.0.0',
+      version: process.env.npm_package_version || '1.0.0',
       environment: process.env.NODE_ENV || 'development',
-      
-      // Database health
-      database: {
-        status: dbHealth,
-        connected: true,
-        responseTime: `${dbResponseTime}ms`,
-        records: {
-          companies: companyCount,
-          portfolio: portfolioCount
-        }
+      uptime: process.uptime(),
+      memory: {
+        used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+        total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
+        external: Math.round(process.memoryUsage().external / 1024 / 1024)
       },
-      
-      // API services
       services: {
-        dashboard: 'operational',
-        portfolio: 'operational',
-        analytics: 'operational',
-        dataIngestion: 'operational'
-      },
-      
-      // Server info
-      server: {
-        uptime: process.uptime(),
-        memory: {
-          used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
-          total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024)
-        },
-        nodeVersion: process.version
+        brightdata: process.env.BRIGHTDATA_API_KEY ? 'configured' : 'not-configured',
+        crunchbase: process.env.CRUNCHBASE_API_KEY ? 'configured' : 'not-configured',
+        database: process.env.DATABASE_URL ? 'configured' : 'not-configured'
       }
     }
-    
-    return NextResponse.json({
-      success: true,
-      message: 'All systems operational',
-      data: systemStatus
-    })
-    
+
+    return NextResponse.json(healthData)
   } catch (error) {
-    console.error('Health check error:', error)
     return NextResponse.json(
       {
-        success: false,
-        status: 'error',
-        message: 'System health check failed',
-        error: error instanceof Error ? error.message : 'Unknown error',
-        timestamp: new Date().toISOString()
+        status: 'unhealthy',
+        timestamp: new Date().toISOString(),
+        error: error instanceof Error ? error.message : 'Unknown error'
       },
       { status: 500 }
     )

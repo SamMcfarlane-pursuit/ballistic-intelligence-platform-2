@@ -1241,7 +1241,44 @@ export default function ExecutiveDashboard() {
     loadData()
   }, [selectedTab, selectedSector, selectedRegion, selectedStage, selectedInvestor, selectedPeriod])
 
-  // Initial data load with health check
+  // BrightData real-time enrichment
+  const enrichCompanyWithBrightData = async (company: Company) => {
+    try {
+      const response = await fetch(`/api/brightdata?action=enrich&company=${encodeURIComponent(company.name)}`)
+      if (response.ok) {
+        const enrichmentData = await response.json()
+        if (enrichmentData.success && enrichmentData.data) {
+          return {
+            ...company,
+            brightData: {
+              ...company.brightData,
+              newsSentiment: enrichmentData.data.news?.sentiment || company.brightData?.newsSentiment,
+              recentMentions: enrichmentData.data.news?.recentMentions || company.brightData?.recentMentions,
+              techStack: enrichmentData.data.technology?.techStack || company.brightData?.techStack,
+              competitors: enrichmentData.data.competitors || company.brightData?.competitors,
+              marketPosition: enrichmentData.data.marketPosition || company.brightData?.marketPosition
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('BrightData enrichment failed for', company.name)
+    }
+    return company
+  }
+
+  // Enhanced data loading with BrightData enrichment
+  const enrichAllCompaniesWithBrightData = async () => {
+    if (companies.length > 0) {
+      console.log('Enriching companies with BrightData...')
+      const enrichedCompanies = await Promise.all(
+        companies.map(company => enrichCompanyWithBrightData(company))
+      )
+      setCompanies(enrichedCompanies)
+    }
+  }
+
+  // Initial data load with health check and BrightData enrichment
   useEffect(() => {
     const initializeData = async () => {
       const apiHealthy = await checkAPIHealth()
@@ -1251,10 +1288,27 @@ export default function ExecutiveDashboard() {
         loadMockCompanies()
         loadMockPatents()
       }
+      
+      // Try to enrich with BrightData after initial load
+      setTimeout(() => {
+        enrichAllCompaniesWithBrightData()
+      }, 2000)
     }
     
     initializeData()
   }, [])
+
+  // Periodic BrightData enrichment (every 5 minutes)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (companies.length > 0) {
+        console.log('Periodic BrightData enrichment...')
+        enrichAllCompaniesWithBrightData()
+      }
+    }, 300000) // 5 minutes
+
+    return () => clearInterval(interval)
+  }, [companies])
 
   // Reset page when filters change
   useEffect(() => {
@@ -1948,6 +2002,209 @@ export default function ExecutiveDashboard() {
             hiring: 19,
             funding: 32,
             news: 24
+          }
+        }
+      },
+      {
+        id: '12',
+        name: 'SecureFlow',
+        description: 'AI-powered network traffic analysis and threat detection for enterprise networks',
+        sector: 'Network Security',
+        location: 'Austin, TX, USA',
+        region: 'North America',
+        founded: 2022,
+        fundingFrom: 'Ballistic Ventures',
+        totalFunding: 15000000,
+        lastRound: 'Series A',
+        lastRoundAmount: 12000000,
+        latestDateOfFunding: 'Sep 20, 2025',
+        website: 'https://www.secureflow.ai',
+        linkedin: 'linkedin.com/company/secureflow',
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 35,
+          techStack: ['Python', 'TensorFlow', 'Apache Kafka', 'Redis'],
+          patents: 4,
+          competitors: ['Darktrace', 'Vectra AI', 'ExtraHop'],
+          marketPosition: 'Emerging',
+          growthIndicators: {
+            hiring: 45,
+            funding: 60,
+            news: 38
+          }
+        }
+      },
+      {
+        id: '13',
+        name: 'CloudGuard Pro',
+        description: 'Multi-cloud security posture management with automated compliance monitoring',
+        sector: 'Cloud Security',
+        location: 'Seattle, WA, USA',
+        region: 'North America',
+        founded: 2021,
+        fundingFrom: 'CyberForge Capital',
+        totalFunding: 28000000,
+        lastRound: 'Series A',
+        lastRoundAmount: 18000000,
+        latestDateOfFunding: 'Aug 25, 2025',
+        website: 'https://www.cloudguardpro.com',
+        linkedin: 'linkedin.com/company/cloudguard-pro',
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 42,
+          techStack: ['Go', 'Kubernetes', 'Terraform', 'AWS'],
+          patents: 6,
+          competitors: ['Prisma Cloud', 'Aqua Security', 'Sysdig'],
+          marketPosition: 'Growing',
+          growthIndicators: {
+            hiring: 38,
+            funding: 55,
+            news: 45
+          }
+        }
+      },
+      {
+        id: '14',
+        name: 'ZeroTrust Systems',
+        description: 'Zero-trust network access platform for remote workforce security',
+        sector: 'Identity Management',
+        location: 'London, UK',
+        region: 'Western Europe',
+        founded: 2020,
+        fundingFrom: 'Guardian Capital',
+        totalFunding: 35000000,
+        lastRound: 'Series B',
+        lastRoundAmount: 22000000,
+        latestDateOfFunding: 'Sep 12, 2025',
+        website: 'https://www.zerotrustsystems.com',
+        linkedin: 'linkedin.com/company/zerotrust-systems',
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 38,
+          techStack: ['Node.js', 'React', 'PostgreSQL', 'Docker'],
+          patents: 8,
+          competitors: ['Zscaler', 'Okta', 'Ping Identity'],
+          marketPosition: 'Growing',
+          growthIndicators: {
+            hiring: 32,
+            funding: 48,
+            news: 35
+          }
+        }
+      },
+      {
+        id: '15',
+        name: 'ThreatHunter AI',
+        description: 'Machine learning-powered threat hunting and incident response automation',
+        sector: 'Threat Intelligence',
+        location: 'Tel Aviv, Israel',
+        region: 'Middle East',
+        founded: 2021,
+        fundingFrom: 'MENA Ventures',
+        totalFunding: 20000000,
+        lastRound: 'Series A',
+        lastRoundAmount: 15000000,
+        latestDateOfFunding: 'Sep 8, 2025',
+        website: 'https://www.threathunterai.com',
+        linkedin: 'linkedin.com/company/threathunter-ai',
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 31,
+          techStack: ['Python', 'PyTorch', 'Elasticsearch', 'Kibana'],
+          patents: 5,
+          competitors: ['Recorded Future', 'Anomali', 'ThreatConnect'],
+          marketPosition: 'Emerging',
+          growthIndicators: {
+            hiring: 40,
+            funding: 52,
+            news: 33
+          }
+        }
+      },
+      {
+        id: '16',
+        name: 'DataVault Enterprise',
+        description: 'Enterprise data loss prevention with advanced encryption and monitoring',
+        sector: 'Data Protection',
+        location: 'Toronto, Canada',
+        region: 'North America',
+        founded: 2019,
+        fundingFrom: 'Ballistic Ventures',
+        totalFunding: 42000000,
+        lastRound: 'Series B',
+        lastRoundAmount: 25000000,
+        latestDateOfFunding: 'Sep 15, 2025',
+        website: 'https://www.datavault-enterprise.com',
+        linkedin: 'linkedin.com/company/datavault-enterprise',
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 29,
+          techStack: ['Java', 'Spring Boot', 'Apache Cassandra', 'Kafka'],
+          patents: 12,
+          competitors: ['Varonis', 'Forcepoint', 'Digital Guardian'],
+          marketPosition: 'Growing',
+          growthIndicators: {
+            hiring: 28,
+            funding: 45,
+            news: 31
+          }
+        }
+      },
+      {
+        id: '17',
+        name: 'MobileShield',
+        description: 'Mobile device security and management for enterprise BYOD environments',
+        sector: 'Endpoint Security',
+        location: 'Sydney, Australia',
+        region: 'Asia Pacific',
+        founded: 2020,
+        fundingFrom: 'APAC Innovation Fund',
+        totalFunding: 18000000,
+        lastRound: 'Series A',
+        lastRoundAmount: 12000000,
+        latestDateOfFunding: 'Aug 28, 2025',
+        website: 'https://www.mobileshield.com.au',
+        linkedin: 'linkedin.com/company/mobileshield',
+        brightData: {
+          newsSentiment: 'neutral',
+          recentMentions: 22,
+          techStack: ['Swift', 'Kotlin', 'React Native', 'Firebase'],
+          patents: 3,
+          competitors: ['VMware Workspace ONE', 'Microsoft Intune', 'Citrix'],
+          marketPosition: 'Emerging',
+          growthIndicators: {
+            hiring: 25,
+            funding: 35,
+            news: 28
+          }
+        }
+      },
+      {
+        id: '18',
+        name: 'CryptoSecure Labs',
+        description: 'Quantum-resistant encryption solutions for next-generation security',
+        sector: 'Encryption',
+        location: 'Zurich, Switzerland',
+        region: 'Western Europe',
+        founded: 2021,
+        fundingFrom: 'European Tech Fund',
+        totalFunding: 25000000,
+        lastRound: 'Series A',
+        lastRoundAmount: 18000000,
+        latestDateOfFunding: 'Sep 5, 2025',
+        website: 'https://www.cryptosecurelabs.ch',
+        linkedin: 'linkedin.com/company/cryptosecure-labs',
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 26,
+          techStack: ['C++', 'Rust', 'OpenSSL', 'NIST'],
+          patents: 15,
+          competitors: ['IBM Quantum Safe', 'ISARA', 'PQShield'],
+          marketPosition: 'Innovative',
+          growthIndicators: {
+            hiring: 35,
+            funding: 58,
+            news: 42
           }
         }
       }

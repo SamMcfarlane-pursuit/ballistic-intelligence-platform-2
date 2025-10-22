@@ -1,0 +1,129 @@
+# Ballistic Intelligence Platform - Docker Compose Configuration
+version: '3.8'
+
+services:
+  # Main Application
+  ballistic-intel:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ballistic-intelligence-platform
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - NEXT_TELEMETRY_DISABLED=1
+      # BrightData Configuration
+      - BRIGHTDATA_API_KEY=${BRIGHTDATA_API_KEY:-demo-key}
+      - BRIGHTDATA_PROXY_HOST=${BRIGHTDATA_PROXY_HOST:-brd.superproxy.io}
+      - BRIGHTDATA_PROXY_PORT=${BRIGHTDATA_PROXY_PORT:-22225}
+      - BRIGHTDATA_PROXY_USERNAME=${BRIGHTDATA_PROXY_USERNAME:-demo}
+      - BRIGHTDATA_PROXY_PASSWORD=${BRIGHTDATA_PROXY_PASSWORD:-demo}
+      # Crunchbase Configuration
+      - CRUNCHBASE_API_KEY=${CRUNCHBASE_API_KEY:-demo-key}
+      - CRUNCHBASE_BASE_URL=${CRUNCHBASE_BASE_URL:-https://api.crunchbase.com/api/v4}
+      # Database Configuration
+      - DATABASE_URL=${DATABASE_URL:-postgresql://postgres:password@postgres:5432/ballistic_intel}
+      # NextAuth Configuration
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-your-secret-key-here}
+      - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}
+    volumes:
+      - ./data:/app/data
+    networks:
+      - ballistic-network
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: ballistic-postgres
+    environment:
+      - POSTGRES_DB=ballistic_intel
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - ballistic-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: ballistic-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - ballistic-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # BrightData Proxy (Optional - for enhanced data collection)
+  brightdata-proxy:
+    image: brightdata/proxy-manager:latest
+    container_name: ballistic-brightdata-proxy
+    ports:
+      - "22999:22999"
+    environment:
+      - BRIGHTDATA_API_KEY=${BRIGHTDATA_API_KEY:-demo-key}
+      - BRIGHTDATA_ZONE=${BRIGHTDATA_ZONE:-static}
+    networks:
+      - ballistic-network
+    restart: unless-stopped
+    profiles:
+      - brightdata
+
+  # Nginx Reverse Proxy (Optional - for production)
+  nginx:
+    image: nginx:alpine
+    container_name: ballistic-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    networks:
+      - ballistic-network
+    depends_on:
+      - ballistic-intel
+    restart: unless-stopped
+    profiles:
+      - production
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  ballistic-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
