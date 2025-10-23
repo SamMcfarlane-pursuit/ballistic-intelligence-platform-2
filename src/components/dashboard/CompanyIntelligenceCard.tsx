@@ -8,10 +8,8 @@ import {
   MapPin, 
   Calendar, 
   Users, 
-  TrendingUp, 
   Globe,
-  BarChart3,
-  AlertCircle
+  BarChart3
 } from 'lucide-react'
 
 interface CompanyIntelligenceCardProps {

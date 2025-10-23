@@ -9,7 +9,6 @@ import {
   TrendingUp, 
   DollarSign, 
   Users, 
-  Globe,
   Download,
   ArrowLeft
 } from 'lucide-react'
