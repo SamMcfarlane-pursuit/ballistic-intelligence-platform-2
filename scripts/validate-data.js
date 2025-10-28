@@ -24,24 +24,24 @@ const extractMockData = (content, dataType) => {
 // Validation functions
 const validateCompanyData = () => {
   console.log('📊 Validating Company Data...');
-  
+
   const requiredFields = [
-    'id', 'name', 'description', 'sector', 'location', 'region', 
-    'founded', 'fundingFrom', 'totalFunding', 'lastRound', 
+    'id', 'name', 'description', 'sector', 'location', 'region',
+    'founded', 'fundingFrom', 'totalFunding', 'lastRound',
     'lastRoundAmount', 'latestDateOfFunding', 'website', 'linkedin'
   ];
-  
+
   const brightDataFields = [
-    'newsSentiment', 'recentMentions', 'techStack', 'patents', 
+    'newsSentiment', 'recentMentions', 'techStack', 'patents',
     'competitors', 'marketPosition', 'growthIndicators'
   ];
-  
+
   // Check if mock data contains all required fields
   const mockCompaniesMatch = dashboardContent.match(/const mockCompanies: Company\[\] = \[([\s\S]*?)\]/);
-  
+
   if (mockCompaniesMatch) {
     const mockData = mockCompaniesMatch[1];
-    
+
     requiredFields.forEach(field => {
       if (mockData.includes(`${field}:`)) {
         console.log(`  ✅ ${field}: Present`);
@@ -49,7 +49,7 @@ const validateCompanyData = () => {
         console.log(`  ❌ ${field}: Missing`);
       }
     });
-    
+
     console.log('\n  🔬 BrightData Enhancement Fields:');
     brightDataFields.forEach(field => {
       if (mockData.includes(`${field}:`)) {
@@ -65,18 +65,18 @@ const validateCompanyData = () => {
 
 const validateTechnologyTrends = () => {
   console.log('\n🚀 Validating Technology Trends Data...');
-  
+
   const requiredFields = [
-    'id', 'name', 'category', 'adoptionCount', 'growthRate', 
-    'avgFunding', 'trendDirection', 'maturityLevel', 'popularityScore', 
+    'id', 'name', 'category', 'adoptionCount', 'growthRate',
+    'avgFunding', 'trendDirection', 'maturityLevel', 'popularityScore',
     'successRate', 'topCompanies', 'relatedTechnologies'
   ];
-  
+
   const mockTechMatch = dashboardContent.match(/const mockTechnologyTrends: TechnologyTrend\[\] = \[([\s\S]*?)\]/);
-  
+
   if (mockTechMatch) {
     const mockData = mockTechMatch[1];
-    
+
     requiredFields.forEach(field => {
       if (mockData.includes(`${field}:`)) {
         console.log(`  ✅ ${field}: Present`);
@@ -84,18 +84,18 @@ const validateTechnologyTrends = () => {
         console.log(`  ❌ ${field}: Missing`);
       }
     });
-    
+
     // Count technologies
     const techCount = (mockData.match(/{\s*id:/g) || []).length;
     console.log(`  📈 Total Technologies: ${techCount}`);
-    
+
     // Check categories
     const categories = [...new Set(
       (mockData.match(/category:\s*['"]([^'"]+)['"]/g) || [])
         .map(match => match.match(/['"]([^'"]+)['"]/)[1])
     )];
     console.log(`  🏷️  Categories: ${categories.join(', ')}`);
-    
+
   } else {
     console.log('  ❌ Mock technology trends data not found');
   }
@@ -103,34 +103,34 @@ const validateTechnologyTrends = () => {
 
 const validateComponents = () => {
   console.log('\n🎨 Validating UI Components...');
-  
+
   const components = [
     'TechnologyTrendsCard',
-    'CompanyIntelligenceCard', 
+    'CompanyIntelligenceCard',
     'TechStack',
     'SectorIntelligenceCard',
     'PatentIntelligenceCard'
   ];
-  
+
   components.forEach(component => {
     const componentPath = path.join(__dirname, `../src/components/dashboard/${component}.tsx`);
     const techStackPath = path.join(__dirname, `../src/components/ui/tech-stack.tsx`);
-    
+
     let filePath = componentPath;
     if (component === 'TechStack') {
       filePath = techStackPath;
     }
-    
+
     if (fs.existsSync(filePath)) {
       const content = fs.readFileSync(filePath, 'utf8');
-      
+
       // Check for proper imports
       if (content.includes('import')) {
         console.log(`  ✅ ${component}: Component exists with imports`);
       } else {
         console.log(`  ⚠️  ${component}: Component exists but may have import issues`);
       }
-      
+
       // Check for export
       if (content.includes('export default')) {
         console.log(`  ✅ ${component}: Properly exported`);
@@ -145,28 +145,28 @@ const validateComponents = () => {
 
 const validateCSVExports = () => {
   console.log('\n� Validaating CSV Export Functions...');
-  
+
   const csvFunctions = [
     'exportCompaniesToCSV',
-    'exportSectorsToCSV', 
+    'exportSectorsToCSV',
     'exportPatentsToCSV',
     'exportAllDataToCSV'
   ];
-  
+
   csvFunctions.forEach(func => {
     if (dashboardContent.includes(`const ${func} = `)) {
       console.log(`  ✅ ${func}: Function implemented`);
-      
+
       // Check for proper CSV headers
       if (dashboardContent.includes('const headers = [')) {
         console.log(`  ✅ ${func}: CSV headers defined`);
       }
-      
+
       // Check for data cleaning
       if (dashboardContent.includes('cleanDataForCSV')) {
         console.log(`  ✅ ${func}: Data cleaning implemented`);
       }
-      
+
       // Check for download functionality
       if (dashboardContent.includes('downloadCSV')) {
         console.log(`  ✅ ${func}: Download functionality present`);
@@ -175,7 +175,7 @@ const validateCSVExports = () => {
       console.log(`  ❌ ${func}: Function not found`);
     }
   });
-  
+
   // Validate CSV data quality functions
   const qualityFunctions = [
     'validateCompanyData',
@@ -185,7 +185,7 @@ const validateCSVExports = () => {
     'assessRisk',
     'assessInvestmentReadiness'
   ];
-  
+
   console.log('\n  📈 CSV Data Quality Functions:');
   qualityFunctions.forEach(func => {
     if (dashboardContent.includes(`const ${func} = `) || dashboardContent.includes(`function ${func}`)) {
@@ -198,38 +198,38 @@ const validateCSVExports = () => {
 
 const validateBrightDataIntegration = () => {
   console.log('\n🌐 Validating BrightData Integration...');
-  
+
   // Check BrightData service
   const servicePath = path.join(__dirname, '../src/services/brightdata-service.ts');
   if (fs.existsSync(servicePath)) {
     const serviceContent = fs.readFileSync(servicePath, 'utf8');
-    
+
     console.log('  ✅ BrightData Service: Present');
-    
+
     if (serviceContent.includes('enrichCompanyData')) {
       console.log('  ✅ Company Enrichment: Implemented');
     }
-    
+
     if (serviceContent.includes('getCybersecurityCompanyData')) {
       console.log('  ✅ Cybersecurity Data: Enhanced with real company profiles');
     }
-    
+
     if (serviceContent.includes('healthCheck')) {
       console.log('  ✅ Health Check: Implemented');
     }
   } else {
     console.log('  ❌ BrightData Service: Missing');
   }
-  
+
   // Check API integration
   if (dashboardContent.includes('generateEnhancedCybersecurityData')) {
     console.log('  ✅ Enhanced Mock Data: Real cybersecurity company profiles');
   }
-  
+
   if (dashboardContent.includes('brightDataMatch')) {
     console.log('  ✅ Data Matching: BrightData integration in company loading');
   }
-  
+
   if (dashboardContent.includes('validateCompanyData')) {
     console.log('  ✅ Data Validation: Company data validation implemented');
   }
@@ -237,25 +237,25 @@ const validateBrightDataIntegration = () => {
 
 const validateAPIEndpoints = () => {
   console.log('\n🔌 Validating API Endpoints...');
-  
+
   const endpoints = [
     'health',
     'technology-trends',
     'brightdata'
   ];
-  
+
   endpoints.forEach(endpoint => {
     const endpointPath = path.join(__dirname, `../src/app/api/${endpoint}/route.ts`);
-    
+
     if (fs.existsSync(endpointPath)) {
       const content = fs.readFileSync(endpointPath, 'utf8');
-      
+
       if (content.includes('export async function GET')) {
         console.log(`  ✅ /api/${endpoint}: GET method implemented`);
       } else {
         console.log(`  ⚠️  /api/${endpoint}: Missing GET method`);
       }
-      
+
       if (content.includes('NextResponse.json')) {
         console.log(`  ✅ /api/${endpoint}: Proper JSON responses`);
       } else {
@@ -269,20 +269,20 @@ const validateAPIEndpoints = () => {
 
 const validateDockerSetup = () => {
   console.log('\n🐳 Validating Docker Setup...');
-  
+
   const dockerFiles = [
     'Dockerfile',
     'docker-compose.yml',
     'docker-start.sh',
     '.dockerignore'
   ];
-  
+
   dockerFiles.forEach(file => {
     const filePath = path.join(__dirname, `../${file}`);
-    
+
     if (fs.existsSync(filePath)) {
       console.log(`  ✅ ${file}: Present`);
-      
+
       if (file === 'docker-start.sh') {
         const stats = fs.statSync(filePath);
         if (stats.mode & parseInt('111', 8)) {
