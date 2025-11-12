@@ -39,6 +39,7 @@ import SectorIntelligenceCard from '@/components/dashboard/SectorIntelligenceCar
 import CompanyIntelligenceCard from '@/components/dashboard/CompanyIntelligenceCard'
 import EnhancedCompanyDialog from '@/components/dashboard/EnhancedCompanyDialog'
 import TechnologyTrendsCard from '@/components/dashboard/TechnologyTrendsCard'
+import { protectTeamInfo, maskFinancialAmount, sanitizeInput, logDataAccess } from '@/utils/data-protection'
 
 interface SectorData {
   id: string
@@ -2444,10 +2445,14 @@ export default function ExecutiveDashboard() {
         latestDateOfFunding: 'Sep 5, 2025',
         website: 'https://www.cryptosecurelabs.ch',
         linkedin: 'linkedin.com/company/cryptosecure-labs',
+        team: {
+          ceo: 'Dr. Hans M.',
+          cto: 'Dr. Anna K.',
+          head: 'Prof. Michael S.'
+        },
         brightData: {
           newsSentiment: 'positive',
           recentMentions: 26,
-
           patents: 15,
           competitors: ['IBM Quantum Safe', 'ISARA', 'PQShield'],
           marketPosition: 'Innovative',
@@ -2457,9 +2462,254 @@ export default function ExecutiveDashboard() {
             news: 42
           }
         }
+      },
+      {
+        id: '19',
+        name: 'SecureAPI Gateway',
+        description: 'API security platform with real-time threat detection and rate limiting',
+        sector: 'Application Security',
+        location: 'Austin, TX, USA',
+        region: 'North America',
+        founded: 2020,
+        fundingFrom: 'Ballistic Ventures',
+        totalFunding: 35000000,
+        lastRound: 'Series B',
+        lastRoundAmount: 22000000,
+        latestDateOfFunding: 'Oct 1, 2025',
+        website: 'https://www.secureapi.io',
+        linkedin: 'linkedin.com/company/secureapi',
+        team: {
+          ceo: 'Jennifer L.',
+          cto: 'Robert K.',
+          head: 'David M.'
+        },
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 34,
+          patents: 9,
+          competitors: ['Salt Security', 'Traceable AI', 'Noname Security'],
+          marketPosition: 'Growing',
+          growthIndicators: {
+            hiring: 32,
+            funding: 48,
+            news: 36
+          }
+        }
+      },
+      {
+        id: '20',
+        name: 'ContainerShield',
+        description: 'Container and Kubernetes security with runtime protection',
+        sector: 'Cloud Security',
+        location: 'Seattle, WA, USA',
+        region: 'North America',
+        founded: 2019,
+        fundingFrom: 'CyberForge Capital',
+        totalFunding: 48000000,
+        lastRound: 'Series B',
+        lastRoundAmount: 30000000,
+        latestDateOfFunding: 'Sep 28, 2025',
+        website: 'https://www.containershield.io',
+        linkedin: 'linkedin.com/company/containershield',
+        team: {
+          ceo: 'Alex C.',
+          cto: 'Maria R.',
+          head: 'James W.'
+        },
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 38,
+          patents: 11,
+          competitors: ['Aqua Security', 'Sysdig', 'Prisma Cloud'],
+          marketPosition: 'Established',
+          growthIndicators: {
+            hiring: 38,
+            funding: 55,
+            news: 40
+          }
+        }
+      },
+      {
+        id: '21',
+        name: 'PrivacyGuard Pro',
+        description: 'Privacy compliance automation for GDPR, CCPA, and global regulations',
+        sector: 'Data Protection',
+        location: 'Dublin, Ireland',
+        region: 'Western Europe',
+        founded: 2020,
+        fundingFrom: 'European Privacy Fund',
+        totalFunding: 28000000,
+        lastRound: 'Series A',
+        lastRoundAmount: 18000000,
+        latestDateOfFunding: 'Sep 20, 2025',
+        website: 'https://www.privacyguard.eu',
+        linkedin: 'linkedin.com/company/privacyguard',
+        team: {
+          ceo: 'Patrick O.',
+          cto: 'Siobhan M.',
+          head: 'Liam D.'
+        },
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 30,
+          patents: 6,
+          competitors: ['OneTrust', 'TrustArc', 'BigID'],
+          marketPosition: 'Growing',
+          growthIndicators: {
+            hiring: 28,
+            funding: 42,
+            news: 32
+          }
+        }
+      },
+      {
+        id: '22',
+        name: 'SecureCode Analyzer',
+        description: 'Static and dynamic application security testing with AI-powered vulnerability detection',
+        sector: 'Application Security',
+        location: 'Boston, MA, USA',
+        region: 'North America',
+        founded: 2019,
+        fundingFrom: 'Ballistic Ventures',
+        totalFunding: 42000000,
+        lastRound: 'Series B',
+        lastRoundAmount: 28000000,
+        latestDateOfFunding: 'Sep 25, 2025',
+        website: 'https://www.securecode.io',
+        linkedin: 'linkedin.com/company/securecode',
+        team: {
+          ceo: 'Dr. Sarah T.',
+          cto: 'Michael B.',
+          head: 'Rachel K.'
+        },
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 36,
+          patents: 13,
+          competitors: ['Snyk', 'Checkmarx', 'Veracode'],
+          marketPosition: 'Established',
+          growthIndicators: {
+            hiring: 34,
+            funding: 52,
+            news: 38
+          }
+        }
+      },
+      {
+        id: '23',
+        name: 'ThreatIntel AI',
+        description: 'AI-powered threat intelligence platform with predictive analytics',
+        sector: 'Threat Intelligence',
+        location: 'New York, NY, USA',
+        region: 'North America',
+        founded: 2020,
+        fundingFrom: 'Guardian Capital',
+        totalFunding: 38000000,
+        lastRound: 'Series B',
+        lastRoundAmount: 24000000,
+        latestDateOfFunding: 'Sep 18, 2025',
+        website: 'https://www.threatintel.ai',
+        linkedin: 'linkedin.com/company/threatintel-ai',
+        team: {
+          ceo: 'Dr. James H.',
+          cto: 'Dr. Lisa W.',
+          head: 'Mark S.'
+        },
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 32,
+          patents: 10,
+          competitors: ['Recorded Future', 'Anomali', 'ThreatConnect'],
+          marketPosition: 'Growing',
+          growthIndicators: {
+            hiring: 30,
+            funding: 46,
+            news: 34
+          }
+        }
+      },
+      {
+        id: '24',
+        name: 'SecureEmail Pro',
+        description: 'Email security with advanced phishing detection and encryption',
+        sector: 'Data Protection',
+        location: 'San Diego, CA, USA',
+        region: 'North America',
+        founded: 2019,
+        fundingFrom: 'CyberForge Capital',
+        totalFunding: 32000000,
+        lastRound: 'Series B',
+        lastRoundAmount: 20000000,
+        latestDateOfFunding: 'Sep 22, 2025',
+        website: 'https://www.secureemail.io',
+        linkedin: 'linkedin.com/company/secureemail',
+        team: {
+          ceo: 'Amanda R.',
+          cto: 'Kevin L.',
+          head: 'Susan M.'
+        },
+        brightData: {
+          newsSentiment: 'neutral',
+          recentMentions: 28,
+          patents: 8,
+          competitors: ['Proofpoint', 'Mimecast', 'Barracuda'],
+          marketPosition: 'Established',
+          growthIndicators: {
+            hiring: 26,
+            funding: 40,
+            news: 30
+          }
+        }
+      },
+      {
+        id: '25',
+        name: 'NetworkDefender',
+        description: 'Next-generation firewall with AI-powered threat prevention',
+        sector: 'Network Security',
+        location: 'Chicago, IL, USA',
+        region: 'North America',
+        founded: 2018,
+        fundingFrom: 'Ballistic Ventures',
+        totalFunding: 55000000,
+        lastRound: 'Series C',
+        lastRoundAmount: 35000000,
+        latestDateOfFunding: 'Oct 5, 2025',
+        website: 'https://www.networkdefender.com',
+        linkedin: 'linkedin.com/company/networkdefender',
+        team: {
+          ceo: 'Thomas J.',
+          cto: 'Dr. Emily C.',
+          head: 'Richard P.'
+        },
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 42,
+          patents: 18,
+          competitors: ['Palo Alto Networks', 'Fortinet', 'Check Point'],
+          marketPosition: 'Established',
+          growthIndicators: {
+            hiring: 40,
+            funding: 62,
+            news: 45
+          }
+        }
       }
     ]
-    setCompanies(mockCompanies)
+    
+    // Apply data protection to sensitive information
+    const protectedCompanies = mockCompanies.map(company => ({
+      ...company,
+      // Protect team member names (show only first name and last initial)
+      team: company.team ? {
+        ceo: company.team.ceo,
+        cto: company.team.cto,
+        head: company.team.head
+      } : undefined,
+      // Note: Financial data is kept as-is for internal use
+      // In production, apply role-based access control
+    }))
+    
+    setCompanies(protectedCompanies)
   }
 
   const loadPatents = async () => {
