@@ -1493,79 +1493,161 @@ export default function ExecutiveDashboard() {
         id: '1',
         name: 'Cloud Security',
         rank: 1,
-        companies: 45,
-        totalFunding: 890000000,
+        companies: 52,
+        totalFunding: 3200000000,
         momentumScore: 28,
         momentumGrowth: 28,
         marketGrowth: 35,
-        investmentTrends: ['AI/ML', 'Zero Trust'],
-        keyPlayers: ['Wiz', 'Orca Security', 'Palo Alto Networks'],
-        emergingTechnologies: ['Cloud Native', 'Serverless Security']
+        investmentTrends: ['AI/ML Security', 'Zero Trust Architecture', 'CSPM'],
+        keyPlayers: [
+          'Wiz (CEO: Assaf Rappaport, CTO: Ami Luttwak)',
+          'Orca Security (CEO: Avi Shua, CTO: Gil Geron)',
+          'Lacework (CEO: Jay Parikh, CTO: Sanjay Kalra)',
+          'Aqua Security (CEO: Dror Davidoff, CTO: Amir Jerbi)',
+          'Snyk (CEO: Peter McKay, CTO: Danny Grander)',
+          'Palo Alto Networks (CEO: Nikesh Arora, CTO: Nir Zuk)'
+        ],
+        emergingTechnologies: ['Cloud Native Security', 'Serverless Security', 'Container Security']
       },
       {
         id: '2',
-        name: 'Threat Intelligence',
+        name: 'Endpoint Security',
         rank: 2,
-        companies: 28,
-        totalFunding: 520000000,
+        companies: 38,
+        totalFunding: 2100000000,
         momentumScore: 25,
         momentumGrowth: 25,
         marketGrowth: 28,
-        investmentTrends: ['AI Detection', 'Threat Hunting'],
-        keyPlayers: ['Recorded Future', 'CrowdStrike', 'Splunk'],
-        emergingTechnologies: ['Extended Detection', 'Threat Intelligence Platforms']
+        investmentTrends: ['EDR/XDR', 'AI-Powered Detection', 'Zero Trust Endpoint'],
+        keyPlayers: [
+          'CrowdStrike (CEO: George Kurtz, CTO: Michael Sentonas)',
+          'SentinelOne (CEO: Tomer Weingarten, CTO: Ric Smith)',
+          'Cybereason (CEO: Eric Gan, CTO: Yonatan Striem-Amit)',
+          'Carbon Black (CEO: Patrick Morley)',
+          'Tanium (CEO: Dan Streetman, CTO: Orion Hindawi)',
+          'Microsoft Defender (CVP: Vasu Jakkal)'
+        ],
+        emergingTechnologies: ['Extended Detection & Response', 'Autonomous Response', 'Behavioral AI']
       },
       {
         id: '3',
-        name: 'Network Security',
+        name: 'Identity & Access Management',
         rank: 3,
-        companies: 38,
-        totalFunding: 720000000,
+        companies: 45,
+        totalFunding: 1800000000,
         momentumScore: 22,
         momentumGrowth: 22,
-        marketGrowth: 22,
-        investmentTrends: ['Zero Trust', 'SD-WAN'],
-        keyPlayers: ['Cisco', 'Fortinet', 'Palo Alto Networks'],
-        emergingTechnologies: ['Secure Access Service Edge', 'Next-Gen Firewalls']
+        marketGrowth: 30,
+        investmentTrends: ['Passwordless Authentication', 'Zero Trust Identity', 'Decentralized Identity'],
+        keyPlayers: [
+          'Okta (CEO: Todd McKinnon, CTO: Hector Aguilar)',
+          'CyberArk (CEO: Matt Cohen, CTO: Kurt Sand)',
+          'Ping Identity (CEO: Andre Durand, CTO: Bryan Field-Elliot)',
+          'Auth0 (CEO: Eugenio Pace, CTO: Matias Woloski)',
+          'ForgeRock (CEO: Fran Rosch)',
+          'SailPoint (CEO: Mark McClain, CTO: Grady Summers)'
+        ],
+        emergingTechnologies: ['Biometric Authentication', 'Decentralized Identity', 'Continuous Authentication']
       },
       {
         id: '4',
-        name: 'Data Protection',
+        name: 'Network Security',
         rank: 4,
-        companies: 32,
-        totalFunding: 650000000,
-        momentumScore: 18,
-        momentumGrowth: 18,
-        marketGrowth: 20,
-        investmentTrends: ['Privacy Compliance', 'Data Loss Prevention'],
-        keyPlayers: ['Varonis', 'Proofpoint', 'Microsoft'],
-        emergingTechnologies: ['Data Classification', 'Privacy-Preserving Computation']
+        companies: 42,
+        totalFunding: 1500000000,
+        momentumScore: 20,
+        momentumGrowth: 20,
+        marketGrowth: 22,
+        investmentTrends: ['Zero Trust Network', 'SASE', 'SD-WAN Security'],
+        keyPlayers: [
+          'Zscaler (CEO: Jay Chaudhry, CTO: Amit Sinha)',
+          'Palo Alto Networks (CEO: Nikesh Arora, CTO: Nir Zuk)',
+          'Fortinet (CEO: Ken Xie, CTO: Michael Xie)',
+          'Cisco Security (SVP: Jeetu Patel)',
+          'Check Point (CEO: Gil Shwed, CTO: Dorit Dor)',
+          'Cloudflare (CEO: Matthew Prince, CTO: John Graham-Cumming)'
+        ],
+        emergingTechnologies: ['Secure Access Service Edge', 'Next-Gen Firewalls', 'Network Detection & Response']
       },
       {
         id: '5',
-        name: 'Identity Management',
+        name: 'Data Protection & Privacy',
         rank: 5,
-        companies: 24,
-        totalFunding: 480000000,
-        momentumScore: 15,
-        momentumGrowth: 15,
+        companies: 36,
+        totalFunding: 1200000000,
+        momentumScore: 18,
+        momentumGrowth: 18,
         marketGrowth: 25,
-        investmentTrends: ['Passwordless', 'Zero Trust'],
-        keyPlayers: ['Okta', 'Auth0', 'Ping Identity'],
-        emergingTechnologies: ['Decentralized Identity', 'Biometric Authentication']
+        investmentTrends: ['Privacy Compliance', 'Data Loss Prevention', 'Encryption'],
+        keyPlayers: [
+          'Varonis (CEO: Yaki Faitelson, CTO: Ohad Korkus)',
+          'BigID (CEO: Dimitri Sirota, CTO: Nimrod Vax)',
+          'OneTrust (CEO: Kabir Barday, CTO: Blake Brannon)',
+          'Proofpoint (CEO: Sumit Dhawan)',
+          'Vera (CEO: Ajay Arora)',
+          'Virtru (CEO: John Ackerly, CTO: Will Ackerly)'
+        ],
+        emergingTechnologies: ['Privacy-Preserving Computation', 'Homomorphic Encryption', 'Data Classification AI']
       },
       {
         id: '6',
-        name: 'Endpoint Security',
+        name: 'Application Security',
         rank: 6,
-        companies: 22,
-        totalFunding: 410000000,
-        momentumScore: 12,
-        momentumGrowth: 12,
-        marketGrowth: 18,
-        investmentTrends: ['EDR', 'XDR'],
-        keyPlayers: ['CrowdStrike', 'SentinelOne', 'Microsoft'],
-        emergingTechnologies: ['Extended Detection', 'Automated Response']
+        companies: 40,
+        totalFunding: 1400000000,
+        momentumScore: 17,
+        momentumGrowth: 17,
+        marketGrowth: 32,
+        investmentTrends: ['DevSecOps', 'API Security', 'Software Supply Chain'],
+        keyPlayers: [
+          'Snyk (CEO: Peter McKay, CTO: Danny Grander)',
+          'Checkmarx (CEO: Emmanuel Benzaquen)',
+          'Veracode (CEO: Sam King)',
+          'Contrast Security (CEO: Alan Naumann, CTO: Jeff Williams)',
+          'WhiteSource (CEO: Rami Sass)',
+          'GitLab Security (CEO: Sid Sijbrandij)'
+        ],
+        emergingTechnologies: ['Software Composition Analysis', 'API Security', 'Runtime Application Protection']
+      },
+      {
+        id: '7',
+        name: 'Threat Intelligence & Detection',
+        rank: 7,
+        companies: 32,
+        totalFunding: 980000000,
+        momentumScore: 16,
+        momentumGrowth: 16,
+        marketGrowth: 24,
+        investmentTrends: ['AI Threat Detection', 'Threat Hunting', 'SOAR'],
+        keyPlayers: [
+          'Recorded Future (CEO: Christopher Ahlberg, CTO: Staffan Truvé)',
+          'Anomali (CEO: Greg Lesher)',
+          'ThreatConnect (CEO: Adam Vincent)',
+          'Rapid7 (CEO: Corey Thomas, CTO: Lee Weiner)',
+          'Splunk Security (CEO: Gary Steele)',
+          'IBM X-Force (GM: Mary O\'Brien)'
+        ],
+        emergingTechnologies: ['AI-Powered Threat Detection', 'Threat Intelligence Platforms', 'Automated Threat Hunting']
+      },
+      {
+        id: '8',
+        name: 'Security Operations & SIEM',
+        rank: 8,
+        companies: 28,
+        totalFunding: 850000000,
+        momentumScore: 15,
+        momentumGrowth: 15,
+        marketGrowth: 20,
+        investmentTrends: ['Cloud SIEM', 'SOAR', 'Security Analytics'],
+        keyPlayers: [
+          'Splunk (CEO: Gary Steele, CTO: Tim Tully)',
+          'Sumo Logic (CEO: Ramin Sayar)',
+          'Exabeam (CEO: Michael DeCesare)',
+          'LogRhythm (CEO: Chris O\'Malley)',
+          'Securonix (CEO: Nayaki Nayyar)',
+          'Devo (CEO: Marc van Zadelhoff)'
+        ],
+        emergingTechnologies: ['Cloud-Native SIEM', 'Security Orchestration', 'User Behavior Analytics']
       }
     ]
     setSectors(mockSectors)
@@ -3035,43 +3117,6 @@ export default function ExecutiveDashboard() {
                   options={periods}
                   onChange={setSelectedPeriod}
                 />
-
-                {/* Data Source Selector */}
-                <div className="mt-8">
-                  <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">
-                    <Database className="h-3 w-3 inline mr-1" />
-                    DATA SOURCE
-                  </label>
-                  <div className="space-y-2">
-                    <Button
-                      onClick={() => setDataSource('combined')}
-                      className={`w-full px-4 py-2.5 rounded-lg font-medium transition-all text-left ${dataSource === 'combined'
-                        ? 'bg-[#0066FF] text-white hover:bg-[#1A3766] shadow-md'
-                        : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
-                        }`}
-                    >
-                      Combined (Best)
-                    </Button>
-                    <Button
-                      onClick={() => setDataSource('brightdata')}
-                      className={`w-full px-4 py-2.5 rounded-lg font-medium transition-all text-left ${dataSource === 'brightdata'
-                        ? 'bg-[#0066FF] text-white hover:bg-[#1A3766] shadow-md'
-                        : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
-                        }`}
-                    >
-                      BrightData
-                    </Button>
-                    <Button
-                      onClick={() => setDataSource('crunchbase')}
-                      className={`w-full px-4 py-2.5 rounded-lg font-medium transition-all text-left ${dataSource === 'crunchbase'
-                        ? 'bg-[#0066FF] text-white hover:bg-[#1A3766] shadow-md'
-                        : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
-                        }`}
-                    >
-                      Crunchbase
-                    </Button>
-                  </div>
-                </div>
 
                 {/* Display Mode */}
                 <div className="mt-8">

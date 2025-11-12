@@ -183,10 +183,18 @@ export default function SectorIntelligenceCard({ sector, displayMode, dataSource
             
             {sector.keyPlayers && sector.keyPlayers.length > 0 && (
               <div className="mb-3">
-                <div className="text-xs text-white/70 mb-1 font-medium">Key Players</div>
-                <div className="text-xs text-white bg-white/10 backdrop-blur-sm p-2 rounded border border-white/20">
-                  {sector.keyPlayers.slice(0, 3).join(', ')}
-                  {sector.keyPlayers.length > 3 && ` +${sector.keyPlayers.length - 3} more`}
+                <div className="text-xs text-white/70 mb-1 font-medium">Key Players & Leadership</div>
+                <div className="text-xs text-white bg-white/10 backdrop-blur-sm p-2 rounded border border-white/20 space-y-1">
+                  {sector.keyPlayers.slice(0, 3).map((player, index) => {
+                    // Extract just company name for card display
+                    const companyName = player.match(/^(.+?)\s*\(/)?.[1] || player
+                    return (
+                      <div key={index} className="truncate">• {companyName}</div>
+                    )
+                  })}
+                  {sector.keyPlayers.length > 3 && (
+                    <div className="text-white/60 italic">+{sector.keyPlayers.length - 3} more companies</div>
+                  )}
                 </div>
               </div>
             )}

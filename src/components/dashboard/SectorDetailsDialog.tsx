@@ -216,22 +216,48 @@ export default function SectorDetailsDialog({
                 <div className="bg-white p-6 rounded-lg border border-gray-200">
                   <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
                     <Users className="h-5 w-5 mr-2 text-[#0066FF]" />
-                    Key Players
+                    Key Players & Leadership
                   </h3>
                   <div className="space-y-3">
-                    {sector.keyPlayers.map((player, index) => (
-                      <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                        <div className="flex items-center">
-                          <div className="w-8 h-8 bg-[#0066FF] rounded-full flex items-center justify-center text-white font-bold mr-3">
-                            {index + 1}
+                    {sector.keyPlayers.map((player, index) => {
+                      // Parse company name and leadership from format: "Company (CEO: Name, CTO: Name)"
+                      const match = player.match(/^(.+?)\s*\((.+)\)$/)
+                      const companyName = match ? match[1].trim() : player
+                      const leadership = match ? match[2] : null
+                      
+                      return (
+                        <div key={index} className="p-4 bg-gradient-to-r from-gray-50 to-white rounded-lg border border-gray-200 hover:border-[#0066FF] transition-all">
+                          <div className="flex items-start justify-between">
+                            <div className="flex items-start flex-1">
+                              <div className="w-10 h-10 bg-gradient-to-br from-[#0066FF] to-[#1A3766] rounded-full flex items-center justify-center text-white font-bold mr-4 flex-shrink-0">
+                                {index + 1}
+                              </div>
+                              <div className="flex-1">
+                                <h4 className="font-bold text-gray-900 text-lg mb-2">{companyName}</h4>
+                                {leadership && (
+                                  <div className="space-y-1">
+                                    {leadership.split(',').map((role, roleIndex) => {
+                                      const [title, name] = role.split(':').map(s => s.trim())
+                                      return (
+                                        <div key={roleIndex} className="flex items-center text-sm">
+                                          <Badge variant="outline" className="mr-2 bg-[#0066FF]/10 text-[#0066FF] border-[#0066FF]/30">
+                                            {title}
+                                          </Badge>
+                                          <span className="text-gray-700 font-medium">{name}</span>
+                                        </div>
+                                      )
+                                    })}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                            <Button variant="outline" size="sm" className="ml-4">
+                              View Profile
+                            </Button>
                           </div>
-                          <span className="font-medium text-gray-900">{player}</span>
                         </div>
-                        <Button variant="outline" size="sm">
-                          View Profile
-                        </Button>
-                      </div>
-                    ))}
+                      )
+                    })}
                   </div>
                 </div>
               ) : (
