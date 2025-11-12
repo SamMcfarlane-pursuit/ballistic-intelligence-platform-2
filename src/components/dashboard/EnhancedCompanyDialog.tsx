@@ -170,11 +170,11 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
                   </div>
                 </div>
                 
-                {company.brightData.newsSentiment === 'negative' && (
-                  <div className="bg-gradient-to-br from-red-50 to-red-100 p-4 rounded-xl border border-red-200">
-                    <div className="text-sm text-red-700 mb-2">News Sentiment</div>
-                    <div className="text-lg font-bold text-red-900 capitalize">
-                      {company.brightData.newsSentiment}
+                {company.brightData.newsSentiment === 'positive' && (
+                  <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl border border-green-200">
+                    <div className="text-sm text-green-700 mb-2">News Sentiment</div>
+                    <div className="text-lg font-bold text-green-900 capitalize">
+                      Positive
                     </div>
                   </div>
                 )}

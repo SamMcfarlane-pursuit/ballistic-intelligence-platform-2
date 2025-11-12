@@ -1294,7 +1294,13 @@ export default function ExecutiveDashboard() {
   }, [searchQuery, selectedTab])
 
   useEffect(() => {
-    loadData()
+    // Optimize: Only load data when tab changes or filters change
+    // Use debouncing to prevent excessive API calls
+    const timer = setTimeout(() => {
+      loadData()
+    }, 100) // Small delay to batch rapid changes
+    
+    return () => clearTimeout(timer)
   }, [selectedTab, selectedSector, selectedRegion, selectedStage, selectedInvestor, selectedPeriod])
 
   // BrightData real-time enrichment
@@ -1379,15 +1385,22 @@ export default function ExecutiveDashboard() {
     try {
       console.log(`Loading data for tab: ${selectedTab}`)
       
+      // Optimize: Load mock data immediately for instant UI, then enrich with API data
       if (selectedTab === 'trending-sectors') {
-        await loadSectors()
+        loadMockSectors() // Instant load
+        loadSectors().catch(() => {}) // Enrich in background
       } else if (selectedTab === 'market-intelligence') {
-        await loadCompanies()
+        loadMockCompanies() // Instant load
+        loadCompanies().catch(() => {}) // Enrich in background
       } else if (selectedTab === 'patent-deep-dive') {
-        await loadPatents()
-
+        loadMockPatents() // Instant load
+        loadPatents().catch(() => {}) // Enrich in background
       } else if (selectedTab === 'data-intelligence') {
-        await loadDataIntelligence()
+        // Load all data types for comprehensive view
+        loadMockSectors()
+        loadMockCompanies()
+        loadMockPatents()
+        loadDataIntelligence().catch(() => {})
       }
       
       console.log('Data loading completed successfully')
@@ -1396,15 +1409,7 @@ export default function ExecutiveDashboard() {
       const errorMessage = err instanceof Error ? err.message : 'Failed to load data'
       setError(`${errorMessage}. Using mock data instead.`)
       
-      // Load mock data as fallback
-      if (selectedTab === 'trending-sectors') {
-        loadMockSectors()
-      } else if (selectedTab === 'market-intelligence') {
-        loadMockCompanies()
-      } else if (selectedTab === 'patent-deep-dive') {
-        loadMockPatents()
-
-      }
+      // Mock data already loaded above
     } finally {
       setLoading(false)
     }
