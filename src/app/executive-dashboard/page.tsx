@@ -2921,7 +2921,14 @@ export default function ExecutiveDashboard() {
         <div className="px-8 py-6">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-ballistic-blue-500 to-ballistic-navy-600 bg-clip-text text-transparent">Ballistic Intel</h1>
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-br from-[#0066FF] to-[#1A3766] rounded-lg flex items-center justify-center shadow-lg">
+                <span className="text-white font-bold text-xl">B</span>
+              </div>
+              <h1 className="text-4xl font-bold text-[#0066FF]">
+                Ballistic <span className="text-[#1A3766]">Intel</span>
+              </h1>
+            </div>
 
             {/* Navigation Tabs and Export */}
             <div className="flex items-center space-x-6">
