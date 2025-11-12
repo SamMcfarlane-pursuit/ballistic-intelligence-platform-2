@@ -3952,69 +3952,6 @@ export default function ExecutiveDashboard() {
           {/* Market Intelligence View */}
           {selectedTab === 'market-intelligence' && !loading && (
             <div className="p-8">
-              {/* Market Intelligence Stats */}
-              <div className="mb-6 p-4 bg-gradient-to-r from-[#0066FF]/10 to-[#1A3766]/10 rounded-lg border border-[#0066FF]/30">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <Building2 className="h-5 w-5 text-[#0066FF]" />
-                    <div>
-                      <p className="font-medium text-gray-900">Market Intelligence Overview</p>
-                      <p className="text-sm text-gray-600">Comprehensive cybersecurity company analysis and insights</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Badge variant="outline" className="border-[#0066FF] text-[#0066FF]">
-                      {companies.filter(c => c.brightData?.newsSentiment === 'positive').length} Positive Sentiment
-                    </Badge>
-                    <Button
-                      onClick={() => setSelectedTab('data-intelligence')}
-                      variant="outline"
-                      size="sm"
-                      className="border-[#0066FF] text-[#0066FF] hover:bg-[#0066FF]/10"
-                    >
-                      View All Data
-                    </Button>
-                  </div>
-                </div>
-              </div>
-
-              {/* Technology Trends Integration */}
-              <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <Card className="p-4 border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-white">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-blue-600">Trending Tech Stack</p>
-                      <p className="text-lg font-bold text-gray-900">
-                        {technologyTrends.filter(t => t.trendDirection === 'up').slice(0, 3).map(t => t.name).join(', ')}
-                      </p>
-                    </div>
-                    <TrendingUp className="h-6 w-6 text-blue-600" />
-                  </div>
-                </Card>
-                <Card className="p-4 border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-white">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-purple-600">High-Growth Technologies</p>
-                      <p className="text-lg font-bold text-gray-900">
-                        {technologyTrends.filter(t => t.growthRate > 30).length} technologies
-                      </p>
-                    </div>
-                    <BarChart3 className="h-6 w-6 text-purple-600" />
-                  </div>
-                </Card>
-                <Card className="p-4 border-2 border-orange-200 bg-gradient-to-br from-orange-50 to-white">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-orange-600">Avg Success Rate</p>
-                      <p className="text-lg font-bold text-gray-900">
-                        {Math.round(technologyTrends.reduce((acc, t) => acc + t.successRate, 0) / technologyTrends.length)}%
-                      </p>
-                    </div>
-                    <Users className="h-6 w-6 text-orange-600" />
-                  </div>
-                </Card>
-              </div>
-
               {/* Search Bar and Export */}
               <div className="mb-6 flex items-center justify-between">
                 <div className="relative max-w-md">
