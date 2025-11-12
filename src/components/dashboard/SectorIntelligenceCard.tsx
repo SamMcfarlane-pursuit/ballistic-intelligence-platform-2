@@ -73,87 +73,90 @@ export default function SectorIntelligenceCard({ sector, displayMode }: SectorIn
   }
 
   return (
-    <Card className="bg-white border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all group">
-      <CardContent className="p-6">
+    <Card className="bg-gradient-to-br from-[#0066FF] via-[#0052CC] to-[#1A3766] border-2 border-[#0066FF] hover:border-[#1A3766] hover:shadow-2xl transition-all duration-300 group relative overflow-hidden">
+      {/* Gradient Overlay for depth */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/20 pointer-events-none"></div>
+      
+      <CardContent className="p-6 relative z-10">
         {/* Rank Badge */}
         <div className="flex items-center justify-between mb-4">
           <Badge 
             className={`${
               sector.rank === 1 
-                ? 'bg-yellow-100 text-yellow-800 border-yellow-300' 
+                ? 'bg-yellow-400 text-yellow-900 border-yellow-500' 
                 : sector.rank === 2 
-                  ? 'bg-gray-100 text-gray-800 border-gray-300' 
+                  ? 'bg-gray-300 text-gray-900 border-gray-400' 
                   : sector.rank === 3 
-                    ? 'bg-amber-100 text-amber-800 border-amber-300' 
-                    : 'bg-blue-100 text-blue-800 border-blue-300'
-            } border font-bold px-3 py-1 rounded-full`}
+                    ? 'bg-amber-400 text-amber-900 border-amber-500' 
+                    : 'bg-white/30 text-white border-white/50'
+            } border-2 font-bold px-3 py-1 rounded-full backdrop-blur-sm`}
           >
             #{sector.rank}
           </Badge>
           
           {sector.marketGrowth && (
-            <Badge variant="secondary" className="text-xs">
+            <Badge variant="secondary" className="text-xs bg-white/20 text-white border-white/30 backdrop-blur-sm">
               +{sector.marketGrowth}% growth
             </Badge>
           )}
         </div>
 
         {/* Sector Name */}
-        <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+        <h3 className="text-xl font-bold text-white mb-4 group-hover:text-white/90 transition-colors">
           {sector.name}
         </h3>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-2 gap-4 mb-4">
-          <div className="bg-gray-50 p-3 rounded-lg">
-            <div className="flex items-center text-gray-500 mb-1">
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <div className="bg-white/15 backdrop-blur-sm p-3 rounded-lg border border-white/20">
+            <div className="flex items-center text-white/70 mb-1">
               <Building2 className="h-4 w-4 mr-1" />
-              <span className="text-xs">Companies</span>
+              <span className="text-xs font-medium">Companies</span>
             </div>
-            <p className="text-lg font-bold text-gray-900">{sector.companies}</p>
+            <p className="text-lg font-bold text-white">{sector.companies}</p>
           </div>
           
-          <div className="bg-gray-50 p-3 rounded-lg">
-            <div className="flex items-center text-gray-500 mb-1">
+          <div className="bg-white/15 backdrop-blur-sm p-3 rounded-lg border border-white/20">
+            <div className="flex items-center text-white/70 mb-1">
               <DollarSign className="h-4 w-4 mr-1" />
-              <span className="text-xs">Funding</span>
+              <span className="text-xs font-medium">Funding</span>
             </div>
-            <p className="text-lg font-bold text-gray-900">{formatCurrency(sector.totalFunding)}</p>
+            <p className="text-lg font-bold text-white">${formatCurrency(sector.totalFunding)}</p>
           </div>
           
-          <div className="bg-gray-50 p-3 rounded-lg">
-            <div className="flex items-center text-gray-500 mb-1">
+          <div className="bg-white/15 backdrop-blur-sm p-3 rounded-lg border border-white/20">
+            <div className="flex items-center text-white/70 mb-1">
               <TrendingUp className="h-4 w-4 mr-1" />
-              <span className="text-xs">Momentum</span>
+              <span className="text-xs font-medium">Momentum</span>
             </div>
-            <p className="text-lg font-bold text-gray-900">{sector.momentumScore}</p>
+            <p className="text-lg font-bold text-white">{sector.momentumScore}</p>
           </div>
           
-          <div className="bg-gray-50 p-3 rounded-lg">
-            <div className="flex items-center text-gray-500 mb-1">
+          <div className="bg-white/15 backdrop-blur-sm p-3 rounded-lg border border-white/20">
+            <div className="flex items-center text-white/70 mb-1">
               <Globe className="h-4 w-4 mr-1" />
-              <span className="text-xs">Growth</span>
+              <span className="text-xs font-medium">Growth</span>
             </div>
-            <p className="text-lg font-bold text-gray-900">
-              {sector.momentumGrowth}%
+            <p className="text-lg font-bold text-white">
+              +{sector.momentumGrowth}%
             </p>
           </div>
         </div>
 
         {/* BrightData Intelligence Section */}
         {(sector.investmentTrends || sector.keyPlayers || sector.emergingTechnologies) && (
-          <div className="border-t border-gray-200 pt-4 mt-4">
-            <h4 className="text-sm font-bold text-gray-900 mb-3 flex items-center">
-              <Globe className="h-4 w-4 text-blue-600 mr-2" />
+          <div className="border-t border-white/20 pt-4 mt-4">
+            <h4 className="text-sm font-bold text-white mb-3 flex items-center">
+              <Globe className="h-4 w-4 text-white mr-2" />
               Sector Intelligence
             </h4>
             
             {sector.investmentTrends && sector.investmentTrends.length > 0 && (
               <div className="mb-3">
-                <div className="text-xs text-gray-500 mb-1">Investment Trends</div>
+                <div className="text-xs text-white/70 mb-1 font-medium">Investment Trends</div>
                 <div className="flex flex-wrap gap-1">
                   {sector.investmentTrends.slice(0, 2).map((trend, index) => (
-                    <Badge key={index} variant="default" className="text-xs bg-blue-100 text-blue-800">
+                    <Badge key={index} variant="default" className="text-xs bg-white/20 text-white border-white/30 backdrop-blur-sm">
                       {trend}
                     </Badge>
                   ))}
@@ -163,8 +166,8 @@ export default function SectorIntelligenceCard({ sector, displayMode }: SectorIn
             
             {sector.keyPlayers && sector.keyPlayers.length > 0 && (
               <div className="mb-3">
-                <div className="text-xs text-gray-500 mb-1">Key Players</div>
-                <div className="text-xs text-gray-700">
+                <div className="text-xs text-white/70 mb-1 font-medium">Key Players</div>
+                <div className="text-xs text-white bg-white/10 backdrop-blur-sm p-2 rounded border border-white/20">
                   {sector.keyPlayers.slice(0, 3).join(', ')}
                   {sector.keyPlayers.length > 3 && ` +${sector.keyPlayers.length - 3} more`}
                 </div>
@@ -173,10 +176,10 @@ export default function SectorIntelligenceCard({ sector, displayMode }: SectorIn
             
             {sector.emergingTechnologies && sector.emergingTechnologies.length > 0 && (
               <div>
-                <div className="text-xs text-gray-500 mb-1">Emerging Tech</div>
+                <div className="text-xs text-white/70 mb-1 font-medium">Emerging Tech</div>
                 <div className="flex flex-wrap gap-1">
                   {sector.emergingTechnologies.slice(0, 2).map((tech, index) => (
-                    <Badge key={index} variant="outline" className="text-xs">
+                    <Badge key={index} variant="outline" className="text-xs bg-white/10 text-white border-white/30 backdrop-blur-sm">
                       {tech}
                     </Badge>
                   ))}

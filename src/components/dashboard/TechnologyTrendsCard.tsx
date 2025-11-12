@@ -113,8 +113,11 @@ export default function TechnologyTrendsCard({ trend, rank, onViewDetails }: Tec
   }
 
   return (
-    <Card className="bg-white border border-gray-200 hover:border-blue-300 hover:shadow-lg transition-all group">
-      <CardContent className="p-6">
+    <Card className="bg-gradient-to-br from-[#0066FF] via-[#0052CC] to-[#1A3766] border-2 border-[#0066FF] hover:border-[#1A3766] hover:shadow-2xl transition-all duration-300 group relative overflow-hidden">
+      {/* Gradient Overlay for depth */}
+      <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/20 pointer-events-none"></div>
+      
+      <CardContent className="p-6 relative z-10">
         {/* Header with Rank */}
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center space-x-3">
