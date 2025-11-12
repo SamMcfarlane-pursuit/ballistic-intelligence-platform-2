@@ -1,15 +1,19 @@
 'use client'
 
+import { useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
 import { 
   FileText, 
   Calendar, 
   Building2, 
   TrendingUp,
   Globe,
-  AlertCircle
+  AlertCircle,
+  Eye
 } from 'lucide-react'
+import PatentDetailsDialog from './PatentDetailsDialog'
 
 interface PatentIntelligenceCardProps {
   patent: {
@@ -31,10 +35,15 @@ interface PatentIntelligenceCardProps {
     competitiveLandscape?: string[]
     technologyTrends?: string[]
   }
+  dataSource?: 'brightdata' | 'crunchbase' | 'combined'
 }
 
-export default function PatentIntelligenceCard({ patent }: PatentIntelligenceCardProps) {
+export default function PatentIntelligenceCard({ patent, dataSource = 'combined' }: PatentIntelligenceCardProps) {
+  const [showDetails, setShowDetails] = useState(false)
+
   return (
+    <>
+    <div className="relative">
     <Card className="bg-gradient-to-br from-[#0066FF] via-[#0052CC] to-[#1A3766] border-2 border-[#0066FF] hover:border-[#1A3766] hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
       {/* Gradient Overlay for depth */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/20 pointer-events-none"></div>
@@ -166,7 +175,28 @@ export default function PatentIntelligenceCard({ patent }: PatentIntelligenceCar
             )}
           </div>
         )}
+
+        {/* View Details Button */}
+        <Button
+          onClick={() => setShowDetails(true)}
+          variant="secondary"
+          size="sm"
+          className="w-full mt-4 bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm"
+        >
+          <Eye className="h-4 w-4 mr-2" />
+          View Full Details
+        </Button>
       </CardContent>
     </Card>
+    </div>
+
+    {/* Details Dialog */}
+    <PatentDetailsDialog
+      open={showDetails}
+      onOpenChange={setShowDetails}
+      patent={patent}
+      dataSource={dataSource}
+    />
+    </>
   )
 }

@@ -28,7 +28,8 @@ import {
   Download,
   FileSpreadsheet,
   Upload,
-  FileUp
+  FileUp,
+  Database
 } from 'lucide-react'
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -150,8 +151,8 @@ export default function ExecutiveDashboard() {
   const [selectedStage, setSelectedStage] = useState('All Stages')
   const [selectedInvestor, setSelectedInvestor] = useState('All Investors')
   const [selectedPeriod, setSelectedPeriod] = useState('90 Days')
-  // Always use combined data sources (BrightData + Crunchbase) - hidden from UI
-  const dataSource = 'combined'
+  // Data source selection (BrightData, Crunchbase, or Combined)
+  const [dataSource, setDataSource] = useState<'brightdata' | 'crunchbase' | 'combined'>('combined')
 
   // Helper function to determine region from location
   const getRegionFromLocation = (location: string): string => {
@@ -3035,6 +3036,43 @@ export default function ExecutiveDashboard() {
                   onChange={setSelectedPeriod}
                 />
 
+                {/* Data Source Selector */}
+                <div className="mt-8">
+                  <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">
+                    <Database className="h-3 w-3 inline mr-1" />
+                    DATA SOURCE
+                  </label>
+                  <div className="space-y-2">
+                    <Button
+                      onClick={() => setDataSource('combined')}
+                      className={`w-full px-4 py-2.5 rounded-lg font-medium transition-all text-left ${dataSource === 'combined'
+                        ? 'bg-[#0066FF] text-white hover:bg-[#1A3766] shadow-md'
+                        : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
+                        }`}
+                    >
+                      Combined (Best)
+                    </Button>
+                    <Button
+                      onClick={() => setDataSource('brightdata')}
+                      className={`w-full px-4 py-2.5 rounded-lg font-medium transition-all text-left ${dataSource === 'brightdata'
+                        ? 'bg-[#0066FF] text-white hover:bg-[#1A3766] shadow-md'
+                        : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
+                        }`}
+                    >
+                      BrightData
+                    </Button>
+                    <Button
+                      onClick={() => setDataSource('crunchbase')}
+                      className={`w-full px-4 py-2.5 rounded-lg font-medium transition-all text-left ${dataSource === 'crunchbase'
+                        ? 'bg-[#0066FF] text-white hover:bg-[#1A3766] shadow-md'
+                        : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-300'
+                        }`}
+                    >
+                      Crunchbase
+                    </Button>
+                  </div>
+                </div>
+
                 {/* Display Mode */}
                 <div className="mt-8">
                   <label className="block text-xs font-medium text-gray-500 uppercase tracking-wider mb-3">
@@ -3270,6 +3308,7 @@ export default function ExecutiveDashboard() {
                     key={sector.id}
                     sector={sector}
                     displayMode={displayMode}
+                    dataSource={dataSource as 'brightdata' | 'crunchbase' | 'combined'}
                   />
                 ))}
               </div>
@@ -3690,7 +3729,11 @@ export default function ExecutiveDashboard() {
                   </div>
                 ) : (
                   paginatedPatents.map((patent) => (
-                    <PatentIntelligenceCard key={patent.id} patent={patent} />
+                    <PatentIntelligenceCard 
+                      key={patent.id} 
+                      patent={patent}
+                      dataSource={dataSource as 'brightdata' | 'crunchbase' | 'combined'}
+                    />
                   ))
                 )}
               </div>

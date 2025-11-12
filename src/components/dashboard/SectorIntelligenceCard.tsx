@@ -1,8 +1,11 @@
 'use client'
 
+import { useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { TrendingUp, Building2, DollarSign, Globe } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { TrendingUp, Building2, DollarSign, Globe, Eye } from 'lucide-react'
+import SectorDetailsDialog from './SectorDetailsDialog'
 
 interface SectorIntelligenceCardProps {
   sector: {
@@ -20,9 +23,12 @@ interface SectorIntelligenceCardProps {
     emergingTechnologies?: string[]
   }
   displayMode: 'grid' | 'list'
+  dataSource?: 'brightdata' | 'crunchbase' | 'combined'
 }
 
-export default function SectorIntelligenceCard({ sector, displayMode }: SectorIntelligenceCardProps) {
+export default function SectorIntelligenceCard({ sector, displayMode, dataSource = 'combined' }: SectorIntelligenceCardProps) {
+  const [showDetails, setShowDetails] = useState(false)
+
   // Format currency
   const formatCurrency = (amount: number) => {
     if (amount >= 1000000) {
@@ -100,6 +106,17 @@ export default function SectorIntelligenceCard({ sector, displayMode }: SectorIn
             </Badge>
           )}
         </div>
+
+        {/* View Details Button */}
+        <Button
+          onClick={() => setShowDetails(true)}
+          variant="secondary"
+          size="sm"
+          className="absolute top-4 right-4 bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm"
+        >
+          <Eye className="h-4 w-4 mr-2" />
+          View Details
+        </Button>
 
         {/* Sector Name */}
         <h3 className="text-xl font-bold text-white mb-4 group-hover:text-white/90 transition-colors">
@@ -189,6 +206,14 @@ export default function SectorIntelligenceCard({ sector, displayMode }: SectorIn
           </div>
         )}
       </CardContent>
+
+      {/* Details Dialog */}
+      <SectorDetailsDialog
+        open={showDetails}
+        onOpenChange={setShowDetails}
+        sector={sector}
+        dataSource={dataSource}
+      />
     </Card>
   )
 }
