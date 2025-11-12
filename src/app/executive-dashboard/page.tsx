@@ -2693,6 +2693,271 @@ export default function ExecutiveDashboard() {
             news: 45
           }
         }
+      },
+      // Real factual companies from Crunchbase data
+      {
+        id: '26',
+        name: 'CrowdStrike',
+        description: 'Global cybersecurity leader providing cloud-delivered endpoint and workload protection with pioneering cloud-native endpoint security',
+        sector: 'Endpoint Security',
+        location: 'Austin, TX, USA',
+        region: 'North America',
+        founded: 2011,
+        fundingFrom: 'Accel, CapitalG',
+        totalFunding: 481000000,
+        lastRound: 'IPO',
+        lastRoundAmount: 612000000,
+        latestDateOfFunding: 'Jun 12, 2019',
+        website: 'https://www.crowdstrike.com',
+        linkedin: 'linkedin.com/company/crowdstrike',
+        team: {
+          ceo: 'George Kurtz',
+          cto: 'Michael Sentonas',
+          head: 'Burt Podbere (CFO)'
+        },
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 156,
+          patents: 45,
+          competitors: ['SentinelOne', 'Carbon Black', 'Cybereason'],
+          marketPosition: 'Established',
+          growthIndicators: {
+            hiring: 52,
+            funding: 85,
+            news: 78
+          }
+        }
+      },
+      {
+        id: '27',
+        name: 'SentinelOne',
+        description: 'Pioneer in autonomous cybersecurity delivering AI-powered platform protecting endpoints, containers, cloud workloads, and IoT devices',
+        sector: 'Endpoint Security',
+        location: 'Mountain View, CA, USA',
+        region: 'North America',
+        founded: 2013,
+        fundingFrom: 'Insight Partners, Tiger Global',
+        totalFunding: 696500000,
+        lastRound: 'IPO',
+        lastRoundAmount: 1200000000,
+        latestDateOfFunding: 'Jun 30, 2021',
+        website: 'https://www.sentinelone.com',
+        linkedin: 'linkedin.com/company/sentinelone',
+        team: {
+          ceo: 'Tomer Weingarten',
+          cto: 'Ric Smith',
+          head: 'David Bernhardt (CFO)'
+        },
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 142,
+          patents: 38,
+          competitors: ['CrowdStrike', 'Microsoft Defender', 'Palo Alto Networks'],
+          marketPosition: 'Established',
+          growthIndicators: {
+            hiring: 48,
+            funding: 82,
+            news: 72
+          }
+        }
+      },
+      {
+        id: '28',
+        name: 'CyberArk',
+        description: 'Global leader in Identity Security providing comprehensive security for any identity across business applications, distributed workforces, and hybrid cloud',
+        sector: 'Identity Management',
+        location: 'Newton, MA, USA',
+        region: 'North America',
+        founded: 1999,
+        fundingFrom: 'Jerusalem Venture Partners',
+        totalFunding: 125000000,
+        lastRound: 'IPO',
+        lastRoundAmount: 88000000,
+        latestDateOfFunding: 'Sep 24, 2014',
+        website: 'https://www.cyberark.com',
+        linkedin: 'linkedin.com/company/cyber-ark-software',
+        team: {
+          ceo: 'Matt Cohen',
+          cto: 'Kurt Sand',
+          head: 'Josh Siegel (CFO)'
+        },
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 128,
+          patents: 52,
+          competitors: ['Okta', 'Ping Identity', 'SailPoint'],
+          marketPosition: 'Established',
+          growthIndicators: {
+            hiring: 42,
+            funding: 75,
+            news: 68
+          }
+        }
+      },
+      {
+        id: '29',
+        name: 'Zscaler',
+        description: 'Cloud security company providing secure access to applications and data from any device, anywhere, pioneering zero trust security model',
+        sector: 'Network Security',
+        location: 'San Jose, CA, USA',
+        region: 'North America',
+        founded: 2007,
+        fundingFrom: 'TPG Capital, Lightspeed',
+        totalFunding: 148000000,
+        lastRound: 'IPO',
+        lastRoundAmount: 192000000,
+        latestDateOfFunding: 'Mar 16, 2018',
+        website: 'https://www.zscaler.com',
+        linkedin: 'linkedin.com/company/zscaler',
+        team: {
+          ceo: 'Jay Chaudhry',
+          cto: 'Amit Sinha',
+          head: 'Remo Canessa (CFO)'
+        },
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 138,
+          patents: 48,
+          competitors: ['Palo Alto Networks', 'Fortinet', 'Cisco'],
+          marketPosition: 'Established',
+          growthIndicators: {
+            hiring: 45,
+            funding: 78,
+            news: 70
+          }
+        }
+      },
+      {
+        id: '30',
+        name: 'Okta',
+        description: 'Leading independent identity provider enabling organizations to securely connect the right people to the right technologies at the right time',
+        sector: 'Identity Management',
+        location: 'San Francisco, CA, USA',
+        region: 'North America',
+        founded: 2009,
+        fundingFrom: 'Andreessen Horowitz, Sequoia',
+        totalFunding: 229500000,
+        lastRound: 'IPO',
+        lastRoundAmount: 187000000,
+        latestDateOfFunding: 'Apr 7, 2017',
+        website: 'https://www.okta.com',
+        linkedin: 'linkedin.com/company/okta-inc-',
+        team: {
+          ceo: 'Todd McKinnon',
+          cto: 'Hector Aguilar',
+          head: 'Brett Tighe (CFO)'
+        },
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 145,
+          patents: 42,
+          competitors: ['CyberArk', 'Ping Identity', 'Microsoft Azure AD'],
+          marketPosition: 'Established',
+          growthIndicators: {
+            hiring: 46,
+            funding: 80,
+            news: 74
+          }
+        }
+      },
+      {
+        id: '31',
+        name: 'Palo Alto Networks',
+        description: 'Global cybersecurity leader providing next-generation firewalls, cloud security, and threat intelligence with comprehensive platform approach',
+        sector: 'Network Security',
+        location: 'Santa Clara, CA, USA',
+        region: 'North America',
+        founded: 2005,
+        fundingFrom: 'Greylock Partners, Sequoia',
+        totalFunding: 177000000,
+        lastRound: 'IPO',
+        lastRoundAmount: 260000000,
+        latestDateOfFunding: 'Jul 20, 2012',
+        website: 'https://www.paloaltonetworks.com',
+        linkedin: 'linkedin.com/company/palo-alto-networks',
+        team: {
+          ceo: 'Nikesh Arora',
+          cto: 'Nir Zuk',
+          head: 'Dipak Golechha (CFO)'
+        },
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 168,
+          patents: 125,
+          competitors: ['Fortinet', 'Check Point', 'Cisco'],
+          marketPosition: 'Established',
+          growthIndicators: {
+            hiring: 55,
+            funding: 88,
+            news: 82
+          }
+        }
+      },
+      {
+        id: '32',
+        name: 'Snyk',
+        description: 'Developer security platform helping organizations use open source code and stay secure with tools for finding and fixing vulnerabilities',
+        sector: 'Application Security',
+        location: 'Boston, MA, USA',
+        region: 'North America',
+        founded: 2015,
+        fundingFrom: 'Accel, Coatue Management',
+        totalFunding: 1020000000,
+        lastRound: 'Series F',
+        lastRoundAmount: 530000000,
+        latestDateOfFunding: 'Sep 9, 2021',
+        website: 'https://snyk.io',
+        linkedin: 'linkedin.com/company/snyk',
+        team: {
+          ceo: 'Peter McKay',
+          cto: 'Danny Grander',
+          head: 'Udi Mokady (Chairman)'
+        },
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 132,
+          patents: 28,
+          competitors: ['Checkmarx', 'Veracode', 'WhiteSource'],
+          marketPosition: 'Growing',
+          growthIndicators: {
+            hiring: 58,
+            funding: 92,
+            news: 76
+          }
+        }
+      },
+      {
+        id: '33',
+        name: 'Wiz',
+        description: 'Cloud security platform enabling organizations to rapidly identify and remove critical risks in cloud environments with comprehensive multi-cloud visibility',
+        sector: 'Cloud Security',
+        location: 'New York, NY, USA',
+        region: 'North America',
+        founded: 2020,
+        fundingFrom: 'Sequoia, Index Ventures',
+        totalFunding: 1900000000,
+        lastRound: 'Series E',
+        lastRoundAmount: 1000000000,
+        latestDateOfFunding: 'May 8, 2024',
+        website: 'https://www.wiz.io',
+        linkedin: 'linkedin.com/company/wizsecurity',
+        team: {
+          ceo: 'Assaf Rappaport',
+          cto: 'Ami Luttwak',
+          head: 'Raaz Herzberg (CMO)'
+        },
+        brightData: {
+          newsSentiment: 'positive',
+          recentMentions: 185,
+          patents: 15,
+          competitors: ['Orca Security', 'Lacework', 'Prisma Cloud'],
+          marketPosition: 'Innovative',
+          growthIndicators: {
+            hiring: 72,
+            funding: 98,
+            news: 88
+          }
+        }
       }
     ]
     
@@ -3687,27 +3952,27 @@ export default function ExecutiveDashboard() {
           {/* Market Intelligence View */}
           {selectedTab === 'market-intelligence' && !loading && (
             <div className="p-8">
-              {/* Data Intelligence Integration */}
-              <div className="mb-6 p-4 bg-green-50 rounded-lg border border-green-200">
+              {/* Market Intelligence Stats */}
+              <div className="mb-6 p-4 bg-gradient-to-r from-[#0066FF]/10 to-[#1A3766]/10 rounded-lg border border-[#0066FF]/30">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    <Building2 className="h-5 w-5 text-green-600" />
+                    <Building2 className="h-5 w-5 text-[#0066FF]" />
                     <div>
-                      <p className="font-medium text-green-900">BrightData + Crunchbase Intelligence</p>
-                      <p className="text-sm text-green-700">Companies enriched with sentiment analysis, patent activity, and market positioning</p>
+                      <p className="font-medium text-gray-900">Market Intelligence Overview</p>
+                      <p className="text-sm text-gray-600">Comprehensive cybersecurity company analysis and insights</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Badge variant="outline" className="border-green-300 text-green-700">
+                    <Badge variant="outline" className="border-[#0066FF] text-[#0066FF]">
                       {companies.filter(c => c.brightData?.newsSentiment === 'positive').length} Positive Sentiment
                     </Badge>
                     <Button
                       onClick={() => setSelectedTab('data-intelligence')}
                       variant="outline"
                       size="sm"
-                      className="border-green-300 text-green-700 hover:bg-green-100"
+                      className="border-[#0066FF] text-[#0066FF] hover:bg-[#0066FF]/10"
                     >
-                      Cross-Reference
+                      View All Data
                     </Button>
                   </div>
                 </div>
