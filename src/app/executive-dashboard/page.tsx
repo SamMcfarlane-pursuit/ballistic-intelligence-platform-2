@@ -2917,11 +2917,11 @@ export default function ExecutiveDashboard() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="border-b border-gray-300 bg-gradient-to-r from-gray-50 to-white sticky top-0 z-50 shadow-sm">
+      <header className="border-b border-ballistic-blue-200 bg-gradient-to-r from-ballistic-light-blue to-white sticky top-0 z-50 shadow-md">
         <div className="px-8 py-6">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-gray-800 bg-clip-text text-transparent">Ballistic Intel</h1>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-ballistic-blue-500 to-ballistic-navy-600 bg-clip-text text-transparent">Ballistic Intel</h1>
 
             {/* Navigation Tabs and Export */}
             <div className="flex items-center space-x-6">

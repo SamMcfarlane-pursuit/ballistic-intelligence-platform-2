@@ -44,71 +44,114 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  
+  /* Ballistic Intel Brand Colors */
+  --ballistic-blue: 217 100% 50%;        /* #0066FF */
+  --ballistic-navy: 217 60% 25%;         /* #1A3766 */
+  --ballistic-light-blue: 217 100% 95%;  /* #E6F0FF */
+  --ballistic-dark-navy: 217 80% 15%;    /* #0A1629 */
+  
+  /* Base Colors with Ballistic Theme */
+  --background: 0 0% 100%;                /* White */
+  --foreground: 217 60% 25%;              /* Ballistic Navy */
+  --card: 0 0% 100%;                      /* White */
+  --card-foreground: 217 60% 25%;         /* Ballistic Navy */
+  --popover: 0 0% 100%;                   /* White */
+  --popover-foreground: 217 60% 25%;      /* Ballistic Navy */
+  
+  /* Primary - Ballistic Blue */
+  --primary: 217 100% 50%;                /* #0066FF */
+  --primary-foreground: 0 0% 100%;        /* White */
+  
+  /* Secondary - Ballistic Navy */
+  --secondary: 217 60% 25%;               /* #1A3766 */
+  --secondary-foreground: 0 0% 100%;      /* White */
+  
+  /* Muted - Light Blue/Gray */
+  --muted: 217 100% 97%;                  /* Very light blue */
+  --muted-foreground: 217 20% 45%;        /* Medium gray-blue */
+  
+  /* Accent - Bright Blue */
+  --accent: 217 100% 60%;                 /* Lighter blue */
+  --accent-foreground: 0 0% 100%;         /* White */
+  
+  /* Destructive - Keep red for errors */
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  
+  /* Borders and Inputs - Light blue tint */
+  --border: 217 30% 90%;                  /* Light blue-gray */
+  --input: 217 30% 90%;                   /* Light blue-gray */
+  --ring: 217 100% 50%;                   /* Ballistic Blue */
+  
+  /* Charts - Blue gradient palette */
+  --chart-1: 217 100% 50%;                /* Ballistic Blue */
+  --chart-2: 217 80% 40%;                 /* Darker Blue */
+  --chart-3: 217 60% 30%;                 /* Navy */
+  --chart-4: 217 100% 70%;                /* Light Blue */
+  --chart-5: 217 100% 85%;                /* Very Light Blue */
+  
+  /* Sidebar - Light with blue accents */
+  --sidebar: 0 0% 100%;                   /* White */
+  --sidebar-foreground: 217 60% 25%;      /* Ballistic Navy */
+  --sidebar-primary: 217 100% 50%;        /* Ballistic Blue */
+  --sidebar-primary-foreground: 0 0% 100%; /* White */
+  --sidebar-accent: 217 100% 97%;         /* Very light blue */
+  --sidebar-accent-foreground: 217 60% 25%; /* Ballistic Navy */
+  --sidebar-border: 217 30% 90%;          /* Light blue-gray */
+  --sidebar-ring: 217 100% 50%;           /* Ballistic Blue */
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Dark Mode - Ballistic Intel Theme */
+  --background: 217 80% 8%;               /* Very dark navy */
+  --foreground: 217 100% 95%;             /* Light blue-white */
+  --card: 217 70% 12%;                    /* Dark navy card */
+  --card-foreground: 217 100% 95%;        /* Light blue-white */
+  --popover: 217 70% 12%;                 /* Dark navy */
+  --popover-foreground: 217 100% 95%;     /* Light blue-white */
+  
+  /* Primary - Bright Blue (more vibrant in dark mode) */
+  --primary: 217 100% 60%;                /* Brighter blue */
+  --primary-foreground: 217 80% 8%;       /* Dark navy */
+  
+  /* Secondary - Medium Navy */
+  --secondary: 217 50% 20%;               /* Medium dark navy */
+  --secondary-foreground: 217 100% 95%;   /* Light blue-white */
+  
+  /* Muted - Dark blue-gray */
+  --muted: 217 40% 18%;                   /* Dark blue-gray */
+  --muted-foreground: 217 20% 65%;        /* Medium light gray-blue */
+  
+  /* Accent - Bright Blue */
+  --accent: 217 100% 65%;                 /* Bright blue */
+  --accent-foreground: 217 80% 8%;        /* Dark navy */
+  
+  /* Destructive - Keep red for errors */
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  
+  /* Borders and Inputs - Subtle blue */
+  --border: 217 40% 25%;                  /* Dark blue-gray border */
+  --input: 217 40% 25%;                   /* Dark blue-gray input */
+  --ring: 217 100% 60%;                   /* Bright blue ring */
+  
+  /* Charts - Blue gradient palette for dark mode */
+  --chart-1: 217 100% 60%;                /* Bright Blue */
+  --chart-2: 217 80% 50%;                 /* Medium Blue */
+  --chart-3: 217 60% 40%;                 /* Darker Blue */
+  --chart-4: 217 100% 75%;                /* Very Light Blue */
+  --chart-5: 217 80% 65%;                 /* Light Blue */
+  
+  /* Sidebar - Dark navy with blue accents */
+  --sidebar: 217 70% 12%;                 /* Dark navy */
+  --sidebar-foreground: 217 100% 95%;     /* Light blue-white */
+  --sidebar-primary: 217 100% 60%;        /* Bright blue */
+  --sidebar-primary-foreground: 217 80% 8%; /* Dark navy */
+  --sidebar-accent: 217 50% 20%;          /* Medium dark navy */
+  --sidebar-accent-foreground: 217 100% 95%; /* Light blue-white */
+  --sidebar-border: 217 40% 25%;          /* Dark blue-gray */
+  --sidebar-ring: 217 100% 60%;           /* Bright blue */
 }
 
 @layer base {
