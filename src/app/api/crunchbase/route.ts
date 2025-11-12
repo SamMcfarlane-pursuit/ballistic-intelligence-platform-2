@@ -1,284 +1,228 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { crunchbaseService } from '@/services/crunchbase-service'
 
-/**
- * Crunchbase API Endpoint
- * Provides access to Crunchbase cybersecurity company data
- */
+export const dynamic = 'force-dynamic'
+export const runtime = 'nodejs'
 
+/**
+ * Crunchbase API Route
+ * 
+ * Endpoints:
+ * - GET /api/crunchbase?action=search&query=company&limit=50
+ * - GET /api/crunchbase?action=organization&uuid=org-123
+ * - GET /api/crunchbase?action=funding&uuid=org-123
+ * - GET /api/crunchbase?action=investors&uuid=org-123
+ * - GET /api/crunchbase?action=analysis&timeframe=6m
+ * - GET /api/crunchbase?action=health
+ */
 export async function GET(request: NextRequest) {
+  const startTime = Date.now()
+  
   try {
-    const { searchParams } = new URL(request.url)
+    const searchParams = request.nextUrl.searchParams
     const action = searchParams.get('action') || 'search'
-    const query = searchParams.get('query') || ''
-    const limit = parseInt(searchParams.get('limit') || '50')
-    const page = parseInt(searchParams.get('page') || '1')
-    const uuid = searchParams.get('uuid') || ''
-    const timeframe = (searchParams.get('timeframe') || '6m') as '1m' | '3m' | '6m' | '1y' | 'all'
+    
+    console.log(`[Crunchbase API] Action: ${action}`, {
+      timestamp: new Date().toISOString(),
+      params: Object.fromEntries(searchParams.entries())
+    })
 
     switch (action) {
-      case 'search':
-        return await searchOrganizations(query, limit, page)
-      
-      case 'organization':
-        return await getOrganization(uuid)
-      
-      case 'funding-rounds':
-        return await getFundingRounds(uuid)
-      
-      case 'investors':
-        return await getInvestors(uuid)
-      
-      case 'funding-analysis':
-        return await getFundingAnalysis(timeframe)
-      
-      case 'real-time-alerts':
-        return await getRealTimeAlerts()
-      
-      case 'monitor':
+      case 'search': {
+        const query = searchParams.get('query') || ''
+        const limit = parseInt(searchParams.get('limit') || '50')
+        const page = parseInt(searchParams.get('page') || '1')
+        
+        const result = await crunchbaseService.searchCybersecurityOrganizations(query, limit, page)
+        
+        console.log(`[Crunchbase API] Search completed`, {
+          timestamp: new Date().toISOString(),
+          query,
+          results: result.organizations.length,
+          duration: Date.now() - startTime
+        })
+        
+        return NextResponse.json({
+          success: true,
+          data: result,
+          timestamp: new Date().toISOString(),
+          duration: Date.now() - startTime
+        })
+      }
+
+      case 'organization': {
+        const uuid = searchParams.get('uuid')
+        
+        if (!uuid) {
+          return NextResponse.json({
+            success: false,
+            error: 'UUID parameter is required',
+            timestamp: new Date().toISOString()
+          }, { status: 400 })
+        }
+        
+        const organization = await crunchbaseService.getOrganization(uuid)
+        
+        if (!organization) {
+          return NextResponse.json({
+            success: false,
+            error: 'Organization not found',
+            timestamp: new Date().toISOString()
+          }, { status: 404 })
+        }
+        
+        console.log(`[Crunchbase API] Organization fetched`, {
+          timestamp: new Date().toISOString(),
+          uuid,
+          name: organization.name,
+          duration: Date.now() - startTime
+        })
+        
+        return NextResponse.json({
+          success: true,
+          data: organization,
+          timestamp: new Date().toISOString(),
+          duration: Date.now() - startTime
+        })
+      }
+
+      case 'funding': {
+        const uuid = searchParams.get('uuid')
+        
+        if (!uuid) {
+          return NextResponse.json({
+            success: false,
+            error: 'UUID parameter is required',
+            timestamp: new Date().toISOString()
+          }, { status: 400 })
+        }
+        
+        const fundingRounds = await crunchbaseService.getOrganizationFundingRounds(uuid)
+        
+        console.log(`[Crunchbase API] Funding rounds fetched`, {
+          timestamp: new Date().toISOString(),
+          uuid,
+          rounds: fundingRounds.length,
+          duration: Date.now() - startTime
+        })
+        
+        return NextResponse.json({
+          success: true,
+          data: fundingRounds,
+          timestamp: new Date().toISOString(),
+          duration: Date.now() - startTime
+        })
+      }
+
+      case 'investors': {
+        const uuid = searchParams.get('uuid')
+        
+        if (!uuid) {
+          return NextResponse.json({
+            success: false,
+            error: 'UUID parameter is required',
+            timestamp: new Date().toISOString()
+          }, { status: 400 })
+        }
+        
+        const investors = await crunchbaseService.getOrganizationInvestors(uuid)
+        
+        console.log(`[Crunchbase API] Investors fetched`, {
+          timestamp: new Date().toISOString(),
+          uuid,
+          investors: investors.length,
+          duration: Date.now() - startTime
+        })
+        
+        return NextResponse.json({
+          success: true,
+          data: investors,
+          timestamp: new Date().toISOString(),
+          duration: Date.now() - startTime
+        })
+      }
+
+      case 'analysis': {
+        const timeframe = (searchParams.get('timeframe') || '6m') as '1m' | '3m' | '6m' | '1y' | 'all'
+        
+        const analysis = await crunchbaseService.getCybersecurityFundingAnalysis(timeframe)
+        
+        console.log(`[Crunchbase API] Analysis completed`, {
+          timestamp: new Date().toISOString(),
+          timeframe,
+          totalFunding: analysis.total_funding,
+          duration: Date.now() - startTime
+        })
+        
+        return NextResponse.json({
+          success: true,
+          data: analysis,
+          timestamp: new Date().toISOString(),
+          duration: Date.now() - startTime
+        })
+      }
+
+      case 'health': {
+        const health = await crunchbaseService.getHealthStatus()
+        
+        console.log(`[Crunchbase API] Health check`, {
+          timestamp: new Date().toISOString(),
+          status: health.status,
+          duration: Date.now() - startTime
+        })
+        
+        return NextResponse.json({
+          success: true,
+          data: health,
+          timestamp: new Date().toISOString(),
+          duration: Date.now() - startTime
+        })
+      }
+
+      case 'monitor': {
         const companies = searchParams.get('companies')?.split(',') || []
-        return await monitorCompanies(companies)
-      
-      case 'health':
-        return await getHealthStatus()
-      
+        
+        if (companies.length === 0) {
+          return NextResponse.json({
+            success: false,
+            error: 'Companies parameter is required (comma-separated list)',
+            timestamp: new Date().toISOString()
+          }, { status: 400 })
+        }
+        
+        const fundingRounds = await crunchbaseService.monitorCompanies(companies)
+        
+        console.log(`[Crunchbase API] Companies monitored`, {
+          timestamp: new Date().toISOString(),
+          companies: companies.length,
+          rounds: fundingRounds.length,
+          duration: Date.now() - startTime
+        })
+        
+        return NextResponse.json({
+          success: true,
+          data: fundingRounds,
+          timestamp: new Date().toISOString(),
+          duration: Date.now() - startTime
+        })
+      }
+
       default:
         return NextResponse.json({
           success: false,
-          error: 'Invalid action'
+          error: `Unknown action: ${action}`,
+          availableActions: ['search', 'organization', 'funding', 'investors', 'analysis', 'health', 'monitor'],
+          timestamp: new Date().toISOString()
         }, { status: 400 })
     }
   } catch (error) {
-    console.error('Crunchbase API error:', error)
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Crunchbase API request failed',
-        details: error instanceof Error ? error.message : 'Unknown error'
-      },
-      { status: 500 }
-    )
-  }
-}
-
-/**
- * Search for cybersecurity organizations
- */
-async function searchOrganizations(query: string, limit: number, page: number) {
-  try {
-    const result = await crunchbaseService.searchCybersecurityOrganizations(query, limit, page)
+    console.error('[Crunchbase API] Error:', error)
     
-    return NextResponse.json({
-      success: true,
-      data: result,
-      timestamp: new Date().toISOString()
-    })
-  } catch (error) {
-    throw error
-  }
-}
-
-/**
- * Get organization details
- */
-async function getOrganization(uuid: string) {
-  try {
-    if (!uuid) {
-      return NextResponse.json({
-        success: false,
-        error: 'Organization UUID required'
-      }, { status: 400 })
-    }
-
-    const organization = await crunchbaseService.getOrganization(uuid)
-    
-    if (!organization) {
-      return NextResponse.json({
-        success: false,
-        error: 'Organization not found'
-      }, { status: 404 })
-    }
-
-    return NextResponse.json({
-      success: true,
-      data: organization,
-      timestamp: new Date().toISOString()
-    })
-  } catch (error) {
-    throw error
-  }
-}
-
-/**
- * Get funding rounds for organization
- */
-async function getFundingRounds(uuid: string) {
-  try {
-    if (!uuid) {
-      return NextResponse.json({
-        success: false,
-        error: 'Organization UUID required'
-      }, { status: 400 })
-    }
-
-    const rounds = await crunchbaseService.getOrganizationFundingRounds(uuid)
-    
-    return NextResponse.json({
-      success: true,
-      data: {
-        rounds,
-        totalRounds: rounds.length,
-        totalFunding: rounds.reduce((sum, r) => sum + (r.money_raised_usd || 0), 0)
-      },
-      timestamp: new Date().toISOString()
-    })
-  } catch (error) {
-    throw error
-  }
-}
-
-/**
- * Get investors for organization
- */
-async function getInvestors(uuid: string) {
-  try {
-    if (!uuid) {
-      return NextResponse.json({
-        success: false,
-        error: 'Organization UUID required'
-      }, { status: 400 })
-    }
-
-    const investors = await crunchbaseService.getOrganizationInvestors(uuid)
-    
-    return NextResponse.json({
-      success: true,
-      data: {
-        investors,
-        totalInvestors: investors.length
-      },
-      timestamp: new Date().toISOString()
-    })
-  } catch (error) {
-    throw error
-  }
-}
-
-/**
- * Get comprehensive funding analysis
- */
-async function getFundingAnalysis(timeframe: '1m' | '3m' | '6m' | '1y' | 'all') {
-  try {
-    const analysis = await crunchbaseService.getCybersecurityFundingAnalysis(timeframe)
-    
-    return NextResponse.json({
-      success: true,
-      data: analysis,
-      timeframe,
-      timestamp: new Date().toISOString()
-    })
-  } catch (error) {
-    throw error
-  }
-}
-
-/**
- * Get real-time funding alerts
- */
-async function getRealTimeAlerts() {
-  try {
-    const alerts = await crunchbaseService.getRealTimeFundingAlerts()
-    
-    return NextResponse.json({
-      success: true,
-      data: {
-        alerts,
-        totalAlerts: alerts.length,
-        period: 'Last 30 days'
-      },
-      timestamp: new Date().toISOString()
-    })
-  } catch (error) {
-    throw error
-  }
-}
-
-/**
- * Monitor specific companies
- */
-async function monitorCompanies(companies: string[]) {
-  try {
-    if (companies.length === 0) {
-      return NextResponse.json({
-        success: false,
-        error: 'At least one company required'
-      }, { status: 400 })
-    }
-
-    const rounds = await crunchbaseService.monitorCompanies(companies)
-    
-    return NextResponse.json({
-      success: true,
-      data: {
-        rounds,
-        totalRounds: rounds.length,
-        companies
-      },
-      timestamp: new Date().toISOString()
-    })
-  } catch (error) {
-    throw error
-  }
-}
-
-/**
- * Get service health status
- */
-async function getHealthStatus() {
-  try {
-    const health = await crunchbaseService.getHealthStatus()
-    
-    return NextResponse.json({
-      success: true,
-      data: health,
-      timestamp: new Date().toISOString()
-    })
-  } catch (error) {
-    throw error
-  }
-}
-
-export async function POST(request: NextRequest) {
-  try {
-    const body = await request.json()
-    const { action, companies } = body
-
-    if (action === 'monitor' && companies) {
-      const rounds = await crunchbaseService.monitorCompanies(companies)
-      
-      return NextResponse.json({
-        success: true,
-        data: {
-          rounds,
-          totalRounds: rounds.length,
-          companies
-        },
-        timestamp: new Date().toISOString()
-      })
-    }
-
     return NextResponse.json({
       success: false,
-      error: 'Invalid action'
-    }, { status: 400 })
-  } catch (error) {
-    console.error('Crunchbase POST error:', error)
-    return NextResponse.json(
-      {
-        success: false,
-        error: 'Request failed'
-      },
-      { status: 500 }
-    )
+      error: error instanceof Error ? error.message : 'Internal server error',
+      timestamp: new Date().toISOString(),
+      duration: Date.now() - startTime
+    }, { status: 500 })
   }
 }

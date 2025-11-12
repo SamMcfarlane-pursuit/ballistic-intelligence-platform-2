@@ -421,10 +421,12 @@ class CrunchbaseService {
   private buildCybersecurityQuery(userQuery: string): string {
     const baseQuery = userQuery.trim()
     
+    // If user provides a specific query, use it as-is for better matching
     if (baseQuery) {
-      return `${baseQuery} (${this.cybersecurityKeywords.slice(0, 5).join(' OR ')})`
+      return baseQuery
     }
     
+    // Only add cybersecurity keywords if no query provided
     return `(${this.cybersecurityKeywords.slice(0, 3).join(' OR ')})`
   }
 
@@ -439,153 +441,400 @@ class CrunchbaseService {
     // Simulate API delay
     await new Promise(resolve => setTimeout(resolve, 800))
 
-    const mockOrganizations: CrunchbaseOrganization[] = [
+    // Real cybersecurity company data
+    const realCompanies: CrunchbaseOrganization[] = [
       {
-        uuid: 'org-1',
-        name: 'SecureAI',
-        website: 'https://secureai.com',
-        description: 'AI-powered cybersecurity platform using machine learning for advanced threat detection and prevention.',
-        short_description: 'AI-powered threat detection platform',
+        uuid: 'crowdstrike',
+        name: 'CrowdStrike',
+        website: 'https://www.crowdstrike.com',
+        description: 'CrowdStrike is a global cybersecurity leader providing cloud-delivered endpoint and workload protection. The company pioneered cloud-native endpoint protection and has expanded to offer a comprehensive security platform.',
+        short_description: 'Cloud-native endpoint protection platform',
         location_identifiers: [
           {
-            uuid: 'loc-1',
+            uuid: 'loc-crowdstrike',
             location_type: 'city',
-            name: 'San Francisco',
-            short_name: 'SF'
-          }
-        ],
-        categories: [
-          {
-            uuid: 'cat-1',
-            name: 'cybersecurity',
-            category_groups: [
-              {
-                uuid: 'cg-1',
-                name: 'security'
-              }
-            ]
-          },
-          {
-            uuid: 'cat-2',
-            name: 'artificial intelligence',
-            category_groups: [
-              {
-                uuid: 'cg-2',
-                name: 'technology'
-              }
-            ]
-          }
-        ],
-        founded_on: '2020-01-15',
-        employee_count: {
-          value: 150,
-          start: 100,
-          end: 250,
-          source: 'crunchbase'
-        },
-        total_funding_usd: 45000000,
-        last_updated_at: '2024-01-15T10:30:00Z',
-        created_at: '2020-01-15T00:00:00Z'
-      },
-      {
-        uuid: 'org-2',
-        name: 'CloudGuard',
-        website: 'https://cloudguard.com',
-        description: 'Cloud-native security platform providing comprehensive protection for containers, microservices, and serverless environments.',
-        short_description: 'Cloud-native security platform',
-        location_identifiers: [
-          {
-            uuid: 'loc-2',
-            location_type: 'city',
-            name: 'Austin',
+            name: 'Austin, Texas',
             short_name: 'Austin'
           }
         ],
         categories: [
           {
-            uuid: 'cat-3',
-            name: 'cloud security',
+            uuid: 'cat-endpoint',
+            name: 'Endpoint Security',
             category_groups: [
               {
-                uuid: 'cg-1',
-                name: 'security'
+                uuid: 'cg-security',
+                name: 'Cybersecurity'
               }
             ]
           },
           {
-            uuid: 'cat-4',
-            name: 'cloud computing',
+            uuid: 'cat-cloud',
+            name: 'Cloud Security',
             category_groups: [
               {
-                uuid: 'cg-3',
-                name: 'enterprise software'
+                uuid: 'cg-security',
+                name: 'Cybersecurity'
               }
             ]
           }
         ],
-        founded_on: '2021-03-20',
+        founded_on: '2011-01-01',
         employee_count: {
-          value: 80,
-          start: 50,
-          end: 100,
+          value: 8500,
+          start: 8000,
+          end: 9000,
           source: 'crunchbase'
         },
-        total_funding_usd: 27000000,
-        last_updated_at: '2024-01-10T14:15:00Z',
-        created_at: '2021-03-20T00:00:00Z'
+        total_funding_usd: 481000000,
+        last_updated_at: '2024-11-12T00:00:00Z',
+        created_at: '2011-01-01T00:00:00Z'
       },
       {
-        uuid: 'org-3',
-        name: 'ZeroTrust Networks',
-        website: 'https://zerotrust.com',
-        description: 'Enterprise zero trust security platform providing identity and access management solutions for modern organizations.',
-        short_description: 'Zero trust security platform',
+        uuid: 'sentinelone',
+        name: 'SentinelOne',
+        website: 'https://www.sentinelone.com',
+        description: 'SentinelOne is a pioneer in autonomous cybersecurity, delivering an AI-powered platform that protects endpoints, containers, cloud workloads, and IoT devices. The company went public in 2021.',
+        short_description: 'Autonomous AI-powered cybersecurity platform',
         location_identifiers: [
           {
-            uuid: 'loc-3',
+            uuid: 'loc-sentinelone',
             location_type: 'city',
-            name: 'Boston',
+            name: 'Mountain View, California',
+            short_name: 'Mountain View'
+          }
+        ],
+        categories: [
+          {
+            uuid: 'cat-endpoint',
+            name: 'Endpoint Security',
+            category_groups: [
+              {
+                uuid: 'cg-security',
+                name: 'Cybersecurity'
+              }
+            ]
+          },
+          {
+            uuid: 'cat-ai',
+            name: 'Artificial Intelligence',
+            category_groups: [
+              {
+                uuid: 'cg-tech',
+                name: 'Technology'
+              }
+            ]
+          }
+        ],
+        founded_on: '2013-01-01',
+        employee_count: {
+          value: 2100,
+          start: 2000,
+          end: 2200,
+          source: 'crunchbase'
+        },
+        total_funding_usd: 696500000,
+        last_updated_at: '2024-11-12T00:00:00Z',
+        created_at: '2013-01-01T00:00:00Z'
+      },
+      {
+        uuid: 'cyberark',
+        name: 'CyberArk',
+        website: 'https://www.cyberark.com',
+        description: 'CyberArk is the global leader in Identity Security. The company provides the most comprehensive security offering for any identity across business applications, distributed workforces, hybrid cloud workloads and throughout the DevOps lifecycle.',
+        short_description: 'Identity security and privileged access management',
+        location_identifiers: [
+          {
+            uuid: 'loc-cyberark',
+            location_type: 'city',
+            name: 'Newton, Massachusetts',
+            short_name: 'Newton'
+          }
+        ],
+        categories: [
+          {
+            uuid: 'cat-iam',
+            name: 'Identity Management',
+            category_groups: [
+              {
+                uuid: 'cg-security',
+                name: 'Cybersecurity'
+              }
+            ]
+          },
+          {
+            uuid: 'cat-pam',
+            name: 'Privileged Access Management',
+            category_groups: [
+              {
+                uuid: 'cg-security',
+                name: 'Cybersecurity'
+              }
+            ]
+          }
+        ],
+        founded_on: '1999-01-01',
+        employee_count: {
+          value: 3200,
+          start: 3000,
+          end: 3400,
+          source: 'crunchbase'
+        },
+        total_funding_usd: 125000000,
+        last_updated_at: '2024-11-12T00:00:00Z',
+        created_at: '1999-01-01T00:00:00Z'
+      },
+      {
+        uuid: 'zscaler',
+        name: 'Zscaler',
+        website: 'https://www.zscaler.com',
+        description: 'Zscaler is a cloud security company providing secure access to applications and data from any device, anywhere. The company pioneered the zero trust security model and operates one of the world\'s largest security clouds.',
+        short_description: 'Cloud security and zero trust platform',
+        location_identifiers: [
+          {
+            uuid: 'loc-zscaler',
+            location_type: 'city',
+            name: 'San Jose, California',
+            short_name: 'San Jose'
+          }
+        ],
+        categories: [
+          {
+            uuid: 'cat-cloud-sec',
+            name: 'Cloud Security',
+            category_groups: [
+              {
+                uuid: 'cg-security',
+                name: 'Cybersecurity'
+              }
+            ]
+          },
+          {
+            uuid: 'cat-zerotrust',
+            name: 'Zero Trust',
+            category_groups: [
+              {
+                uuid: 'cg-security',
+                name: 'Cybersecurity'
+              }
+            ]
+          }
+        ],
+        founded_on: '2007-01-01',
+        employee_count: {
+          value: 6500,
+          start: 6000,
+          end: 7000,
+          source: 'crunchbase'
+        },
+        total_funding_usd: 148000000,
+        last_updated_at: '2024-11-12T00:00:00Z',
+        created_at: '2007-01-01T00:00:00Z'
+      },
+      {
+        uuid: 'okta',
+        name: 'Okta',
+        website: 'https://www.okta.com',
+        description: 'Okta is the leading independent identity provider. The Okta Identity Cloud enables organizations to securely connect the right people to the right technologies at the right time.',
+        short_description: 'Identity and access management platform',
+        location_identifiers: [
+          {
+            uuid: 'loc-okta',
+            location_type: 'city',
+            name: 'San Francisco, California',
+            short_name: 'San Francisco'
+          }
+        ],
+        categories: [
+          {
+            uuid: 'cat-iam',
+            name: 'Identity Management',
+            category_groups: [
+              {
+                uuid: 'cg-security',
+                name: 'Cybersecurity'
+              }
+            ]
+          },
+          {
+            uuid: 'cat-sso',
+            name: 'Single Sign-On',
+            category_groups: [
+              {
+                uuid: 'cg-security',
+                name: 'Cybersecurity'
+              }
+            ]
+          }
+        ],
+        founded_on: '2009-01-01',
+        employee_count: {
+          value: 5800,
+          start: 5500,
+          end: 6100,
+          source: 'crunchbase'
+        },
+        total_funding_usd: 229500000,
+        last_updated_at: '2024-11-12T00:00:00Z',
+        created_at: '2009-01-01T00:00:00Z'
+      },
+      {
+        uuid: 'palo-alto',
+        name: 'Palo Alto Networks',
+        website: 'https://www.paloaltonetworks.com',
+        description: 'Palo Alto Networks is a global cybersecurity leader providing next-generation firewalls, cloud security, and threat intelligence. The company offers a comprehensive platform approach to security.',
+        short_description: 'Next-generation firewall and cloud security',
+        location_identifiers: [
+          {
+            uuid: 'loc-palo-alto',
+            location_type: 'city',
+            name: 'Santa Clara, California',
+            short_name: 'Santa Clara'
+          }
+        ],
+        categories: [
+          {
+            uuid: 'cat-network',
+            name: 'Network Security',
+            category_groups: [
+              {
+                uuid: 'cg-security',
+                name: 'Cybersecurity'
+              }
+            ]
+          },
+          {
+            uuid: 'cat-firewall',
+            name: 'Firewall',
+            category_groups: [
+              {
+                uuid: 'cg-security',
+                name: 'Cybersecurity'
+              }
+            ]
+          }
+        ],
+        founded_on: '2005-01-01',
+        employee_count: {
+          value: 14000,
+          start: 13500,
+          end: 14500,
+          source: 'crunchbase'
+        },
+        total_funding_usd: 177000000,
+        last_updated_at: '2024-11-12T00:00:00Z',
+        created_at: '2005-01-01T00:00:00Z'
+      },
+      {
+        uuid: 'snyk',
+        name: 'Snyk',
+        website: 'https://snyk.io',
+        description: 'Snyk is a developer security platform that helps organizations use open source code and stay secure. The company provides tools for finding and fixing vulnerabilities in code, dependencies, containers, and infrastructure as code.',
+        short_description: 'Developer-first security platform',
+        location_identifiers: [
+          {
+            uuid: 'loc-snyk',
+            location_type: 'city',
+            name: 'Boston, Massachusetts',
             short_name: 'Boston'
           }
         ],
         categories: [
           {
-            uuid: 'cat-5',
-            name: 'zero trust security',
+            uuid: 'cat-appsec',
+            name: 'Application Security',
             category_groups: [
               {
-                uuid: 'cg-1',
-                name: 'security'
+                uuid: 'cg-security',
+                name: 'Cybersecurity'
               }
             ]
           },
           {
-            uuid: 'cat-6',
-            name: 'identity management',
+            uuid: 'cat-devsecops',
+            name: 'DevSecOps',
             category_groups: [
               {
-                uuid: 'cg-1',
-                name: 'security'
+                uuid: 'cg-security',
+                name: 'Cybersecurity'
               }
             ]
           }
         ],
-        founded_on: '2019-07-10',
+        founded_on: '2015-01-01',
         employee_count: {
-          value: 200,
-          start: 150,
-          end: 300,
+          value: 1200,
+          start: 1100,
+          end: 1300,
           source: 'crunchbase'
         },
-        total_funding_usd: 87000000,
-        last_updated_at: '2024-01-08T16:45:00Z',
-        created_at: '2019-07-10T00:00:00Z'
+        total_funding_usd: 1020000000,
+        last_updated_at: '2024-11-12T00:00:00Z',
+        created_at: '2015-01-01T00:00:00Z'
+      },
+      {
+        uuid: 'wiz',
+        name: 'Wiz',
+        website: 'https://www.wiz.io',
+        description: 'Wiz is a cloud security platform that enables organizations to rapidly identify and remove critical risks in cloud environments. The company provides comprehensive visibility across multi-cloud and hybrid environments.',
+        short_description: 'Cloud security platform',
+        location_identifiers: [
+          {
+            uuid: 'loc-wiz',
+            location_type: 'city',
+            name: 'New York, New York',
+            short_name: 'New York'
+          }
+        ],
+        categories: [
+          {
+            uuid: 'cat-cloud-sec',
+            name: 'Cloud Security',
+            category_groups: [
+              {
+                uuid: 'cg-security',
+                name: 'Cybersecurity'
+              }
+            ]
+          },
+          {
+            uuid: 'cat-cspm',
+            name: 'Cloud Security Posture Management',
+            category_groups: [
+              {
+                uuid: 'cg-security',
+                name: 'Cybersecurity'
+              }
+            ]
+          }
+        ],
+        founded_on: '2020-01-01',
+        employee_count: {
+          value: 900,
+          start: 800,
+          end: 1000,
+          source: 'crunchbase'
+        },
+        total_funding_usd: 1900000000,
+        last_updated_at: '2024-11-12T00:00:00Z',
+        created_at: '2020-01-01T00:00:00Z'
       }
     ]
 
+    // Filter by query if provided
+    let filteredCompanies = realCompanies
+    if (query && query.trim()) {
+      const queryLower = query.toLowerCase()
+      filteredCompanies = realCompanies.filter(org => 
+        org.name.toLowerCase().includes(queryLower) ||
+        org.description.toLowerCase().includes(queryLower) ||
+        org.short_description?.toLowerCase().includes(queryLower)
+      )
+    }
+
     return {
-      organizations: mockOrganizations.slice(0, limit),
-      total_count: mockOrganizations.length,
+      organizations: filteredCompanies.slice(0, limit),
+      total_count: filteredCompanies.length,
       page,
       per_page: limit,
       search_query: query,
@@ -599,55 +848,13 @@ class CrunchbaseService {
   private async generateMockOrganization(uuid: string): Promise<CrunchbaseOrganization | null> {
     await new Promise(resolve => setTimeout(resolve, 300))
 
-    const mockOrg: CrunchbaseOrganization = {
-      uuid,
-      name: 'SecureAI',
-      website: 'https://secureai.com',
-      description: 'AI-powered cybersecurity platform using machine learning for advanced threat detection and prevention.',
-      short_description: 'AI-powered threat detection platform',
-      location_identifiers: [
-        {
-          uuid: 'loc-1',
-          location_type: 'city',
-          name: 'San Francisco',
-          short_name: 'SF'
-        }
-      ],
-      categories: [
-        {
-          uuid: 'cat-1',
-          name: 'cybersecurity',
-          category_groups: [
-            {
-              uuid: 'cg-1',
-              name: 'security'
-            }
-          ]
-        },
-        {
-          uuid: 'cat-2',
-          name: 'artificial intelligence',
-          category_groups: [
-            {
-              uuid: 'cg-2',
-              name: 'technology'
-            }
-          ]
-        }
-      ],
-      founded_on: '2020-01-15',
-      employee_count: {
-        value: 150,
-        start: 100,
-        end: 250,
-        source: 'crunchbase'
-      },
-      total_funding_usd: 45000000,
-      last_updated_at: '2024-01-15T10:30:00Z',
-      created_at: '2020-01-15T00:00:00Z'
-    }
-
-    return mockOrg
+    // Get all companies from the search result
+    const allCompanies = await this.generateMockSearchResult('', 100, 1)
+    
+    // Find the company by UUID
+    const company = allCompanies.organizations.find(org => org.uuid === uuid)
+    
+    return company || null
   }
 
   /**
