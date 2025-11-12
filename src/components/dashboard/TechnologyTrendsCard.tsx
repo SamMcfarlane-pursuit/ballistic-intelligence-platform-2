@@ -94,7 +94,7 @@ export default function TechnologyTrendsCard({ trend, rank, onViewDetails }: Tec
       case 'mature':
         return 'bg-gray-100 text-gray-800'
       case 'declining':
-        return 'bg-red-100 text-red-800'
+        return 'bg-gray-100 text-gray-800' // Changed from red to neutral
       default:
         return 'bg-gray-100 text-gray-800'
     }
@@ -102,7 +102,7 @@ export default function TechnologyTrendsCard({ trend, rank, onViewDetails }: Tec
 
   const getTrendIcon = () => {
     if (trend.trendDirection === 'up') return <TrendingUp className="h-4 w-4 text-green-600" />
-    if (trend.trendDirection === 'down') return <TrendingDown className="h-4 w-4 text-red-600" />
+    if (trend.trendDirection === 'down') return <TrendingUp className="h-4 w-4 text-gray-600" /> // Changed to neutral
     return <Minus className="h-4 w-4 text-gray-600" />
   }
 
@@ -143,8 +143,7 @@ export default function TechnologyTrendsCard({ trend, rank, onViewDetails }: Tec
           <div className="flex items-center space-x-1">
             {getTrendIcon()}
             <span className={`text-sm font-semibold ${
-              trend.trendDirection === 'up' ? 'text-green-600' : 
-              trend.trendDirection === 'down' ? 'text-red-600' : 'text-gray-600'
+              trend.trendDirection === 'up' ? 'text-green-600' : 'text-gray-600'
             }`}>
               {trend.growthRate > 0 ? '+' : ''}{trend.growthRate}%
             </span>
