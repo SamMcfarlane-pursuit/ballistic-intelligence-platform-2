@@ -1385,22 +1385,37 @@ export default function ExecutiveDashboard() {
     try {
       console.log(`Loading data for tab: ${selectedTab}`)
       
-      // Optimize: Load mock data immediately for instant UI, then enrich with API data
+      // Load actual API data with mock data as fallback
       if (selectedTab === 'trending-sectors') {
-        loadMockSectors() // Instant load
-        loadSectors().catch(() => {}) // Enrich in background
+        try {
+          await loadSectors()
+        } catch (error) {
+          console.warn('API failed, using mock sectors:', error)
+          loadMockSectors()
+        }
       } else if (selectedTab === 'market-intelligence') {
-        loadMockCompanies() // Instant load
-        loadCompanies().catch(() => {}) // Enrich in background
+        try {
+          await loadCompanies()
+        } catch (error) {
+          console.warn('API failed, using mock companies:', error)
+          loadMockCompanies()
+        }
       } else if (selectedTab === 'patent-deep-dive') {
-        loadMockPatents() // Instant load
-        loadPatents().catch(() => {}) // Enrich in background
+        try {
+          await loadPatents()
+        } catch (error) {
+          console.warn('API failed, using mock patents:', error)
+          loadMockPatents()
+        }
       } else if (selectedTab === 'data-intelligence') {
-        // Load all data types for comprehensive view
-        loadMockSectors()
-        loadMockCompanies()
-        loadMockPatents()
-        loadDataIntelligence().catch(() => {})
+        try {
+          await loadDataIntelligence()
+        } catch (error) {
+          console.warn('API failed, using mock data:', error)
+          loadMockSectors()
+          loadMockCompanies()
+          loadMockPatents()
+        }
       }
       
       console.log('Data loading completed successfully')
@@ -1409,7 +1424,14 @@ export default function ExecutiveDashboard() {
       const errorMessage = err instanceof Error ? err.message : 'Failed to load data'
       setError(`${errorMessage}. Using mock data instead.`)
       
-      // Mock data already loaded above
+      // Load mock data as final fallback
+      if (selectedTab === 'trending-sectors') {
+        loadMockSectors()
+      } else if (selectedTab === 'market-intelligence') {
+        loadMockCompanies()
+      } else if (selectedTab === 'patent-deep-dive') {
+        loadMockPatents()
+      }
     } finally {
       setLoading(false)
     }
