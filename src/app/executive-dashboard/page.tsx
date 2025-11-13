@@ -222,7 +222,7 @@ export default function ExecutiveDashboard() {
     }
   }
 
-  const exportCompaniesToCSV = () => {
+  const exportCompaniesToCSV = (limit: number | 'all' = 'all') => {
     const headers = [
       'Company Name',
       'Business Description',
@@ -264,7 +264,8 @@ export default function ExecutiveDashboard() {
       'Exit Potential'
     ]
 
-    const csvData = filteredCompanies.map(comp => {
+    const companiesToExport = limit === 'all' ? filteredCompanies : filteredCompanies.slice(0, limit)
+    const csvData = companiesToExport.map(comp => {
       const company = validateCompanyData(comp)
       const currentYear = new Date().getFullYear()
       const companyAge = currentYear - company.founded
@@ -1004,7 +1005,7 @@ export default function ExecutiveDashboard() {
     return `${Math.min(score, 100)} - ${score > 90 ? 'Excellent' : score > 80 ? 'Good' : score > 70 ? 'Fair' : 'Limited'} data completeness`
   }
 
-  const exportSectorsToCSV = () => {
+  const exportSectorsToCSV = (limit: number | 'all' = 'all') => {
     const headers = [
       'Sector Name',
       'Market Rank',
@@ -1031,7 +1032,8 @@ export default function ExecutiveDashboard() {
       'Future Outlook'
     ]
 
-    const csvData = sectors.map(sector => [
+    const sectorsToExport = limit === 'all' ? sectors : sectors.slice(0, limit)
+    const csvData = sectorsToExport.map(sector => [
       cleanDataForCSV(sector.name),
       cleanDataForCSV(sector.rank),
       cleanDataForCSV(sector.companies),
@@ -1065,7 +1067,7 @@ export default function ExecutiveDashboard() {
     downloadCSV(csvContent, `sectors_${new Date().toISOString().split('T')[0]}.csv`)
   }
 
-  const exportPatentsToCSV = () => {
+  const exportPatentsToCSV = (limit: number | 'all' = 'all') => {
     const headers = [
       'Patent Title',
       'Patent Abstract',
@@ -1099,7 +1101,8 @@ export default function ExecutiveDashboard() {
       'Strategic Importance'
     ]
 
-    const csvData = filteredPatents.map(patent => [
+    const patentsToExport = limit === 'all' ? filteredPatents : filteredPatents.slice(0, limit)
+    const csvData = patentsToExport.map(patent => [
       cleanDataForCSV(patent.title),
       cleanDataForCSV(patent.description || generatePatentAbstract(patent.title, patent.sector)),
       cleanDataForCSV(patent.company),
@@ -1240,6 +1243,8 @@ export default function ExecutiveDashboard() {
   const [selectedCompany, setSelectedCompany] = useState<Company | null>(null)
   const [showDialog, setShowDialog] = useState(false)
   const [showImportDialog, setShowImportDialog] = useState(false)
+  const [showExportDialog, setShowExportDialog] = useState(false)
+  const [exportLimit, setExportLimit] = useState<number | 'all'>('all')
   const [importType, setImportType] = useState<'companies' | 'sectors' | 'patents'>('companies')
   const [importProgress, setImportProgress] = useState(0)
   const [importStatus, setImportStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle')
@@ -3954,12 +3959,7 @@ export default function ExecutiveDashboard() {
               {/* Import/Export Buttons */}
               <div className="flex items-center space-x-2">
                 <Button
-                  onClick={() => {
-                    if (selectedTab === 'market-intelligence') exportCompaniesToCSV()
-                    else if (selectedTab === 'trending-sectors') exportSectorsToCSV()
-                    else if (selectedTab === 'patent-deep-dive') exportPatentsToCSV()
-                    else if (selectedTab === 'data-intelligence') exportAllDataToCSV()
-                  }}
+                  onClick={() => setShowExportDialog(true)}
                   variant="outline"
                   size="sm"
                   className="border-orange-600 text-orange-700 hover:bg-orange-50 hover:border-orange-700 font-semibold"
@@ -5200,6 +5200,80 @@ export default function ExecutiveDashboard() {
               <p>• Duplicate entries will be automatically filtered</p>
               <p>• Data will be validated and cleaned during import</p>
             </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Export Dialog */}
+      <Dialog open={showExportDialog} onOpenChange={setShowExportDialog}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold text-gray-900 flex items-center">
+              <Download className="h-6 w-6 text-orange-600 mr-2" />
+              Export Options
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-6">
+            {/* Export Limit Selection */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-3">
+                How many items to export?
+              </label>
+              <div className="grid grid-cols-4 gap-2">
+                {[
+                  { value: 10, label: 'First 10' },
+                  { value: 20, label: 'First 20' },
+                  { value: 50, label: 'First 50' },
+                  { value: 'all', label: 'All' }
+                ].map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => setExportLimit(option.value)}
+                    className={`p-3 rounded-lg border-2 transition-all text-center ${
+                      exportLimit === option.value
+                        ? 'border-orange-600 bg-orange-50 text-orange-700 font-semibold'
+                        : 'border-gray-200 hover:border-gray-300 text-gray-600'
+                    }`}
+                  >
+                    <div className="text-sm font-medium">{option.label}</div>
+                    {option.value !== 'all' && (
+                      <div className="text-xs text-gray-500 mt-1">items</div>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Export Info */}
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+              <h4 className="text-sm font-semibold text-orange-900 mb-2">Export Details</h4>
+              <div className="space-y-1 text-sm text-orange-800">
+                <p>• Type: {selectedTab === 'market-intelligence' ? 'Companies' : selectedTab === 'trending-sectors' ? 'Sectors' : selectedTab === 'patent-deep-dive' ? 'Patents' : 'All Data'}</p>
+                <p>• Format: CSV (Excel compatible)</p>
+                <p>• Items: {exportLimit === 'all' ? 
+                  (selectedTab === 'market-intelligence' ? filteredCompanies.length : 
+                   selectedTab === 'trending-sectors' ? sectors.length : 
+                   selectedTab === 'patent-deep-dive' ? filteredPatents.length : 'All') 
+                  : exportLimit}</p>
+                <p>• File will download immediately</p>
+              </div>
+            </div>
+
+            {/* Export Button */}
+            <Button
+              onClick={() => {
+                if (selectedTab === 'market-intelligence') exportCompaniesToCSV(exportLimit)
+                else if (selectedTab === 'trending-sectors') exportSectorsToCSV(exportLimit)
+                else if (selectedTab === 'patent-deep-dive') exportPatentsToCSV(exportLimit)
+                else if (selectedTab === 'data-intelligence') exportAllDataToCSV()
+                setShowExportDialog(false)
+              }}
+              className="w-full bg-gradient-to-r from-orange-600 to-red-600 text-white hover:from-orange-700 hover:to-red-700 font-semibold"
+            >
+              <Download className="h-4 w-4 mr-2" />
+              Export Now
+            </Button>
           </div>
         </DialogContent>
       </Dialog>
