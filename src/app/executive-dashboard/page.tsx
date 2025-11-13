@@ -1252,7 +1252,7 @@ export default function ExecutiveDashboard() {
   const [patents, setPatents] = useState<Patent[]>([])
   const [technologyTrends, setTechnologyTrends] = useState<TechnologyTrend[]>([])
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 9
+  const itemsPerPage = 20 // Increased to show more companies per page
 
   const sectorOptions = ['All Sectors', 'Network Security', 'Cloud Security', 'Data Protection', 'Identity Management', 'Threat Intelligence', 'Endpoint Security', 'Encryption', 'Email Security']
   const regions = [
@@ -2988,8 +2988,12 @@ export default function ExecutiveDashboard() {
       }
     ]
     
+    // Generate additional companies to reach 200+ total
+    const additionalCompanies = generateAdditionalCompanies(167) // 33 existing + 167 = 200
+    const allCompanies = [...mockCompanies, ...additionalCompanies]
+    
     // Apply data protection to sensitive information
-    const protectedCompanies = mockCompanies.map(company => ({
+    const protectedCompanies = allCompanies.map(company => ({
       ...company,
       // Protect team member names (show only first name and last initial)
       team: company.team ? {
@@ -3002,6 +3006,76 @@ export default function ExecutiveDashboard() {
     }))
     
     setCompanies(protectedCompanies)
+  }
+  
+  // Generate additional companies programmatically
+  const generateAdditionalCompanies = (count: number): Company[] => {
+    const sectors = [
+      'Network Security', 'Cloud Security', 'Endpoint Security', 
+      'Identity Management', 'Data Protection', 'Application Security',
+      'Threat Intelligence', 'Encryption', 'Email Security'
+    ]
+    
+    const regions = ['North America', 'Western Europe', 'Asia Pacific', 'Middle East']
+    const locations = {
+      'North America': ['San Francisco, CA', 'New York, NY', 'Austin, TX', 'Boston, MA', 'Seattle, WA'],
+      'Western Europe': ['London, UK', 'Berlin, Germany', 'Paris, France', 'Amsterdam, Netherlands'],
+      'Asia Pacific': ['Singapore', 'Sydney, Australia', 'Tokyo, Japan', 'Seoul, South Korea'],
+      'Middle East': ['Tel Aviv, Israel', 'Dubai, UAE', 'Riyadh, Saudi Arabia']
+    }
+    
+    const stages = ['Seed', 'Series A', 'Series B', 'Series C', 'Series D']
+    const investors = ['Sequoia Capital', 'Andreessen Horowitz', 'Accel', 'Lightspeed', 'Insight Partners', 'Tiger Global']
+    
+    const companies: Company[] = []
+    
+    for (let i = 0; i < count; i++) {
+      const id = (34 + i).toString()
+      const sector = sectors[i % sectors.length]
+      const region = regions[i % regions.length]
+      const location = locations[region][i % locations[region].length]
+      const stage = stages[i % stages.length]
+      const investor = investors[i % investors.length]
+      
+      const baseFunding = (i % 5 + 1) * 10000000 // 10M to 50M
+      const founded = 2015 + (i % 10)
+      
+      companies.push({
+        id,
+        name: `${sector.split(' ')[0]}Guard ${i + 1}`,
+        description: `Innovative ${sector.toLowerCase()} solutions for enterprise customers with advanced threat detection and prevention capabilities`,
+        sector,
+        location: `${location}, ${region === 'North America' ? 'USA' : region}`,
+        region,
+        founded,
+        fundingFrom: investor,
+        totalFunding: baseFunding + (i * 500000),
+        lastRound: stage,
+        lastRoundAmount: baseFunding * 0.6,
+        latestDateOfFunding: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'][i % 10]} ${15 + (i % 15)}, 2025`,
+        website: `https://www.${sector.toLowerCase().replace(/\s+/g, '')}guard${i + 1}.com`,
+        linkedin: `linkedin.com/company/${sector.toLowerCase().replace(/\s+/g, '')}-guard-${i + 1}`,
+        team: {
+          ceo: `${['Alex', 'Sarah', 'Michael', 'Jennifer', 'David', 'Emily'][i % 6]} ${['Smith', 'Johnson', 'Williams', 'Brown', 'Jones'][i % 5]}`,
+          cto: `${['Robert', 'Lisa', 'James', 'Maria', 'John', 'Anna'][i % 6]} ${['Davis', 'Miller', 'Wilson', 'Moore', 'Taylor'][i % 5]}`,
+          head: `${['Chris', 'Amanda', 'Daniel', 'Rachel', 'Kevin'][i % 5]} ${['Anderson', 'Thomas', 'Jackson', 'White', 'Harris'][i % 5]}`
+        },
+        brightData: {
+          newsSentiment: i % 3 === 0 ? 'positive' : 'neutral' as 'positive' | 'neutral' | 'negative',
+          recentMentions: 10 + (i % 40),
+          patents: 2 + (i % 15),
+          competitors: [`${sector} Leader A`, `${sector} Leader B`],
+          marketPosition: ['Emerging', 'Growing', 'Established'][i % 3] as 'Emerging' | 'Growing' | 'Established' | 'Innovative',
+          growthIndicators: {
+            hiring: 15 + (i % 30),
+            funding: 20 + (i % 40),
+            news: 10 + (i % 35)
+          }
+        }
+      })
+    }
+    
+    return companies
   }
 
   const loadPatents = async () => {
