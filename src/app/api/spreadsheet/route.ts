@@ -6,6 +6,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { generateLeadershipTeam } from '../../../data/leadership-database'
+import { validateCompaniesArray, ensureCompleteCompanyData } from '../../../utils/null-prevention'
 
 const SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/1UUkN5MFB7TnqaUjvEWBK0LlIrQqKNxOVRej-wv9I8nI/export?format=csv'
 
@@ -42,15 +43,24 @@ export async function GET(request: NextRequest) {
     const companies = parseCSV(csvText)
     const formatted = formatForPlatform(companies)
 
+    // Validate and ensure no null values
+    const validation = validateCompaniesArray(formatted)
+    const sanitizedData = validation.data.map(ensureCompleteCompanyData)
+
     // Update cache
-    cachedData = formatted
+    cachedData = sanitizedData
     lastFetch = now
 
     return NextResponse.json({
       success: true,
-      data: formatted,
+      data: sanitizedData,
       cached: false,
-      count: formatted.length,
+      count: sanitizedData.length,
+      validation: {
+        isValid: validation.isValid,
+        errors: validation.errors,
+        warnings: validation.warnings
+      },
       timestamp: new Date().toISOString(),
       processingTime: Date.now() - startTime
     })
