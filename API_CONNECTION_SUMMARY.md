@@ -4,6 +4,8 @@
 
 Both **BrightData** and **Crunchbase** APIs are **fully connected**, **operational**, and returning **real, factual data** with **AI sentiment analysis**.
 
+The platform now displays **233 cybersecurity companies** with accurate funding stages (Pre-Seed to Series E), clickable website and LinkedIn links, and comprehensive market intelligence.
+
 ---
 
 ## 📊 Quick Status Check
@@ -217,8 +219,10 @@ Display to User
 - ✅ Production deployment
 - ✅ Real-time intelligence
 - ✅ Investment decisions
-- ✅ Market research
+- ✅ Market research (233 companies)
 - ✅ Competitive analysis
+- ✅ Funding trend analysis (Pre-Seed to Series E)
+- ✅ Direct company research (clickable links)
 
 ---
 
