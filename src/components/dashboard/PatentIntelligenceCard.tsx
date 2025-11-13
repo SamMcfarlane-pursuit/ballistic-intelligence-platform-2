@@ -44,7 +44,7 @@ export default function PatentIntelligenceCard({ patent, dataSource = 'combined'
   return (
     <>
     <div className="relative">
-    <Card className="bg-gradient-to-br from-orange-600 via-orange-700 to-red-700 border-2 border-orange-600 hover:border-red-700 hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
+    <Card className="bg-gradient-to-br from-[#0066FF] via-[#0052CC] to-[#1A3766] border-2 border-[#0066FF] hover:border-[#1A3766] hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
       {/* Gradient Overlay for depth */}
       <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/20 pointer-events-none"></div>
       

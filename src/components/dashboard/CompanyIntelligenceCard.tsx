@@ -64,10 +64,10 @@ export default function CompanyIntelligenceCard({ company, onShowDetails }: Comp
   }
 
   return (
-    <Card className="bg-white border-2 border-orange-600 hover:border-red-700 hover:shadow-2xl transition-all duration-300 group overflow-hidden">
+    <Card className="bg-white border-2 border-[#0066FF] hover:border-[#1A3766] hover:shadow-2xl transition-all duration-300 group overflow-hidden">
       <CardContent className="p-0">
-        {/* Orange/Red Gradient Header */}
-        <div className="bg-gradient-to-r from-orange-600 via-orange-700 to-red-700 p-6 pb-4 relative">
+        {/* Blue Gradient Header */}
+        <div className="bg-gradient-to-r from-[#0066FF] via-[#0052CC] to-[#1A3766] p-6 pb-4 relative">
           <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/10 pointer-events-none"></div>
           
           {/* Company Header */}
