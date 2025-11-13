@@ -1251,7 +1251,7 @@ export default function ExecutiveDashboard() {
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 1 // Show only one item per page
+  const itemsPerPage = 6 // Show 6 cards per page
   const [companies, setCompanies] = useState<Company[]>([])
   const [sectors, setSectors] = useState<SectorData[]>([])
   const [searchQuery, setSearchQuery] = useState('')
