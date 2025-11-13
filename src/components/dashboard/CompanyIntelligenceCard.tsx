@@ -64,10 +64,10 @@ export default function CompanyIntelligenceCard({ company, onShowDetails }: Comp
   }
 
   return (
-    <Card className="bg-white border-2 border-[#0066FF] hover:border-[#1A3766] hover:shadow-2xl transition-all duration-300 group overflow-hidden">
+    <Card className="bg-white border-2 border-orange-600 hover:border-red-700 hover:shadow-2xl transition-all duration-300 group overflow-hidden">
       <CardContent className="p-0">
-        {/* Blue Gradient Header */}
-        <div className="bg-gradient-to-r from-[#0066FF] via-[#0052CC] to-[#1A3766] p-6 pb-4 relative">
+        {/* Orange/Red Gradient Header */}
+        <div className="bg-gradient-to-r from-orange-600 via-orange-700 to-red-700 p-6 pb-4 relative">
           <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/10 pointer-events-none"></div>
           
           {/* Company Header */}
@@ -258,11 +258,11 @@ export default function CompanyIntelligenceCard({ company, onShowDetails }: Comp
           )}
         </div>
 
-        {/* Blue Gradient Footer - View Details Button */}
-        <div className="bg-gradient-to-r from-[#0066FF] via-[#0052CC] to-[#1A3766] p-4">
+        {/* View Details Button */}
+        <div className="p-4 bg-gray-50">
           <Button
             onClick={() => onShowDetails(company)}
-            className="w-full bg-white/20 backdrop-blur-sm border-2 border-white/30 text-white hover:bg-white/30 font-semibold py-2.5 rounded-lg transition-all shadow-lg hover:shadow-xl hover:scale-[1.02]"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white border-blue-700 font-semibold py-2.5 rounded-lg transition-all shadow-lg hover:shadow-xl hover:scale-[1.02]"
           >
             <BarChart3 className="h-4 w-4 mr-2" />
             View Full Details

@@ -181,7 +181,7 @@ export default function PatentIntelligenceCard({ patent, dataSource = 'combined'
           onClick={() => setShowDetails(true)}
           variant="secondary"
           size="sm"
-          className="w-full mt-4 bg-white/20 hover:bg-white/30 text-white border-white/30 backdrop-blur-sm"
+          className="w-full mt-4 bg-blue-600 hover:bg-blue-700 text-white border-blue-700 shadow-lg"
         >
           <Eye className="h-4 w-4 mr-2" />
           View Full Details
