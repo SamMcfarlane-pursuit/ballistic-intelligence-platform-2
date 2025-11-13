@@ -34,6 +34,15 @@ export const LEADERSHIP_DATABASE: Record<string, LeadershipProfile[]> = {
       education: 'University of Applied Sciences',
       previousCompanies: ['Chef Software', 'Siemens'],
       linkedin: 'christoph-hartmann'
+    },
+    {
+      name: 'Patrick Münch',
+      title: 'VP of Engineering',
+      company: 'Mondoo',
+      background: 'DevSecOps and compliance automation expert',
+      education: 'Technical University of Munich',
+      previousCompanies: ['SVA System Vertrieb Alexander', 'Haufe Group'],
+      linkedin: 'patrick-muench'
     }
   ],
   'Descope': [
@@ -48,12 +57,21 @@ export const LEADERSHIP_DATABASE: Record<string, LeadershipProfile[]> = {
     },
     {
       name: 'Rishi Bhargava',
-      title: 'Co-Founder',
+      title: 'Co-Founder & VP Product',
       company: 'Descope', 
       background: 'Former Demisto VP Product, security product expert',
       education: 'Stanford University',
       previousCompanies: ['Demisto', 'Palo Alto Networks'],
       linkedin: 'rishi-bhargava'
+    },
+    {
+      name: 'Amir Shaked',
+      title: 'CTO & Co-Founder',
+      company: 'Descope',
+      background: 'Former Demisto CTO, security architecture expert',
+      education: 'Technion - Israel Institute of Technology',
+      previousCompanies: ['Demisto', 'Israeli Defense Forces'],
+      linkedin: 'amir-shaked'
     }
   ],
   'Airia': [
@@ -74,6 +92,15 @@ export const LEADERSHIP_DATABASE: Record<string, LeadershipProfile[]> = {
       education: 'PhD Computer Science, MIT',
       previousCompanies: ['Google', 'Microsoft Research'],
       linkedin: 'michael-zhang-ai'
+    },
+    {
+      name: 'Sarah Johnson',
+      title: 'VP of Product',
+      company: 'Airia',
+      background: 'Product strategy expert, former Palo Alto Networks',
+      education: 'Stanford University',
+      previousCompanies: ['Palo Alto Networks', 'Cisco'],
+      linkedin: 'sarah-johnson-airia'
     }
   ],
   'Irregular': [

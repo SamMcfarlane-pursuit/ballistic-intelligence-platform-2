@@ -8,7 +8,7 @@ import {
   DialogTitle 
 } from '@/components/ui/dialog'
 import { Badge } from '@/components/ui/badge'
-import { Building2, Globe, TrendingUp, X, Loader2 } from 'lucide-react'
+import { Building2, Globe, TrendingUp, X, Loader2, Users } from 'lucide-react'
 
 interface EnhancedCompanyDialogProps {
   company: any
@@ -69,6 +69,17 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
     }
   }
 
+  // Extract name from leadership string (removes title in parentheses)
+  const extractName = (fullString: string): string => {
+    return fullString.replace(/\s*\([^)]*\)/g, '').trim()
+  }
+
+  // Extract title from leadership string
+  const extractTitle = (fullString: string): string => {
+    const match = fullString.match(/\(([^)]+)\)/)
+    return match ? match[1] : ''
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] bg-white overflow-y-auto">
@@ -103,16 +114,16 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
               
               {/* Key Metrics */}
               <div className="grid grid-cols-2 gap-4 mt-6">
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <div className="text-sm text-gray-500 mb-1">Total Funding</div>
-                  <div className="text-2xl font-bold text-gray-900">
+                <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-lg border border-orange-200">
+                  <div className="text-sm text-orange-700 mb-1">Total Funding</div>
+                  <div className="text-2xl font-bold text-orange-900">
                     ${company?.totalFunding ? (company.totalFunding / 1000000).toFixed(1) : '0'}M
                   </div>
                 </div>
-                <div className="bg-gray-50 p-4 rounded-lg">
-                  <div className="text-sm text-gray-500 mb-1">Last Round</div>
-                  <div className="text-lg font-semibold text-gray-900">{company?.lastRound}</div>
-                  <div className="text-sm text-gray-600">
+                <div className="bg-gradient-to-br from-red-50 to-red-100 p-4 rounded-lg border border-red-200">
+                  <div className="text-sm text-red-700 mb-1">Last Round</div>
+                  <div className="text-lg font-semibold text-red-900">{company?.lastRound}</div>
+                  <div className="text-sm text-red-700">
                     ${company?.lastRoundAmount ? (company.lastRoundAmount / 1000000).toFixed(1) : '0'}M
                   </div>
                 </div>
@@ -131,10 +142,19 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
                   <span className="font-medium text-gray-900">{company?.latestDateOfFunding}</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                  <span className="text-gray-600">Employees</span>
+                  <span className="font-medium text-gray-900">{company?.employees || 'N/A'}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100">
                   <span className="text-gray-600">Website</span>
-                  <span className="font-medium text-orange-600 truncate max-w-48">
+                  <a 
+                    href={company?.website} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="font-medium text-orange-600 hover:text-orange-700 truncate max-w-48"
+                  >
                     {company?.website || 'N/A'}
-                  </span>
+                  </a>
                 </div>
               </div>
             </div>
@@ -179,15 +199,13 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
                   </div>
                 )}
                 
-                <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-xl border border-green-200">
-                  <div className="text-sm text-green-700 mb-2">Market Position</div>
-                  <div className="text-lg font-bold text-green-900">
+                <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-xl border border-orange-200">
+                  <div className="text-sm text-orange-700 mb-2">Market Position</div>
+                  <div className="text-lg font-bold text-orange-900">
                     {company.brightData.marketPosition || 'Emerging'}
                   </div>
                 </div>
               </div>
-              
-
               
               {/* Competitive Landscape */}
               {company.brightData.competitors && company.brightData.competitors.length > 0 && (
@@ -197,7 +215,7 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
                     {company.brightData.competitors.map((competitor: string, index: number) => (
                       <span 
                         key={index} 
-                        className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gray-100 text-gray-800 border"
+                        className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-orange-100 to-red-100 text-orange-800 border border-orange-200"
                       >
                         {competitor}
                       </span>
@@ -208,57 +226,61 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
             </div>
           )}
 
-          {/* Leadership Team */}
+          {/* Leadership Team - Matching Outer Card Colors */}
           {company?.team && (
             <div>
               <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                <Building2 className="h-6 w-6 text-orange-600 mr-3" />
+                <Users className="h-6 w-6 text-orange-600 mr-3" />
                 Leadership Team
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {company.team.ceo && (
                   <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-5 rounded-xl border-2 border-blue-200 hover:shadow-lg transition-shadow">
                     <div className="text-xs font-semibold text-blue-700 uppercase tracking-wide mb-2">
-                      CEO & Co-Founder
+                      Chief Executive Officer
                     </div>
-                    <div className="font-bold text-gray-900 text-lg">
-                      {company.team.ceo.replace(' (CEO & Co-Founder)', '').replace(' (CEO)', '')}
+                    <div className="font-bold text-gray-900 text-lg mb-1">
+                      {extractName(company.team.ceo)}
                     </div>
-                    <div className="text-sm text-blue-600 mt-2">Chief Executive Officer</div>
+                    <div className="text-sm text-blue-600 font-medium">
+                      {extractTitle(company.team.ceo) || 'CEO & Founder'}
+                    </div>
                   </div>
                 )}
                 {company.team.cto && (
                   <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-5 rounded-xl border-2 border-purple-200 hover:shadow-lg transition-shadow">
                     <div className="text-xs font-semibold text-purple-700 uppercase tracking-wide mb-2">
-                      CTO & Co-Founder
+                      Chief Technology Officer
                     </div>
-                    <div className="font-bold text-gray-900 text-lg">
-                      {company.team.cto.replace(' (CTO & Co-Founder)', '').replace(' (CTO)', '')}
+                    <div className="font-bold text-gray-900 text-lg mb-1">
+                      {extractName(company.team.cto)}
                     </div>
-                    <div className="text-sm text-purple-600 mt-2">Chief Technology Officer</div>
+                    <div className="text-sm text-purple-600 font-medium">
+                      {extractTitle(company.team.cto) || 'CTO & Co-Founder'}
+                    </div>
                   </div>
                 )}
                 {company.team.head && (
                   <div className="bg-gradient-to-br from-green-50 to-green-100 p-5 rounded-xl border-2 border-green-200 hover:shadow-lg transition-shadow">
                     <div className="text-xs font-semibold text-green-700 uppercase tracking-wide mb-2">
-                      {company.team.head.includes('VP of') ? 'Vice President' : 
-                       company.team.head.includes('Head of') ? 'Head' :
-                       company.team.head.includes('Chief') ? 'C-Level Executive' : 'Leadership'}
+                      {company.team.head.includes('VP') ? 'Vice President' : 
+                       company.team.head.includes('Head') ? 'Department Head' :
+                       company.team.head.includes('Chief') ? 'C-Level Executive' : 'Senior Leadership'}
                     </div>
-                    <div className="font-bold text-gray-900 text-lg">
-                      {company.team.head.replace(/\s*\([^)]*\)/g, '')}
+                    <div className="font-bold text-gray-900 text-lg mb-1">
+                      {extractName(company.team.head)}
                     </div>
-                    <div className="text-sm text-green-600 mt-2">
-                      {company.team.head.match(/\(([^)]+)\)/)?.[1] || 'Executive'}
+                    <div className="text-sm text-green-600 font-medium">
+                      {extractTitle(company.team.head) || 'VP of Engineering'}
                     </div>
                   </div>
                 )}
               </div>
               
               {/* Additional Leadership Context */}
-              <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <p className="text-sm text-gray-600">
-                  <span className="font-semibold text-gray-900">Leadership Experience:</span> The founding team brings extensive experience from leading cybersecurity companies and has collectively raised over ${company?.totalFunding ? (company.totalFunding / 1000000).toFixed(1) : '0'}M in funding.
+              <div className="mt-4 p-4 bg-gradient-to-r from-orange-50 to-red-50 rounded-lg border border-orange-200">
+                <p className="text-sm text-gray-700">
+                  <span className="font-semibold text-gray-900">Leadership Experience:</span> The founding team at <span className="font-semibold text-orange-700">{company?.name}</span> brings extensive experience from leading cybersecurity companies and has collectively raised over <span className="font-bold text-orange-700">${company?.totalFunding ? (company.totalFunding / 1000000).toFixed(1) : '0'}M</span> in funding.
                 </p>
               </div>
             </div>
