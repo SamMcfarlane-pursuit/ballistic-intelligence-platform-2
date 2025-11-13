@@ -4260,7 +4260,7 @@ export default function ExecutiveDashboard() {
                       <div>
                         <p className="text-sm font-medium text-amber-600">Avg Novelty Score</p>
                         <p className="text-xl font-bold text-gray-900">
-                          {Math.round(patents.reduce((acc, p) => acc + p.noveltyScore, 0) / patents.length)}
+                          {patents.length > 0 ? Math.round(patents.reduce((acc, p) => acc + p.noveltyScore, 0) / patents.length) : 0}
                         </p>
                       </div>
                       <div className="text-amber-600">⭐</div>
@@ -4532,7 +4532,7 @@ export default function ExecutiveDashboard() {
                       <div>
                         <p className="text-sm font-medium text-purple-600">Avg Success Rate</p>
                         <p className="text-xl font-bold text-gray-900">
-                          {Math.round(technologyTrends.reduce((acc, t) => acc + t.successRate, 0) / technologyTrends.length)}%
+                          {technologyTrends.length > 0 ? Math.round(technologyTrends.reduce((acc, t) => acc + t.successRate, 0) / technologyTrends.length) : 0}%
                         </p>
                       </div>
                       <Users className="h-6 w-6 text-purple-600" />
@@ -4575,7 +4575,7 @@ export default function ExecutiveDashboard() {
                     <div className="space-y-3">
                       {Array.from(new Set(technologyTrends.map(t => t.category))).map((category) => {
                         const categoryTrends = technologyTrends.filter(t => t.category === category)
-                        const avgGrowth = Math.round(categoryTrends.reduce((acc, t) => acc + t.growthRate, 0) / categoryTrends.length)
+                        const avgGrowth = categoryTrends.length > 0 ? Math.round(categoryTrends.reduce((acc, t) => acc + t.growthRate, 0) / categoryTrends.length) : 0
                         const totalAdoption = categoryTrends.reduce((acc, t) => acc + t.adoptionCount, 0)
                         
                         return (
