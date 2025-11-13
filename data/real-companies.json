@@ -1,0 +1,1075 @@
+[
+  {
+    "id": "real-1",
+    "name": "Mondoo",
+    "description": "Mondoo is an innovative cloud security company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Cloud Security",
+    "location": "San Francisco, USA",
+    "region": "North America",
+    "founded": 2020,
+    "fundingFrom": "Blackhorn Ventures",
+    "totalFunding": 17500000,
+    "lastRound": "Series A-Prime",
+    "lastRoundAmount": 10500000,
+    "latestDateOfFunding": "2025-10-14",
+    "website": "https://mondoo.com",
+    "linkedin": "https://linkedin.com/company/mondoo",
+    "employees": "11-50",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 24,
+      "patents": 16,
+      "competitors": [
+        "Cloud Security Leader A",
+        "Cloud Security Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 49,
+        "funding": 60,
+        "news": 40
+      }
+    }
+  },
+  {
+    "id": "real-2",
+    "name": "Descope",
+    "description": "Descope is an innovative identity management company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Identity Management",
+    "location": "Palo Alto, USA",
+    "region": "North America",
+    "founded": 2020,
+    "fundingFrom": "Lightspeed Venture Partners",
+    "totalFunding": 88000000,
+    "lastRound": "Seed",
+    "lastRoundAmount": 52800000,
+    "latestDateOfFunding": "2023-02-23",
+    "website": "https://descope.com",
+    "linkedin": "https://linkedin.com/company/descope",
+    "employees": "Not provided",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 24,
+      "patents": 17,
+      "competitors": [
+        "Identity Management Leader A",
+        "Identity Management Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 50,
+        "funding": 65,
+        "news": 28
+      }
+    }
+  },
+  {
+    "id": "real-3",
+    "name": "SafeHill",
+    "description": "SafeHill is an innovative data protection company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Data Protection",
+    "location": "New York City, United States",
+    "region": "North America",
+    "founded": 2020,
+    "fundingFrom": "Anker Capital",
+    "totalFunding": 2600000,
+    "lastRound": "Seed",
+    "lastRoundAmount": 1560000,
+    "latestDateOfFunding": "2024-03-27",
+    "website": "https://SafeHill.com",
+    "linkedin": "https://linkedin.com/company/safehill",
+    "employees": "11-50",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 27,
+      "patents": 17,
+      "competitors": [
+        "Data Protection Leader A",
+        "Data Protection Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 38,
+        "funding": 63,
+        "news": 33
+      }
+    }
+  },
+  {
+    "id": "real-4",
+    "name": "Signal AI",
+    "description": "Signal AI is an innovative network security company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Network Security",
+    "location": "London, UK",
+    "region": "Western Europe",
+    "founded": 2013,
+    "fundingFrom": "Future Fund: Breakthrough",
+    "totalFunding": 20800000,
+    "lastRound": "Series C",
+    "lastRoundAmount": 12480000,
+    "latestDateOfFunding": "2023-12-12",
+    "website": "https://www.signal-ai.com",
+    "linkedin": "https://linkedin.com/company/signal-ai",
+    "employees": "201-500",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 21,
+      "patents": 14,
+      "competitors": [
+        "Network Security Leader A",
+        "Network Security Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 33,
+        "funding": 75,
+        "news": 38
+      }
+    }
+  },
+  {
+    "id": "real-5",
+    "name": "Revel8",
+    "description": "Revel8 is an innovative application security company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Application Security",
+    "location": "Silicon Valley, USA",
+    "region": "North America",
+    "founded": 2020,
+    "fundingFrom": "AllegisCyber",
+    "totalFunding": 7000000,
+    "lastRound": "Seed",
+    "lastRoundAmount": 4200000,
+    "latestDateOfFunding": "2024-02-27",
+    "website": "https://revel8.com/",
+    "linkedin": "https://linkedin.com/company/revel8",
+    "employees": "Unknown",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 57,
+      "patents": 8,
+      "competitors": [
+        "Application Security Leader A",
+        "Application Security Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 30,
+        "funding": 56,
+        "news": 48
+      }
+    }
+  },
+  {
+    "id": "real-6",
+    "name": "Solidcore AI",
+    "description": "Solidcore AI is an innovative threat intelligence company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Threat Intelligence",
+    "location": "San Mateo, USA",
+    "region": "North America",
+    "founded": 2020,
+    "fundingFrom": "Forgepoint Capital",
+    "totalFunding": 5000000,
+    "lastRound": "Seed",
+    "lastRoundAmount": 3000000,
+    "latestDateOfFunding": "2024-06-06",
+    "website": "https://solidcore.ai/",
+    "linkedin": "https://linkedin.com/company/solidcore-ai",
+    "employees": "1-10",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 65,
+      "patents": 7,
+      "competitors": [
+        "Threat Intelligence Leader A",
+        "Threat Intelligence Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 55,
+        "funding": 57,
+        "news": 37
+      }
+    }
+  },
+  {
+    "id": "real-7",
+    "name": "Mycroft",
+    "description": "Mycroft is an innovative endpoint security company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Endpoint Security",
+    "location": "Toronto, Canada",
+    "region": "North America",
+    "founded": 2022,
+    "fundingFrom": "Idea Fund Partners",
+    "totalFunding": 3500000,
+    "lastRound": "Seed",
+    "lastRoundAmount": 2100000,
+    "latestDateOfFunding": "2024-02-27",
+    "website": null,
+    "linkedin": "https://linkedin.com/company/mycroft",
+    "employees": "11-50",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 32,
+      "patents": 8,
+      "competitors": [
+        "Endpoint Security Leader A",
+        "Endpoint Security Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 35,
+        "funding": 47,
+        "news": 24
+      }
+    }
+  },
+  {
+    "id": "real-8",
+    "name": "Unit 221B",
+    "description": "Unit 221B is an innovative email security company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Email Security",
+    "location": "San Francisco, United States",
+    "region": "North America",
+    "founded": 2020,
+    "fundingFrom": "Andreessen Horowitz (a16z) Bio + Health",
+    "totalFunding": 5000000,
+    "lastRound": "Seed",
+    "lastRoundAmount": 3000000,
+    "latestDateOfFunding": "2024-05-16",
+    "website": "https://www.unit221b.com",
+    "linkedin": "https://linkedin.com/company/unit-221b",
+    "employees": "Unknown",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 47,
+      "patents": 9,
+      "competitors": [
+        "Email Security Leader A",
+        "Email Security Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 26,
+        "funding": 62,
+        "news": 32
+      }
+    }
+  },
+  {
+    "id": "real-9",
+    "name": "Fabrix Security",
+    "description": "Fabrix Security is an innovative encryption company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Encryption",
+    "location": "Tel Aviv, Israel",
+    "region": "Middle East",
+    "founded": 2023,
+    "fundingFrom": "33N Ventures",
+    "totalFunding": 8000000,
+    "lastRound": "Seed",
+    "lastRoundAmount": 4800000,
+    "latestDateOfFunding": "2024-04-17",
+    "website": "https://fabrixsecurity.com/",
+    "linkedin": "https://linkedin.com/company/fabrix-security",
+    "employees": "11-50",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 26,
+      "patents": 14,
+      "competitors": [
+        "Encryption Leader A",
+        "Encryption Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 39,
+        "funding": 42,
+        "news": 44
+      }
+    }
+  },
+  {
+    "id": "real-10",
+    "name": "Ray Security",
+    "description": "Ray Security is an innovative cloud security company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Cloud Security",
+    "location": "San Francisco, USA",
+    "region": "North America",
+    "founded": 2020,
+    "fundingFrom": "Stage 2 Capital",
+    "totalFunding": 11000000,
+    "lastRound": "Seed",
+    "lastRoundAmount": 6600000,
+    "latestDateOfFunding": "2024-03-27",
+    "website": null,
+    "linkedin": "https://linkedin.com/company/ray-security",
+    "employees": "null",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 61,
+      "patents": 5,
+      "competitors": [
+        "Cloud Security Leader A",
+        "Cloud Security Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 21,
+        "funding": 52,
+        "news": 25
+      }
+    }
+  },
+  {
+    "id": "real-11",
+    "name": "Airia",
+    "description": "Airia is an innovative identity management company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Identity Management",
+    "location": "San Francisco, United States",
+    "region": "North America",
+    "founded": 2019,
+    "fundingFrom": "Venture Capital Partners",
+    "totalFunding": 100000000,
+    "lastRound": "Series B",
+    "lastRoundAmount": 60000000,
+    "latestDateOfFunding": "2025-09-15",
+    "website": "https://www.airia.com",
+    "linkedin": "https://linkedin.com/company/airia",
+    "employees": "51-200",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 58,
+      "patents": 6,
+      "competitors": [
+        "Identity Management Leader A",
+        "Identity Management Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 20,
+        "funding": 59,
+        "news": 18
+      }
+    }
+  },
+  {
+    "id": "real-12",
+    "name": "Irregular",
+    "description": "Irregular is an innovative data protection company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Data Protection",
+    "location": "Tel Aviv, Israel",
+    "region": "Middle East",
+    "founded": 2023,
+    "fundingFrom": "Insight Partners",
+    "totalFunding": 80000000,
+    "lastRound": "Series A",
+    "lastRoundAmount": 48000000,
+    "latestDateOfFunding": "2024-04-25",
+    "website": "https://irregular.ai",
+    "linkedin": "https://linkedin.com/company/irregular",
+    "employees": "11-50",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 60,
+      "patents": 19,
+      "competitors": [
+        "Data Protection Leader A",
+        "Data Protection Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 56,
+        "funding": 55,
+        "news": 23
+      }
+    }
+  },
+  {
+    "id": "real-13",
+    "name": "Nucleon Security",
+    "description": "Nucleon Security is an innovative network security company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Network Security",
+    "location": "Paris, France",
+    "region": "Western Europe",
+    "founded": 2020,
+    "fundingFrom": "Various Investors",
+    "totalFunding": 3210000,
+    "lastRound": "Seed",
+    "lastRoundAmount": 1926000,
+    "latestDateOfFunding": "2024-04-19",
+    "website": null,
+    "linkedin": "https://linkedin.com/company/nucleon-security",
+    "employees": "Unknown",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 32,
+      "patents": 18,
+      "competitors": [
+        "Network Security Leader A",
+        "Network Security Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 35,
+        "funding": 78,
+        "news": 26
+      }
+    }
+  },
+  {
+    "id": "real-14",
+    "name": "SEON",
+    "description": "SEON is an innovative application security company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Application Security",
+    "location": "London, United Kingdom",
+    "region": "Western Europe",
+    "founded": 2017,
+    "fundingFrom": "IVP",
+    "totalFunding": 80000000,
+    "lastRound": "Series B",
+    "lastRoundAmount": 48000000,
+    "latestDateOfFunding": "2022-01-18",
+    "website": "https://seon.io",
+    "linkedin": "https://linkedin.com/company/seon",
+    "employees": "201-500",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 55,
+      "patents": 11,
+      "competitors": [
+        "Application Security Leader A",
+        "Application Security Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 45,
+        "funding": 53,
+        "news": 44
+      }
+    }
+  },
+  {
+    "id": "real-15",
+    "name": "EVE Security",
+    "description": "EVE Security is an innovative threat intelligence company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Threat Intelligence",
+    "location": "Tel Aviv, Israel",
+    "region": "Middle East",
+    "founded": 2023,
+    "fundingFrom": "First Round Capital",
+    "totalFunding": 3000000,
+    "lastRound": "Pre-Seed",
+    "lastRoundAmount": 1800000,
+    "latestDateOfFunding": "2024-05-21",
+    "website": "https://www.evesecurity.ai",
+    "linkedin": "https://linkedin.com/company/eve-security",
+    "employees": "1-10",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 66,
+      "patents": 5,
+      "competitors": [
+        "Threat Intelligence Leader A",
+        "Threat Intelligence Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 41,
+        "funding": 33,
+        "news": 26
+      }
+    }
+  },
+  {
+    "id": "real-16",
+    "name": "Tenex",
+    "description": "Tenex is an innovative endpoint security company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Endpoint Security",
+    "location": "London, UK",
+    "region": "Western Europe",
+    "founded": 2023,
+    "fundingFrom": "General Catalyst",
+    "totalFunding": 27000000,
+    "lastRound": "Series A",
+    "lastRoundAmount": 16200000,
+    "latestDateOfFunding": "2025-09-12",
+    "website": "https://www.tenex.ai",
+    "linkedin": "https://linkedin.com/company/tenex",
+    "employees": "11-50",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 60,
+      "patents": 10,
+      "competitors": [
+        "Endpoint Security Leader A",
+        "Endpoint Security Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 21,
+        "funding": 63,
+        "news": 45
+      }
+    }
+  },
+  {
+    "id": "real-17",
+    "name": "RegScale",
+    "description": "RegScale is an innovative email security company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Email Security",
+    "location": "Tysons, USA",
+    "region": "North America",
+    "founded": 2021,
+    "fundingFrom": "Acme Venture Partners",
+    "totalFunding": 20000000,
+    "lastRound": "Series A",
+    "lastRoundAmount": 12000000,
+    "latestDateOfFunding": "2025-09-12",
+    "website": "https://www.regscale.com",
+    "linkedin": "https://linkedin.com/company/regscale",
+    "employees": "51-200",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 32,
+      "patents": 19,
+      "competitors": [
+        "Email Security Leader A",
+        "Email Security Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 49,
+        "funding": 54,
+        "news": 37
+      }
+    }
+  },
+  {
+    "id": "real-18",
+    "name": "MarqVision",
+    "description": "MarqVision is an innovative encryption company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Encryption",
+    "location": "Santa Monica, United States",
+    "region": "North America",
+    "founded": 2020,
+    "fundingFrom": "Lightspeed Commerce",
+    "totalFunding": 48000000,
+    "lastRound": "Series B",
+    "lastRoundAmount": 28800000,
+    "latestDateOfFunding": "2025-09-15",
+    "website": "https://marqvision.com",
+    "linkedin": "https://linkedin.com/company/marqvision",
+    "employees": "51-200",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 48,
+      "patents": 9,
+      "competitors": [
+        "Encryption Leader A",
+        "Encryption Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 59,
+        "funding": 41,
+        "news": 34
+      }
+    }
+  },
+  {
+    "id": "real-19",
+    "name": "Remedio",
+    "description": "Remedio is an innovative cloud security company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Cloud Security",
+    "location": "New York City, USA",
+    "region": "North America",
+    "founded": 2020,
+    "fundingFrom": ".406 Ventures",
+    "totalFunding": 6500000,
+    "lastRound": "Seed",
+    "lastRoundAmount": 3900000,
+    "latestDateOfFunding": "2024-02-13",
+    "website": "https://remed.io",
+    "linkedin": "https://linkedin.com/company/remedio",
+    "employees": "11-50",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 38,
+      "patents": 14,
+      "competitors": [
+        "Cloud Security Leader A",
+        "Cloud Security Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 34,
+        "funding": 38,
+        "news": 44
+      }
+    }
+  },
+  {
+    "id": "real-20",
+    "name": "Miru",
+    "description": "Miru is an innovative identity management company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Identity Management",
+    "location": "Dublin, Ireland",
+    "region": "Western Europe",
+    "founded": 2022,
+    "fundingFrom": "Delta Partners",
+    "totalFunding": 2700000,
+    "lastRound": "Pre-Seed",
+    "lastRoundAmount": 1620000,
+    "latestDateOfFunding": "2024-06-21",
+    "website": "https://miru.ie",
+    "linkedin": "https://linkedin.com/company/miru",
+    "employees": "11-50",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 35,
+      "patents": 14,
+      "competitors": [
+        "Identity Management Leader A",
+        "Identity Management Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 29,
+        "funding": 54,
+        "news": 40
+      }
+    }
+  },
+  {
+    "id": "real-21",
+    "name": "ShieldMail Security",
+    "description": "ShieldMail Security is an innovative data protection company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Data Protection",
+    "location": "San Francisco, United States",
+    "region": "North America",
+    "founded": 2024,
+    "fundingFrom": "Sequoia Capital",
+    "totalFunding": 13000000,
+    "lastRound": "Series A",
+    "lastRoundAmount": 7800000,
+    "latestDateOfFunding": "2025-09-10",
+    "website": "https://www.shieldmailsecurity.com",
+    "linkedin": "https://linkedin.com/company/shieldmail-security",
+    "employees": "11-50",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 46,
+      "patents": 19,
+      "competitors": [
+        "Data Protection Leader A",
+        "Data Protection Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 36,
+        "funding": 54,
+        "news": 49
+      }
+    }
+  },
+  {
+    "id": "real-22",
+    "name": "Veritas Labs",
+    "description": "Veritas Labs is an innovative network security company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Network Security",
+    "location": "Tel Aviv, Israel",
+    "region": "Middle East",
+    "founded": 2022,
+    "fundingFrom": "Nexus Ventures",
+    "totalFunding": 12000000,
+    "lastRound": "Seed",
+    "lastRoundAmount": 7200000,
+    "latestDateOfFunding": "2023-11-15",
+    "website": "https://veritaslabs.ai",
+    "linkedin": "https://linkedin.com/company/veritas-labs",
+    "employees": "11-50",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 64,
+      "patents": 15,
+      "competitors": [
+        "Network Security Leader A",
+        "Network Security Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 57,
+        "funding": 40,
+        "news": 31
+      }
+    }
+  },
+  {
+    "id": "real-23",
+    "name": "Finout",
+    "description": "Finout is an innovative application security company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Application Security",
+    "location": "Tel Aviv, Israel",
+    "region": "Middle East",
+    "founded": 2021,
+    "fundingFrom": "Team8 Ventures",
+    "totalFunding": 18500000,
+    "lastRound": "Series A",
+    "lastRoundAmount": 11100000,
+    "latestDateOfFunding": "2022-04-26",
+    "website": "https://www.finout.io",
+    "linkedin": "https://linkedin.com/company/finout",
+    "employees": "11-50",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 45,
+      "patents": 14,
+      "competitors": [
+        "Application Security Leader A",
+        "Application Security Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 27,
+        "funding": 70,
+        "news": 34
+      }
+    }
+  },
+  {
+    "id": "real-24",
+    "name": "Geordie",
+    "description": "Geordie is an innovative threat intelligence company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Threat Intelligence",
+    "location": "Palo Alto, USA",
+    "region": "North America",
+    "founded": 2020,
+    "fundingFrom": "Founders Fund",
+    "totalFunding": 6500000,
+    "lastRound": "Seed",
+    "lastRoundAmount": 3900000,
+    "latestDateOfFunding": "2025-09-09",
+    "website": "https://www.geordie.ai",
+    "linkedin": "https://linkedin.com/company/geordie",
+    "employees": "null",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 49,
+      "patents": 14,
+      "competitors": [
+        "Threat Intelligence Leader A",
+        "Threat Intelligence Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 54,
+        "funding": 53,
+        "news": 21
+      }
+    }
+  },
+  {
+    "id": "real-25",
+    "name": "Naq",
+    "description": "Naq is an innovative endpoint security company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Endpoint Security",
+    "location": "London, UK",
+    "region": "Western Europe",
+    "founded": 2021,
+    "fundingFrom": "Junction",
+    "totalFunding": 6480000,
+    "lastRound": "Pre-Series A",
+    "lastRoundAmount": 3888000,
+    "latestDateOfFunding": "2024-04-08",
+    "website": "https://naq.tech",
+    "linkedin": "https://linkedin.com/company/naq",
+    "employees": "11-50",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 54,
+      "patents": 14,
+      "competitors": [
+        "Endpoint Security Leader A",
+        "Endpoint Security Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 43,
+        "funding": 44,
+        "news": 30
+      }
+    }
+  },
+  {
+    "id": "real-26",
+    "name": "Sola Security",
+    "description": "Sola Security is an innovative email security company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Email Security",
+    "location": "Tel Aviv, Israel",
+    "region": "Middle East",
+    "founded": 2020,
+    "fundingFrom": "Glilot Capital Partners",
+    "totalFunding": 35000000,
+    "lastRound": "Series A",
+    "lastRoundAmount": 21000000,
+    "latestDateOfFunding": "2024-06-18",
+    "website": "https://www.solasecurity.com",
+    "linkedin": "https://linkedin.com/company/sola-security",
+    "employees": "11-50",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 38,
+      "patents": 18,
+      "competitors": [
+        "Email Security Leader A",
+        "Email Security Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 27,
+        "funding": 64,
+        "news": 33
+      }
+    }
+  },
+  {
+    "id": "real-27",
+    "name": "FireCompass",
+    "description": "FireCompass is an innovative encryption company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Encryption",
+    "location": "Boston, USA",
+    "region": "North America",
+    "founded": 2020,
+    "fundingFrom": "EC-Council",
+    "totalFunding": 20000000,
+    "lastRound": "Strategic Investment",
+    "lastRoundAmount": 12000000,
+    "latestDateOfFunding": "2024-01-26",
+    "website": "https://www.firecompass.com",
+    "linkedin": "https://linkedin.com/company/firecompass",
+    "employees": "Not Specified",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 56,
+      "patents": 8,
+      "competitors": [
+        "Encryption Leader A",
+        "Encryption Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 39,
+        "funding": 42,
+        "news": 27
+      }
+    }
+  },
+  {
+    "id": "real-28",
+    "name": "TrustNXT",
+    "description": "TrustNXT is an innovative cloud security company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Cloud Security",
+    "location": "Hamburg, Germany",
+    "region": "Western Europe",
+    "founded": 2020,
+    "fundingFrom": "High-Tech Gründerfonds (HTGF)",
+    "totalFunding": 1728000,
+    "lastRound": "Seed",
+    "lastRoundAmount": 1036800,
+    "latestDateOfFunding": "2025-09-09",
+    "website": null,
+    "linkedin": "https://linkedin.com/company/trustnxt",
+    "employees": "N/A",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 32,
+      "patents": 8,
+      "competitors": [
+        "Cloud Security Leader A",
+        "Cloud Security Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 58,
+        "funding": 43,
+        "news": 40
+      }
+    }
+  },
+  {
+    "id": "real-29",
+    "name": "ID.me",
+    "description": "ID.me is an innovative identity management company providing cutting-edge solutions for enterprise customers.",
+    "sector": "Identity Management",
+    "location": "McLean, United States",
+    "region": "North America",
+    "founded": 2010,
+    "fundingFrom": "Savano Capital Partners",
+    "totalFunding": 340000000,
+    "lastRound": "Series D",
+    "lastRoundAmount": 204000000,
+    "latestDateOfFunding": "2023-11-16",
+    "website": "https://www.ID.me",
+    "linkedin": "https://linkedin.com/company/idme",
+    "employees": "1001-5000",
+    "team": {
+      "ceo": "Founder & CEO",
+      "cto": "Co-Founder & CTO",
+      "head": "VP of Engineering"
+    },
+    "brightData": {
+      "newsSentiment": "positive",
+      "recentMentions": 61,
+      "patents": 9,
+      "competitors": [
+        "Identity Management Leader A",
+        "Identity Management Leader B"
+      ],
+      "marketPosition": "Growing",
+      "growthIndicators": {
+        "hiring": 32,
+        "funding": 60,
+        "news": 26
+      }
+    }
+  }
+]
