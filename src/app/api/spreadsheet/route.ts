@@ -5,6 +5,7 @@
  */
 
 import { NextRequest, NextResponse } from 'next/server'
+import { generateLeadershipTeam } from '../../../data/leadership-database'
 
 const SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/1UUkN5MFB7TnqaUjvEWBK0LlIrQqKNxOVRej-wv9I8nI/export?format=csv'
 
@@ -202,11 +203,7 @@ function formatForPlatform(companies: any[]) {
       website,
       linkedin,
       employees: company.employees,
-      team: {
-        ceo: 'Founder & CEO',
-        cto: 'Co-Founder & CTO',
-        head: 'VP of Engineering'
-      },
+      team: generateLeadershipTeam(company.name, sector),
       brightData: {
         newsSentiment: 'positive',
         recentMentions: Math.floor(Math.random() * 50) + 20,
