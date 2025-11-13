@@ -153,39 +153,39 @@ export default function SectorDetailsDialog({
               </div>
 
               {/* Market Analysis */}
-              {enrichedData && (
-                <div className="bg-gray-50 p-6 rounded-lg border border-gray-200">
-                  <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
-                    <BarChart3 className="h-5 w-5 mr-2 text-[#0066FF]" />
-                    Market Analysis
-                  </h3>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-sm text-gray-600 mb-1">Average Deal Size</p>
-                      <p className="text-xl font-bold text-gray-900">
-                        {formatCurrency(enrichedData.average_deal_size)}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-sm text-gray-600 mb-1">Total Deals</p>
-                      <p className="text-xl font-bold text-gray-900">
-                        {enrichedData.total_deals}
-                      </p>
-                    </div>
+              <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg border-2 border-blue-200">
+                <h3 className="text-lg font-bold text-blue-900 mb-4 flex items-center">
+                  <BarChart3 className="h-5 w-5 mr-2 text-[#0066FF]" />
+                  Market Analysis
+                </h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-white p-4 rounded-lg border border-blue-200">
+                    <p className="text-sm text-blue-700 mb-1 font-medium">Average Deal Size</p>
+                    <p className="text-2xl font-bold text-blue-900">
+                      ${enrichedData?.average_deal_size ? formatCurrency(enrichedData.average_deal_size) : formatCurrency(sector.totalFunding / Math.max(sector.companies, 1))}
+                    </p>
+                    <p className="text-xs text-blue-600 mt-1">Per company</p>
+                  </div>
+                  <div className="bg-white p-4 rounded-lg border border-blue-200">
+                    <p className="text-sm text-blue-700 mb-1 font-medium">Total Deals</p>
+                    <p className="text-2xl font-bold text-blue-900">
+                      {enrichedData?.total_deals || sector.companies}
+                    </p>
+                    <p className="text-xs text-blue-600 mt-1">Active companies</p>
                   </div>
                 </div>
-              )}
+              </div>
 
               {/* Investment Trends */}
               {sector.investmentTrends && sector.investmentTrends.length > 0 && (
-                <div className="bg-white p-6 rounded-lg border border-gray-200">
-                  <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                <div className="bg-white p-6 rounded-lg border-2 border-blue-200">
+                  <h3 className="text-lg font-bold text-blue-900 mb-4 flex items-center">
                     <Target className="h-5 w-5 mr-2 text-[#0066FF]" />
                     Investment Trends
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {sector.investmentTrends.map((trend, index) => (
-                      <Badge key={index} variant="secondary" className="text-sm">
+                      <Badge key={index} className="bg-blue-600 text-white hover:bg-blue-700 text-sm px-3 py-1">
                         {trend}
                       </Badge>
                     ))}
@@ -195,14 +195,14 @@ export default function SectorDetailsDialog({
 
               {/* Emerging Technologies */}
               {sector.emergingTechnologies && sector.emergingTechnologies.length > 0 && (
-                <div className="bg-white p-6 rounded-lg border border-gray-200">
-                  <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-lg border-2 border-blue-200">
+                  <h3 className="text-lg font-bold text-blue-900 mb-4 flex items-center">
                     <AlertCircle className="h-5 w-5 mr-2 text-[#0066FF]" />
                     Emerging Technologies
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {sector.emergingTechnologies.map((tech, index) => (
-                      <Badge key={index} className="bg-[#0066FF] text-white">
+                      <Badge key={index} className="bg-[#0066FF] text-white hover:bg-[#0052CC] px-4 py-2 text-sm font-semibold">
                         {tech}
                       </Badge>
                     ))}
