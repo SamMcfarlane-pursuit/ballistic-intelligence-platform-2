@@ -3962,7 +3962,7 @@ export default function ExecutiveDashboard() {
                   onClick={() => setShowExportDialog(true)}
                   variant="outline"
                   size="sm"
-                  className="border-orange-600 text-orange-700 hover:bg-orange-50 hover:border-orange-700 font-semibold"
+                  className="border-blue-600 text-blue-700 hover:bg-blue-50 hover:border-blue-700 font-semibold"
                 >
                   <Download className="h-4 w-4 mr-2" />
                   Export {selectedTab === 'market-intelligence' ? 'Companies' : selectedTab === 'trending-sectors' ? 'Sectors' : selectedTab === 'patent-deep-dive' ? 'Patents' : 'All Data'}
@@ -4220,7 +4220,7 @@ export default function ExecutiveDashboard() {
                       onClick={exportSectorsToCSV}
                       variant="outline"
                       size="sm"
-                      className="border-orange-600 text-orange-700 hover:bg-orange-50 hover:border-orange-700 font-semibold"
+                      className="border-blue-600 text-blue-700 hover:bg-blue-50 hover:border-blue-700 font-semibold"
                     >
                       <Download className="h-4 w-4 mr-2" />
                       Export Sectors ({sectors.length})
@@ -4395,7 +4395,7 @@ export default function ExecutiveDashboard() {
                 <Button
                   onClick={exportCompaniesToCSV}
                   variant="outline"
-                  className="border-orange-600 text-orange-700 hover:bg-orange-50 hover:border-orange-700 font-semibold"
+                  className="border-blue-600 text-blue-700 hover:bg-blue-50 hover:border-blue-700 font-semibold"
                 >
                   <Download className="h-4 w-4 mr-2" />
                   Export Companies ({filteredCompanies.length})
@@ -4611,7 +4611,7 @@ export default function ExecutiveDashboard() {
                 <Button
                   onClick={exportPatentsToCSV}
                   variant="outline"
-                  className="border-orange-600 text-orange-700 hover:bg-orange-50 hover:border-orange-700 font-semibold"
+                  className="border-blue-600 text-blue-700 hover:bg-blue-50 hover:border-blue-700 font-semibold"
                 >
                   <Download className="h-4 w-4 mr-2" />
                   Export Patents ({filteredPatents.length})
@@ -4741,13 +4741,13 @@ export default function ExecutiveDashboard() {
                     <FileText className="h-8 w-8 text-purple-600" />
                   </div>
                 </Card>
-                <Card className="p-6 border-2 border-orange-200 bg-gradient-to-br from-orange-50 to-white">
+                <Card className="p-6 border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-white">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-orange-600">Market Insights</p>
+                      <p className="text-sm font-medium text-blue-600">Market Insights</p>
                       <p className="text-2xl font-bold text-gray-900">{companies.filter(c => c.brightData?.newsSentiment === 'positive').length}</p>
                     </div>
-                    <TrendingUp className="h-8 w-8 text-orange-600" />
+                    <TrendingUp className="h-8 w-8 text-blue-600" />
                   </div>
                 </Card>
               </div>
@@ -4784,7 +4784,7 @@ export default function ExecutiveDashboard() {
                       onClick={exportCompaniesToCSV}
                       variant="outline"
                       size="sm"
-                      className="border-orange-600 text-orange-700 hover:bg-orange-50 hover:border-orange-700 font-semibold"
+                      className="border-blue-600 text-blue-700 hover:bg-blue-50 hover:border-blue-700 font-semibold"
                     >
                       <Download className="h-4 w-4 mr-2" />
                       Companies ({filteredCompanies.length})
@@ -4793,7 +4793,7 @@ export default function ExecutiveDashboard() {
                       onClick={exportSectorsToCSV}
                       variant="outline"
                       size="sm"
-                      className="border-orange-600 text-orange-700 hover:bg-orange-50 hover:border-orange-700 font-semibold"
+                      className="border-blue-600 text-blue-700 hover:bg-blue-50 hover:border-blue-700 font-semibold"
                     >
                       <Download className="h-4 w-4 mr-2" />
                       Sectors ({sectors.length})
@@ -4802,14 +4802,14 @@ export default function ExecutiveDashboard() {
                       onClick={exportPatentsToCSV}
                       variant="outline"
                       size="sm"
-                      className="border-orange-600 text-orange-700 hover:bg-orange-50 hover:border-orange-700 font-semibold"
+                      className="border-blue-600 text-blue-700 hover:bg-blue-50 hover:border-blue-700 font-semibold"
                     >
                       <Download className="h-4 w-4 mr-2" />
                       Patents ({filteredPatents.length})
                     </Button>
                     <Button
                       onClick={exportAllDataToCSV}
-                      className="bg-gradient-to-r from-orange-600 to-red-600 text-white hover:from-orange-700 hover:to-red-700 font-semibold"
+                      className="bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-orange-700 hover:to-red-700 font-semibold"
                       size="sm"
                     >
                       <FileSpreadsheet className="h-4 w-4 mr-2" />
@@ -4856,15 +4856,15 @@ export default function ExecutiveDashboard() {
                       <Users className="h-6 w-6 text-purple-600" />
                     </div>
                   </Card>
-                  <Card className="p-4 border-2 border-orange-200 bg-gradient-to-br from-orange-50 to-white">
+                  <Card className="p-4 border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-white">
                     <div className="flex items-center justify-between">
                       <div>
-                        <p className="text-sm font-medium text-orange-600">Total Adoption</p>
+                        <p className="text-sm font-medium text-blue-600">Total Adoption</p>
                         <p className="text-xl font-bold text-gray-900">
                           {technologyTrends.reduce((acc, t) => acc + t.adoptionCount, 0)}
                         </p>
                       </div>
-                      <Building2 className="h-6 w-6 text-orange-600" />
+                      <Building2 className="h-6 w-6 text-blue-600" />
                     </div>
                   </Card>
                 </div>
@@ -5028,7 +5028,7 @@ export default function ExecutiveDashboard() {
                       <div key={sector.id} className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                           <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold ${
-                            index === 0 ? 'bg-yellow-500' : index === 1 ? 'bg-gray-400' : index === 2 ? 'bg-orange-500' : 'bg-blue-500'
+                            index === 0 ? 'bg-yellow-500' : index === 1 ? 'bg-gray-400' : index === 2 ? 'bg-blue-500' : 'bg-blue-500'
                           }`}>
                             {index + 1}
                           </div>
@@ -5051,7 +5051,7 @@ export default function ExecutiveDashboard() {
                       <div key={company.id} className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                           <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white text-sm font-bold ${
-                            index === 0 ? 'bg-yellow-500' : index === 1 ? 'bg-gray-400' : index === 2 ? 'bg-orange-500' : 'bg-green-500'
+                            index === 0 ? 'bg-yellow-500' : index === 1 ? 'bg-gray-400' : index === 2 ? 'bg-blue-500' : 'bg-green-500'
                           }`}>
                             {index + 1}
                           </div>
@@ -5209,7 +5209,7 @@ export default function ExecutiveDashboard() {
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold text-gray-900 flex items-center">
-              <Download className="h-6 w-6 text-orange-600 mr-2" />
+              <Download className="h-6 w-6 text-blue-600 mr-2" />
               Export Options
             </DialogTitle>
           </DialogHeader>
@@ -5232,7 +5232,7 @@ export default function ExecutiveDashboard() {
                     onClick={() => setExportLimit(option.value)}
                     className={`p-3 rounded-lg border-2 transition-all text-center ${
                       exportLimit === option.value
-                        ? 'border-orange-600 bg-orange-50 text-orange-700 font-semibold'
+                        ? 'border-blue-600 bg-blue-50 text-blue-700 font-semibold'
                         : 'border-gray-200 hover:border-gray-300 text-gray-600'
                     }`}
                   >
@@ -5246,9 +5246,9 @@ export default function ExecutiveDashboard() {
             </div>
 
             {/* Export Info */}
-            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
-              <h4 className="text-sm font-semibold text-orange-900 mb-2">Export Details</h4>
-              <div className="space-y-1 text-sm text-orange-800">
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <h4 className="text-sm font-semibold text-blue-900 mb-2">Export Details</h4>
+              <div className="space-y-1 text-sm text-blue-800">
                 <p>• Type: {selectedTab === 'market-intelligence' ? 'Companies' : selectedTab === 'trending-sectors' ? 'Sectors' : selectedTab === 'patent-deep-dive' ? 'Patents' : 'All Data'}</p>
                 <p>• Format: CSV (Excel compatible)</p>
                 <p>• Items: {exportLimit === 'all' ? 
@@ -5269,7 +5269,7 @@ export default function ExecutiveDashboard() {
                 else if (selectedTab === 'data-intelligence') exportAllDataToCSV()
                 setShowExportDialog(false)
               }}
-              className="w-full bg-gradient-to-r from-orange-600 to-red-600 text-white hover:from-orange-700 hover:to-red-700 font-semibold"
+              className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-orange-700 hover:to-red-700 font-semibold"
             >
               <Download className="h-4 w-4 mr-2" />
               Export Now

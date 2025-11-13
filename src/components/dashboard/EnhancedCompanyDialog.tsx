@@ -85,7 +85,7 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
       <DialogContent className="max-w-4xl max-h-[90vh] bg-white overflow-y-auto">
         <DialogHeader className="sticky top-0 bg-white z-10 pb-4 border-b border-gray-200">
           <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-orange-600 to-red-600 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center shadow-lg">
               <Building2 className="h-8 w-8 text-white" />
             </div>
             <div className="flex-1">
@@ -114,9 +114,9 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
               
               {/* Key Metrics */}
               <div className="grid grid-cols-2 gap-4 mt-6">
-                <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-lg border border-orange-200">
-                  <div className="text-sm text-orange-700 mb-1">Total Funding</div>
-                  <div className="text-2xl font-bold text-orange-900">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
+                  <div className="text-sm text-blue-700 mb-1">Total Funding</div>
+                  <div className="text-2xl font-bold text-blue-900">
                     ${company?.totalFunding ? (company.totalFunding / 1000000).toFixed(1) : '0'}M
                   </div>
                 </div>
@@ -151,7 +151,7 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
                     href={company?.website} 
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="font-medium text-orange-600 hover:text-orange-700 truncate max-w-48"
+                    className="font-medium text-blue-600 hover:text-blue-700 truncate max-w-48"
                   >
                     {company?.website || 'N/A'}
                   </a>
@@ -162,7 +162,7 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
 
           {loading && (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-orange-600" />
+              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
               <span className="ml-3 text-gray-600">Loading enhanced intelligence...</span>
             </div>
           )}
@@ -171,7 +171,7 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
           {company?.brightData && (
             <div className="space-y-6">
               <h3 className="text-xl font-bold text-gray-900 flex items-center">
-                <Globe className="h-6 w-6 text-orange-600 mr-3" />
+                <Globe className="h-6 w-6 text-blue-600 mr-3" />
                 Intelligence Insights
               </h3>
               
@@ -199,9 +199,9 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
                   </div>
                 )}
                 
-                <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-xl border border-orange-200">
-                  <div className="text-sm text-orange-700 mb-2">Market Position</div>
-                  <div className="text-lg font-bold text-orange-900">
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-200">
+                  <div className="text-sm text-blue-700 mb-2">Market Position</div>
+                  <div className="text-lg font-bold text-blue-900">
                     {company.brightData.marketPosition || 'Emerging'}
                   </div>
                 </div>
@@ -215,7 +215,7 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
                     {company.brightData.competitors.map((competitor: string, index: number) => (
                       <span 
                         key={index} 
-                        className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-orange-100 to-red-100 text-orange-800 border border-orange-200"
+                        className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-blue-100 to-blue-200 text-blue-800 border border-blue-200"
                       >
                         {competitor}
                       </span>
@@ -230,7 +230,7 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
           {company?.team && (
             <div>
               <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                <Users className="h-6 w-6 text-orange-600 mr-3" />
+                <Users className="h-6 w-6 text-blue-600 mr-3" />
                 Leadership Team
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -278,9 +278,9 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
               </div>
               
               {/* Additional Leadership Context */}
-              <div className="mt-4 p-4 bg-gradient-to-r from-orange-50 to-red-50 rounded-lg border border-orange-200">
+              <div className="mt-4 p-4 bg-gradient-to-r from-blue-50 to-blue-100 rounded-lg border border-blue-200">
                 <p className="text-sm text-gray-700">
-                  <span className="font-semibold text-gray-900">Leadership Experience:</span> The founding team at <span className="font-semibold text-orange-700">{company?.name}</span> brings extensive experience from leading cybersecurity companies and has collectively raised over <span className="font-bold text-orange-700">${company?.totalFunding ? (company.totalFunding / 1000000).toFixed(1) : '0'}M</span> in funding.
+                  <span className="font-semibold text-gray-900">Leadership Experience:</span> The founding team at <span className="font-semibold text-blue-700">{company?.name}</span> brings extensive experience from leading cybersecurity companies and has collectively raised over <span className="font-bold text-blue-700">${company?.totalFunding ? (company.totalFunding / 1000000).toFixed(1) : '0'}M</span> in funding.
                 </p>
               </div>
             </div>
