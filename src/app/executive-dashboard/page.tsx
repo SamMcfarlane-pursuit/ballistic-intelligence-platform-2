@@ -1713,10 +1713,10 @@ export default function ExecutiveDashboard() {
 
   const loadCompanies = async () => {
     try {
-      console.log('🚀 Loading companies with real API data and AI sentiment analysis...')
+      console.log('🚀 Loading 200+ companies with real API data and AI sentiment analysis...')
       
-      // Fetch comprehensive company data with proper error handling
-      const limit = selectedPeriod === '30 Days' ? 20 : selectedPeriod === '60 Days' ? 30 : 50
+      // Fetch comprehensive company data with proper error handling - increased to 200+
+      const limit = selectedPeriod === '30 Days' ? 200 : selectedPeriod === '60 Days' ? 250 : 300
       
       const companiesResponse = await fetch(`/api/trending-factors?action=top&limit=${limit}`).catch(() => null)
       
@@ -3037,8 +3037,9 @@ export default function ExecutiveDashboard() {
     ]
     
     // Generate additional companies to reach 200+ total
-    const additionalCompanies = generateAdditionalCompanies(167) // 33 existing + 167 = 200
-    const allCompanies = [...mockCompanies, ...additionalCompanies]
+    // Generate 200+ companies for comprehensive market intelligence
+    const additionalCompanies = generateAdditionalCompanies(200) // Generate 200 additional companies
+    const allCompanies = [...mockCompanies, ...additionalCompanies] // Total: 233 companies
     
     // Apply data protection to sensitive information
     const protectedCompanies = allCompanies.map(company => ({
@@ -3072,8 +3073,15 @@ export default function ExecutiveDashboard() {
       'Middle East': ['Tel Aviv, Israel', 'Dubai, UAE', 'Riyadh, Saudi Arabia']
     }
     
-    const stages = ['Seed', 'Series A', 'Series B', 'Series C', 'Series D']
-    const investors = ['Sequoia Capital', 'Andreessen Horowitz', 'Accel', 'Lightspeed', 'Insight Partners', 'Tiger Global']
+    // Accurate funding stages matching real startup lifecycle
+    const stages = ['Pre-Seed', 'Seed', 'Series A', 'Series B', 'Series C', 'Series D', 'Series E']
+    const investors = [
+      'Sequoia Capital', 'Andreessen Horowitz', 'Accel', 'Lightspeed Venture Partners', 
+      'Insight Partners', 'Tiger Global', 'Ballistic Ventures', 'Y Combinator',
+      'Techstars', 'Greylock Partners', 'Bessemer Venture Partners', 'Index Ventures',
+      'General Catalyst', 'NEA', 'Kleiner Perkins', 'Benchmark', 'GV (Google Ventures)',
+      'CRV', 'Founders Fund', 'Redpoint Ventures'
+    ]
     
     const companies: Company[] = []
     
@@ -3082,27 +3090,68 @@ export default function ExecutiveDashboard() {
       const sector = sectors[i % sectors.length]
       const region = regions[i % regions.length]
       const location = locations[region][i % locations[region].length]
-      const stage = stages[i % stages.length]
+      const stageIndex = i % stages.length
+      const stage = stages[stageIndex]
       const investor = investors[i % investors.length]
       
-      const baseFunding = (i % 5 + 1) * 10000000 // 10M to 50M
+      // Realistic funding amounts based on stage
+      let baseFunding: number
+      let lastRoundAmount: number
+      
+      switch (stage) {
+        case 'Pre-Seed':
+          baseFunding = 500000 + (i % 10) * 100000 // $500K - $1.5M
+          lastRoundAmount = baseFunding * 0.8
+          break
+        case 'Seed':
+          baseFunding = 2000000 + (i % 10) * 500000 // $2M - $7M
+          lastRoundAmount = baseFunding * 0.7
+          break
+        case 'Series A':
+          baseFunding = 10000000 + (i % 10) * 2000000 // $10M - $30M
+          lastRoundAmount = baseFunding * 0.6
+          break
+        case 'Series B':
+          baseFunding = 30000000 + (i % 10) * 5000000 // $30M - $80M
+          lastRoundAmount = baseFunding * 0.5
+          break
+        case 'Series C':
+          baseFunding = 80000000 + (i % 10) * 10000000 // $80M - $180M
+          lastRoundAmount = baseFunding * 0.45
+          break
+        case 'Series D':
+          baseFunding = 180000000 + (i % 10) * 20000000 // $180M - $380M
+          lastRoundAmount = baseFunding * 0.4
+          break
+        case 'Series E':
+          baseFunding = 400000000 + (i % 10) * 50000000 // $400M - $900M
+          lastRoundAmount = baseFunding * 0.35
+          break
+        default:
+          baseFunding = 10000000
+          lastRoundAmount = 6000000
+      }
+      
       const founded = 2015 + (i % 10)
+      
+      const companyName = `${sector.split(' ')[0]}${['Shield', 'Guard', 'Secure', 'Protect', 'Defend', 'Safe', 'Lock', 'Vault'][i % 8]} ${i + 1}`
+      const companySlug = companyName.toLowerCase().replace(/\s+/g, '-')
       
       companies.push({
         id,
-        name: `${sector.split(' ')[0]}Guard ${i + 1}`,
+        name: companyName,
         description: `Innovative ${sector.toLowerCase()} solutions for enterprise customers with advanced threat detection and prevention capabilities`,
         sector,
         location: `${location}, ${region === 'North America' ? 'USA' : region}`,
         region,
         founded,
         fundingFrom: investor,
-        totalFunding: baseFunding + (i * 500000),
+        totalFunding: baseFunding,
         lastRound: stage,
-        lastRoundAmount: baseFunding * 0.6,
+        lastRoundAmount: lastRoundAmount,
         latestDateOfFunding: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'][i % 10]} ${15 + (i % 15)}, 2025`,
-        website: `https://www.${sector.toLowerCase().replace(/\s+/g, '')}guard${i + 1}.com`,
-        linkedin: `linkedin.com/company/${sector.toLowerCase().replace(/\s+/g, '')}-guard-${i + 1}`,
+        website: `https://www.${companySlug}.com`,
+        linkedin: `https://linkedin.com/company/${companySlug}`,
         team: {
           ceo: `${['Alex', 'Sarah', 'Michael', 'Jennifer', 'David', 'Emily'][i % 6]} ${['Smith', 'Johnson', 'Williams', 'Brown', 'Jones'][i % 5]}`,
           cto: `${['Robert', 'Lisa', 'James', 'Maria', 'John', 'Anna'][i % 6]} ${['Davis', 'Miller', 'Wilson', 'Moore', 'Taylor'][i % 5]}`,

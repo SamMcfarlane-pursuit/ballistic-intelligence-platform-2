@@ -9,7 +9,9 @@ import {
   Calendar, 
   Users, 
   Globe,
-  BarChart3
+  BarChart3,
+  Linkedin,
+  ExternalLink
 } from 'lucide-react'
 
 interface CompanyIntelligenceCardProps {
@@ -135,6 +137,50 @@ export default function CompanyIntelligenceCard({ company, onShowDetails }: Comp
               <span className="text-gray-900 font-medium">{company.latestDateOfFunding}</span>
             </div>
           </div>
+
+          {/* Website & LinkedIn Links */}
+          {(company.website || company.linkedin) && (
+            <div className="border-t border-gray-200 pt-4 mb-4">
+              <h4 className="text-sm font-bold text-[#1A3766] mb-3 flex items-center">
+                <Globe className="h-4 w-4 text-[#0066FF] mr-2" />
+                Company Links
+              </h4>
+              <div className="space-y-2">
+                {company.website && (
+                  <a
+                    href={company.website.startsWith('http') ? company.website : `https://${company.website}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between text-sm bg-blue-50 border border-blue-200 p-2 rounded hover:bg-blue-100 transition-colors group"
+                  >
+                    <span className="text-gray-600 font-medium flex items-center">
+                      <ExternalLink className="h-3 w-3 mr-1.5 text-[#0066FF]" />
+                      Website:
+                    </span>
+                    <span className="text-[#0066FF] font-semibold group-hover:underline truncate max-w-[180px]">
+                      {company.website.replace(/^https?:\/\/(www\.)?/, '')}
+                    </span>
+                  </a>
+                )}
+                {company.linkedin && (
+                  <a
+                    href={company.linkedin.startsWith('http') ? company.linkedin : `https://${company.linkedin}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between text-sm bg-blue-50 border border-blue-200 p-2 rounded hover:bg-blue-100 transition-colors group"
+                  >
+                    <span className="text-gray-600 font-medium flex items-center">
+                      <Linkedin className="h-3 w-3 mr-1.5 text-[#0066FF]" />
+                      LinkedIn:
+                    </span>
+                    <span className="text-[#0066FF] font-semibold group-hover:underline truncate max-w-[180px]">
+                      {company.linkedin.replace(/^https?:\/\/(www\.)?/, '').replace('linkedin.com/company/', '')}
+                    </span>
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* Leadership Team Section */}
           {company.team && (company.team.ceo || company.team.cto || company.team.head) && (
