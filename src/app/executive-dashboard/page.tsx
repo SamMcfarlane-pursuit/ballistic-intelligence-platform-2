@@ -3958,17 +3958,15 @@ export default function ExecutiveDashboard() {
                     if (selectedTab === 'market-intelligence') exportCompaniesToCSV()
                     else if (selectedTab === 'trending-sectors') exportSectorsToCSV()
                     else if (selectedTab === 'patent-deep-dive') exportPatentsToCSV()
-
                     else if (selectedTab === 'data-intelligence') exportAllDataToCSV()
                   }}
                   variant="outline"
                   size="sm"
-                  className="border-blue-600 text-blue-700 hover:bg-blue-50 hover:border-blue-700"
+                  className="border-orange-600 text-orange-700 hover:bg-orange-50 hover:border-orange-700 font-semibold"
                 >
                   <Download className="h-4 w-4 mr-2" />
-                  Export
-                </Button>
-                <Button
+                  Export {selectedTab === 'market-intelligence' ? 'Companies' : selectedTab === 'trending-sectors' ? 'Sectors' : selectedTab === 'patent-deep-dive' ? 'Patents' : 'All Data'}
+                </Button>                <Button
                   onClick={() => setShowImportDialog(true)}
                   variant="outline"
                   size="sm"
@@ -4222,10 +4220,10 @@ export default function ExecutiveDashboard() {
                       onClick={exportSectorsToCSV}
                       variant="outline"
                       size="sm"
-                      className="border-gray-600 text-gray-700 hover:bg-gray-50 hover:border-gray-800"
+                      className="border-orange-600 text-orange-700 hover:bg-orange-50 hover:border-orange-700 font-semibold"
                     >
                       <Download className="h-4 w-4 mr-2" />
-                      Export Sectors
+                      Export Sectors ({sectors.length})
                     </Button>
                     <Button
                       onClick={() => setSelectedTab('data-intelligence')}
@@ -4397,10 +4395,10 @@ export default function ExecutiveDashboard() {
                 <Button
                   onClick={exportCompaniesToCSV}
                   variant="outline"
-                  className="border-blue-600 text-blue-700 hover:bg-blue-50 hover:border-blue-700"
+                  className="border-orange-600 text-orange-700 hover:bg-orange-50 hover:border-orange-700 font-semibold"
                 >
                   <Download className="h-4 w-4 mr-2" />
-                  Export Companies
+                  Export Companies ({filteredCompanies.length})
                 </Button>
               </div>
 
@@ -4613,10 +4611,10 @@ export default function ExecutiveDashboard() {
                 <Button
                   onClick={exportPatentsToCSV}
                   variant="outline"
-                  className="border-blue-600 text-blue-700 hover:bg-blue-50 hover:border-blue-700"
+                  className="border-orange-600 text-orange-700 hover:bg-orange-50 hover:border-orange-700 font-semibold"
                 >
                   <Download className="h-4 w-4 mr-2" />
-                  Export Patents
+                  Export Patents ({filteredPatents.length})
                 </Button>
               </div>
 
@@ -4786,7 +4784,7 @@ export default function ExecutiveDashboard() {
                       onClick={exportCompaniesToCSV}
                       variant="outline"
                       size="sm"
-                      className="border-blue-600 text-blue-700 hover:bg-blue-50 hover:border-blue-700"
+                      className="border-orange-600 text-orange-700 hover:bg-orange-50 hover:border-orange-700 font-semibold"
                     >
                       <Download className="h-4 w-4 mr-2" />
                       Companies ({filteredCompanies.length})
@@ -4795,7 +4793,7 @@ export default function ExecutiveDashboard() {
                       onClick={exportSectorsToCSV}
                       variant="outline"
                       size="sm"
-                      className="border-gray-600 text-gray-700 hover:bg-gray-50 hover:border-gray-800"
+                      className="border-orange-600 text-orange-700 hover:bg-orange-50 hover:border-orange-700 font-semibold"
                     >
                       <Download className="h-4 w-4 mr-2" />
                       Sectors ({sectors.length})
@@ -4804,14 +4802,14 @@ export default function ExecutiveDashboard() {
                       onClick={exportPatentsToCSV}
                       variant="outline"
                       size="sm"
-                      className="border-blue-600 text-blue-700 hover:bg-blue-50 hover:border-blue-700"
+                      className="border-orange-600 text-orange-700 hover:bg-orange-50 hover:border-orange-700 font-semibold"
                     >
                       <Download className="h-4 w-4 mr-2" />
                       Patents ({filteredPatents.length})
                     </Button>
                     <Button
                       onClick={exportAllDataToCSV}
-                      className="bg-gray-800 text-white hover:bg-black"
+                      className="bg-gradient-to-r from-orange-600 to-red-600 text-white hover:from-orange-700 hover:to-red-700 font-semibold"
                       size="sm"
                     >
                       <FileSpreadsheet className="h-4 w-4 mr-2" />
