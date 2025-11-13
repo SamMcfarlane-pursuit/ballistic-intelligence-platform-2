@@ -1248,6 +1248,10 @@ export default function ExecutiveDashboard() {
   const [importType, setImportType] = useState<'companies' | 'sectors' | 'patents'>('companies')
   const [importProgress, setImportProgress] = useState(0)
   const [importStatus, setImportStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle')
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 1 // Show only one item per page
   const [companies, setCompanies] = useState<Company[]>([])
   const [sectors, setSectors] = useState<SectorData[]>([])
   const [searchQuery, setSearchQuery] = useState('')
@@ -1256,8 +1260,6 @@ export default function ExecutiveDashboard() {
   const [trendingData, setTrendingData] = useState<TrendingCompany[]>([])
   const [patents, setPatents] = useState<Patent[]>([])
   const [technologyTrends, setTechnologyTrends] = useState<TechnologyTrend[]>([])
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 20 // Increased to show more companies per page
 
   const sectorOptions = ['All Sectors', 'Network Security', 'Cloud Security', 'Data Protection', 'Identity Management', 'Threat Intelligence', 'Endpoint Security', 'Encryption', 'Email Security']
   const regions = [
@@ -4436,8 +4438,9 @@ export default function ExecutiveDashboard() {
                 </div>
               </div>
 
-              {/* Companies Grid */}
-              <div className={displayMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6' : 'space-y-4'}>
+              {/* Companies Grid - One Card Per Page */}
+              <div className="flex justify-center items-start min-h-[600px]">
+                <div className="w-full max-w-md">
                 {paginatedCompanies.length === 0 ? (
                   <div className="col-span-full text-center py-12">
                     <Building2 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
@@ -4465,6 +4468,7 @@ export default function ExecutiveDashboard() {
                     />
                   ))
                 )}
+                </div>
               </div>
 
               {/* Pagination */}
