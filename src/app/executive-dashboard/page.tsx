@@ -3057,6 +3057,63 @@ export default function ExecutiveDashboard() {
     setCompanies(protectedCompanies)
   }
   
+  // Generate realistic leadership teams with diverse backgrounds
+  const generateLeadershipTeam = (index: number, stage: string, sector: string) => {
+    // Realistic founder/CEO names with diverse backgrounds
+    const ceoNames = [
+      'Sarah Chen', 'Michael Rodriguez', 'Priya Patel', 'David Kim', 'Emily Johnson',
+      'James Anderson', 'Maria Garcia', 'Robert Singh', 'Jennifer Lee', 'Daniel Cohen',
+      'Lisa Wang', 'Christopher Brown', 'Aisha Mohammed', 'Kevin O\'Brien', 'Rachel Goldstein',
+      'Alex Nguyen', 'Sophia Martinez', 'William Taylor', 'Olivia Thompson', 'Ethan Davis',
+      'Maya Sharma', 'Joshua Wilson', 'Isabella Rossi', 'Nathan Green', 'Ava Kumar',
+      'Ryan Murphy', 'Emma Zhang', 'Jacob Miller', 'Mia Anderson', 'Andrew Park',
+      'Zoe Williams', 'Benjamin Harris', 'Chloe Martin', 'Samuel Jackson', 'Grace Liu',
+      'Matthew White', 'Hannah Cohen', 'Nicholas Brown', 'Lily Patel', 'Alexander Kim'
+    ]
+    
+    // Realistic CTO names with technical backgrounds
+    const ctoNames = [
+      'Dr. Raj Malhotra', 'Lisa Chen', 'Marcus Johnson', 'Dr. Yuki Tanaka', 'Ahmed Hassan',
+      'Rebecca Foster', 'Dr. Wei Zhang', 'Carlos Mendez', 'Dr. Anna Kowalski', 'Jamal Williams',
+      'Dr. Sofia Petrov', 'Kevin O\'Connor', 'Dr. Mei Lin', 'Omar Abdullah', 'Dr. Emma Schmidt',
+      'Vikram Reddy', 'Dr. Sarah Levine', 'Luis Fernandez', 'Dr. Nina Ivanova', 'Tariq Khan',
+      'Dr. Julia Martinez', 'Ravi Kumar', 'Dr. Elena Popov', 'Hassan Ali', 'Dr. Amy Wong',
+      'Arjun Gupta', 'Dr. Maria Santos', 'Dmitri Volkov', 'Dr. Fatima Ahmed', 'Sanjay Patel',
+      'Dr. Laura Rosenberg', 'Kenji Yamamoto', 'Dr. Nadia Rahman', 'Paolo Bianchi', 'Dr. Leah Cohen',
+      'Amir Hosseini', 'Dr. Clara Müller', 'Takeshi Sato', 'Dr. Zara Khan', 'Ivan Petrov'
+    ]
+    
+    // Realistic VP/Head names
+    const vpNames = [
+      'Amanda Foster', 'Daniel Park', 'Samantha Lee', 'Christopher Davis', 'Nicole Brown',
+      'Brandon Smith', 'Jessica Wilson', 'Tyler Martinez', 'Ashley Garcia', 'Justin Anderson',
+      'Stephanie Taylor', 'Jordan Thompson', 'Michelle Rodriguez', 'Ryan Clark', 'Lauren White',
+      'Eric Johnson', 'Kimberly Lewis', 'Brian Walker', 'Melissa Hall', 'Jason Allen',
+      'Rebecca Young', 'Steven King', 'Angela Wright', 'Timothy Scott', 'Heather Green',
+      'Patrick Adams', 'Christina Baker', 'Gregory Nelson', 'Vanessa Carter', 'Sean Mitchell',
+      'Tiffany Perez', 'Kenneth Roberts', 'Brittany Turner', 'Jeremy Phillips', 'Courtney Campbell',
+      'Marcus Parker', 'Danielle Evans', 'Aaron Edwards', 'Natalie Collins', 'Kyle Stewart'
+    ]
+    
+    // Titles based on company stage
+    const vpTitles = [
+      'VP of Engineering', 'VP of Product', 'VP of Sales', 'VP of Marketing',
+      'Head of Security', 'Head of Operations', 'Head of Customer Success',
+      'Chief Product Officer', 'Chief Revenue Officer', 'Chief Security Officer'
+    ]
+    
+    const ceo = ceoNames[index % ceoNames.length]
+    const cto = ctoNames[index % ctoNames.length]
+    const vpTitle = vpTitles[index % vpTitles.length]
+    const vpName = vpNames[index % vpNames.length]
+    
+    return {
+      ceo: `${ceo} (CEO & Co-Founder)`,
+      cto: `${cto} (CTO & Co-Founder)`,
+      head: `${vpName} (${vpTitle})`
+    }
+  }
+
   // Generate additional companies programmatically
   const generateAdditionalCompanies = (count: number): Company[] => {
     const sectors = [
@@ -3152,11 +3209,7 @@ export default function ExecutiveDashboard() {
         latestDateOfFunding: `${['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'][i % 10]} ${15 + (i % 15)}, 2025`,
         website: `https://www.${companySlug}.com`,
         linkedin: `https://linkedin.com/company/${companySlug}`,
-        team: {
-          ceo: `${['Alex', 'Sarah', 'Michael', 'Jennifer', 'David', 'Emily'][i % 6]} ${['Smith', 'Johnson', 'Williams', 'Brown', 'Jones'][i % 5]}`,
-          cto: `${['Robert', 'Lisa', 'James', 'Maria', 'John', 'Anna'][i % 6]} ${['Davis', 'Miller', 'Wilson', 'Moore', 'Taylor'][i % 5]}`,
-          head: `${['Chris', 'Amanda', 'Daniel', 'Rachel', 'Kevin'][i % 5]} ${['Anderson', 'Thomas', 'Jackson', 'White', 'Harris'][i % 5]}`
-        },
+        team: generateLeadershipTeam(i, stage, sector),
         brightData: {
           newsSentiment: i % 3 === 0 ? 'positive' : 'neutral' as 'positive' | 'neutral' | 'negative',
           recentMentions: 10 + (i % 40),

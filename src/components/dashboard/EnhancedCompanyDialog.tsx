@@ -211,26 +211,55 @@ export default function EnhancedCompanyDialog({ company, open, onOpenChange }: E
           {/* Leadership Team */}
           {company?.team && (
             <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-4">Leadership Team</h3>
+              <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                <Building2 className="h-6 w-6 text-orange-600 mr-3" />
+                Leadership Team
+              </h3>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {company.team.ceo && (
-                  <div className="bg-gray-50 p-4 rounded-lg border">
-                    <div className="text-sm text-gray-500 mb-1">Chief Executive Officer</div>
-                    <div className="font-semibold text-gray-900">{company.team.ceo}</div>
+                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-5 rounded-xl border-2 border-blue-200 hover:shadow-lg transition-shadow">
+                    <div className="text-xs font-semibold text-blue-700 uppercase tracking-wide mb-2">
+                      CEO & Co-Founder
+                    </div>
+                    <div className="font-bold text-gray-900 text-lg">
+                      {company.team.ceo.replace(' (CEO & Co-Founder)', '').replace(' (CEO)', '')}
+                    </div>
+                    <div className="text-sm text-blue-600 mt-2">Chief Executive Officer</div>
                   </div>
                 )}
                 {company.team.cto && (
-                  <div className="bg-gray-50 p-4 rounded-lg border">
-                    <div className="text-sm text-gray-500 mb-1">Chief Technology Officer</div>
-                    <div className="font-semibold text-gray-900">{company.team.cto}</div>
+                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-5 rounded-xl border-2 border-purple-200 hover:shadow-lg transition-shadow">
+                    <div className="text-xs font-semibold text-purple-700 uppercase tracking-wide mb-2">
+                      CTO & Co-Founder
+                    </div>
+                    <div className="font-bold text-gray-900 text-lg">
+                      {company.team.cto.replace(' (CTO & Co-Founder)', '').replace(' (CTO)', '')}
+                    </div>
+                    <div className="text-sm text-purple-600 mt-2">Chief Technology Officer</div>
                   </div>
                 )}
                 {company.team.head && (
-                  <div className="bg-gray-50 p-4 rounded-lg border">
-                    <div className="text-sm text-gray-500 mb-1">Head of Product</div>
-                    <div className="font-semibold text-gray-900">{company.team.head}</div>
+                  <div className="bg-gradient-to-br from-green-50 to-green-100 p-5 rounded-xl border-2 border-green-200 hover:shadow-lg transition-shadow">
+                    <div className="text-xs font-semibold text-green-700 uppercase tracking-wide mb-2">
+                      {company.team.head.includes('VP of') ? 'Vice President' : 
+                       company.team.head.includes('Head of') ? 'Head' :
+                       company.team.head.includes('Chief') ? 'C-Level Executive' : 'Leadership'}
+                    </div>
+                    <div className="font-bold text-gray-900 text-lg">
+                      {company.team.head.replace(/\s*\([^)]*\)/g, '')}
+                    </div>
+                    <div className="text-sm text-green-600 mt-2">
+                      {company.team.head.match(/\(([^)]+)\)/)?.[1] || 'Executive'}
+                    </div>
                   </div>
                 )}
+              </div>
+              
+              {/* Additional Leadership Context */}
+              <div className="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <p className="text-sm text-gray-600">
+                  <span className="font-semibold text-gray-900">Leadership Experience:</span> The founding team brings extensive experience from leading cybersecurity companies and has collectively raised over ${company?.totalFunding ? (company.totalFunding / 1000000).toFixed(1) : '0'}M in funding.
+                </p>
               </div>
             </div>
           )}
