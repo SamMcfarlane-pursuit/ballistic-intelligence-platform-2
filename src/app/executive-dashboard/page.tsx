@@ -1713,7 +1713,29 @@ export default function ExecutiveDashboard() {
 
   const loadCompanies = async () => {
     try {
-      console.log('🚀 Loading 200+ companies with real API data and AI sentiment analysis...')
+      console.log('🚀 Loading companies from Google Spreadsheet and APIs...')
+      
+      // First, try to load real companies from Google Spreadsheet
+      let spreadsheetCompanies: Company[] = []
+      try {
+        const spreadsheetResponse = await fetch('/api/spreadsheet')
+        if (spreadsheetResponse.ok) {
+          const spreadsheetData = await spreadsheetResponse.json()
+          if (spreadsheetData.success && spreadsheetData.data) {
+            spreadsheetCompanies = spreadsheetData.data
+            console.log(`✅ Loaded ${spreadsheetCompanies.length} companies from Google Spreadsheet`)
+          }
+        }
+      } catch (error) {
+        console.warn('Could not load spreadsheet data, will use fallback:', error)
+      }
+      
+      // If we have spreadsheet companies, display them first
+      if (spreadsheetCompanies.length > 0) {
+        setCompanies(spreadsheetCompanies)
+        console.log(`📊 Displaying ${spreadsheetCompanies.length} real companies from spreadsheet`)
+        return
+      }
       
       // Fetch comprehensive company data with proper error handling - increased to 200+
       const limit = selectedPeriod === '30 Days' ? 200 : selectedPeriod === '60 Days' ? 250 : 300
