@@ -136,6 +136,36 @@ export default function CompanyIntelligenceCard({ company, onShowDetails }: Comp
             </div>
           </div>
 
+          {/* Leadership Team Section */}
+          {company.team && (company.team.ceo || company.team.cto || company.team.head) && (
+            <div className="border-t border-gray-200 pt-4 mb-4">
+              <h4 className="text-sm font-bold text-[#1A3766] mb-3 flex items-center">
+                <Users className="h-4 w-4 text-[#0066FF] mr-2" />
+                Leadership Team
+              </h4>
+              <div className="space-y-2">
+                {company.team.ceo && (
+                  <div className="flex items-center justify-between text-sm bg-blue-50 border border-blue-200 p-2 rounded">
+                    <span className="text-gray-600 font-medium">CEO:</span>
+                    <span className="text-gray-900 font-semibold">{company.team.ceo}</span>
+                  </div>
+                )}
+                {company.team.cto && (
+                  <div className="flex items-center justify-between text-sm bg-blue-50 border border-blue-200 p-2 rounded">
+                    <span className="text-gray-600 font-medium">CTO:</span>
+                    <span className="text-gray-900 font-semibold">{company.team.cto}</span>
+                  </div>
+                )}
+                {company.team.head && (
+                  <div className="flex items-center justify-between text-sm bg-blue-50 border border-blue-200 p-2 rounded">
+                    <span className="text-gray-600 font-medium">Head:</span>
+                    <span className="text-gray-900 font-semibold">{company.team.head}</span>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
           {/* BrightData Intelligence Section */}
           {company.brightData && (
             <div className="border-t border-gray-200 pt-4">
