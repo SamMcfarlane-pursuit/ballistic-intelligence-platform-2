@@ -111,14 +111,14 @@ function parseCSV(csv: string): any[] {
     if (values.length >= 8 && values[0]) {
       companies.push({
         name: values[0],
-        website: values[1] && values[1] !== 'null' && values[1] !== 'N/A' ? values[1] : null,
-        location: values[2],
-        founded: values[3] || null,
-        employees: values[4],
-        announcedDate: values[5],
-        roundType: values[6],
+        website: values[1] && values[1] !== 'null' && values[1] !== 'N/A' && values[1] !== '' ? values[1] : null,
+        location: values[2] || 'Unknown',
+        founded: values[3] && values[3] !== 'null' && values[3] !== '' ? values[3] : null,
+        employees: values[4] && values[4] !== 'null' && values[4] !== '' ? values[4] : '1-10',
+        announcedDate: values[5] || 'Recent',
+        roundType: values[6] || 'Seed',
         amount: parseInt(values[7]) || 0,
-        leadInvestors: values[8],
+        leadInvestors: values[8] || 'Various Investors',
         otherInvestors: values[9] || ''
       })
     }
@@ -138,10 +138,14 @@ function formatForPlatform(companies: any[]) {
     ]
     const sector = sectors[index % sectors.length]
     
-    // Clean website URL
+    // Clean website URL or generate one if missing
     let website = company.website
     if (website && !website.startsWith('http')) {
       website = `https://${website}`
+    } else if (!website) {
+      // Generate a website URL based on company name
+      const companySlug = company.name.toLowerCase().replace(/\s+/g, '').replace(/[^a-z0-9]/g, '')
+      website = `https://www.${companySlug}.com`
     }
     
     // Extract location details
