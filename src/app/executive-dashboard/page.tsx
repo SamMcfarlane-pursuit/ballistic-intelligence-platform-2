@@ -1248,10 +1248,6 @@ export default function ExecutiveDashboard() {
   const [importType, setImportType] = useState<'companies' | 'sectors' | 'patents'>('companies')
   const [importProgress, setImportProgress] = useState(0)
   const [importStatus, setImportStatus] = useState<'idle' | 'processing' | 'success' | 'error'>('idle')
-  
-  // Pagination state
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 6 // Show 6 cards per page
   const [companies, setCompanies] = useState<Company[]>([])
   const [sectors, setSectors] = useState<SectorData[]>([])
   const [searchQuery, setSearchQuery] = useState('')
@@ -1260,6 +1256,8 @@ export default function ExecutiveDashboard() {
   const [trendingData, setTrendingData] = useState<TrendingCompany[]>([])
   const [patents, setPatents] = useState<Patent[]>([])
   const [technologyTrends, setTechnologyTrends] = useState<TechnologyTrend[]>([])
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 6 // Show 6 cards per page
 
   const sectorOptions = ['All Sectors', 'Network Security', 'Cloud Security', 'Data Protection', 'Identity Management', 'Threat Intelligence', 'Endpoint Security', 'Encryption', 'Email Security']
   const regions = [
@@ -2194,6 +2192,11 @@ export default function ExecutiveDashboard() {
         latestDateOfFunding: 'Sep 15, 2025',
         website: 'https://www.shieldtech.io',
         linkedin: 'linkedin.com/company/shieldtech',
+        team: {
+          ceo: 'Marcus Chen (CEO & Founder)',
+          cto: 'Dr. Lisa Rodriguez (CTO & Co-Founder)',
+          head: 'James Wilson (VP of Engineering)'
+        },
         brightData: {
           newsSentiment: 'positive',
           recentMentions: 32,
@@ -2223,6 +2226,11 @@ export default function ExecutiveDashboard() {
         latestDateOfFunding: 'Sep 8, 2025',
         website: 'https://www.cryptoguard.com',
         linkedin: 'linkedin.com/company/cryptoguard',
+        team: {
+          ceo: 'Dr. Yael Goldstein (CEO & Founder)',
+          cto: 'Amir Levin (CTO & Co-Founder)',
+          head: 'Rachel Cohen (VP of Product)'
+        },
         brightData: {
           newsSentiment: 'positive',
           recentMentions: 28,
@@ -2252,6 +2260,11 @@ export default function ExecutiveDashboard() {
         latestDateOfFunding: 'Sep 1, 2025',
         website: 'https://www.threatvision.ai',
         linkedin: 'linkedin.com/company/threatvision',
+        team: {
+          ceo: 'Ahmed Al-Rashid (CEO & Founder)',
+          cto: 'Dr. Fatima Hassan (CTO & Co-Founder)',
+          head: 'Omar Khalil (VP of Engineering)'
+        },
         brightData: {
           newsSentiment: 'neutral',
           recentMentions: 22,
@@ -2349,6 +2362,11 @@ export default function ExecutiveDashboard() {
         latestDateOfFunding: 'Sep 22, 2025',
         website: 'https://www.datavaultpro.com',
         linkedin: 'linkedin.com/company/datavaultpro',
+        team: {
+          ceo: 'Jennifer Thompson (CEO & Founder)',
+          cto: 'Kevin Patel (CTO & Co-Founder)',
+          head: 'Maria Garcia (VP of Product)'
+        },
         brightData: {
           newsSentiment: 'neutral',
           recentMentions: 26,
@@ -2378,6 +2396,11 @@ export default function ExecutiveDashboard() {
         latestDateOfFunding: 'Aug 15, 2025',
         website: 'https://www.cybershield-mena.com',
         linkedin: 'linkedin.com/company/cybershield-mena',
+        team: {
+          ceo: 'Mohammed Al-Saud (CEO & Founder)',
+          cto: 'Dr. Layla Ibrahim (CTO & Co-Founder)',
+          head: 'Khalid Mansour (VP of Operations)'
+        },
         brightData: {
           newsSentiment: 'positive',
           recentMentions: 18,
@@ -4372,7 +4395,7 @@ export default function ExecutiveDashboard() {
 
           {/* Market Intelligence View */}
           {selectedTab === 'market-intelligence' && !loading && (
-            <div className="p-8">
+            <div className="p-8 w-full max-w-none">
               {/* Search Bar and Export */}
               <div className="mb-6 flex items-center justify-between">
                 <div className="relative max-w-md">
@@ -4438,9 +4461,15 @@ export default function ExecutiveDashboard() {
                 </div>
               </div>
 
-              {/* Companies Grid - One Card Per Page */}
-              <div className="flex justify-center items-start min-h-[600px]">
-                <div className="w-full max-w-md">
+              {/* Companies Grid - 3 columns × 2 rows = 6 cards per page */}
+              <div 
+                className={displayMode === 'grid' ? 'w-full' : 'flex flex-col space-y-4 w-full'}
+                style={displayMode === 'grid' ? {
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+                  gap: '1rem'
+                } : undefined}
+              >
                 {paginatedCompanies.length === 0 ? (
                   <div className="col-span-full text-center py-12">
                     <Building2 className="h-12 w-12 text-gray-400 mx-auto mb-4" />
@@ -4468,7 +4497,6 @@ export default function ExecutiveDashboard() {
                     />
                   ))
                 )}
-                </div>
               </div>
 
               {/* Pagination */}
@@ -4631,7 +4659,7 @@ export default function ExecutiveDashboard() {
               </div>
 
               {/* Patents Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className={displayMode === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 gap-6' : 'flex flex-col space-y-4'}>
                 {paginatedPatents.length === 0 ? (
                   <div className="col-span-full text-center py-12">
                     <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />

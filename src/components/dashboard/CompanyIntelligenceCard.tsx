@@ -2,14 +2,9 @@
 
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
 import { 
   Building2, 
-  MapPin, 
-  Calendar, 
-  Users, 
   Globe,
-  BarChart3,
   Linkedin,
   ExternalLink
 } from 'lucide-react'
@@ -34,7 +29,6 @@ interface CompanyIntelligenceCardProps {
       cto?: string
       head?: string
     }
-    // BrightData enhanced fields
     brightData?: {
       newsSentiment?: 'positive' | 'neutral' | 'negative'
       recentMentions?: number
@@ -52,7 +46,6 @@ interface CompanyIntelligenceCardProps {
 }
 
 export default function CompanyIntelligenceCard({ company, onShowDetails }: CompanyIntelligenceCardProps) {
-  // Format currency
   const formatCurrency = (amount: number) => {
     if (amount >= 1000000) {
       return `${(amount / 1000000).toFixed(1)}M`
@@ -64,101 +57,86 @@ export default function CompanyIntelligenceCard({ company, onShowDetails }: Comp
   }
 
   return (
-    <Card className="bg-white border-2 border-[#0066FF] hover:border-[#1A3766] hover:shadow-2xl transition-all duration-300 group overflow-hidden">
+    <Card 
+      className="bg-white border border-gray-200 hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer"
+      onClick={() => onShowDetails(company)}
+    >
       <CardContent className="p-0">
-        {/* Blue Gradient Header */}
-        <div className="bg-gradient-to-r from-[#0066FF] via-[#0052CC] to-[#1A3766] p-6 pb-4 relative">
-          <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-black/10 pointer-events-none"></div>
-          
-          {/* Company Header */}
-          <div className="flex items-start space-x-3 mb-3 relative z-10">
-            <div className="flex-shrink-0 w-12 h-12 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-lg border border-white/30">
-              <Building2 className="h-6 w-6 text-white" />
+        {/* Blue Header */}
+        <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-blue-900 p-4">
+          <div className="flex items-start gap-3 mb-2">
+            <div className="flex-shrink-0 w-10 h-10 bg-white/20 backdrop-blur-sm rounded-lg flex items-center justify-center border border-white/30">
+              <Building2 className="h-5 w-5 text-white" />
             </div>
-            <div className="flex-1">
-              <h3 className="text-lg font-bold text-white group-hover:text-white/90 transition-colors line-clamp-2">
+            <div className="flex-1 min-w-0">
+              <h3 className="text-base font-bold text-white leading-tight">
                 {company.name}
               </h3>
-              <p className="text-sm text-white/90">{company.sector}</p>
+              <p className="text-xs text-white/90 mt-0.5">{company.sector}</p>
             </div>
-            
             {company.brightData?.newsSentiment === 'positive' && (
-              <Badge 
-                variant="secondary" 
-                className="text-xs bg-green-500/90 text-white border-white/30"
-              >
+              <Badge className="text-xs bg-green-500 text-white border-0 px-2 py-0.5 font-semibold shrink-0">
                 Positive
               </Badge>
             )}
           </div>
-
-          {/* Description */}
-          <p className="text-sm text-white/90 line-clamp-2 relative z-10">
+          <p className="text-xs text-white/90 line-clamp-2 leading-relaxed">
             {company.description}
           </p>
         </div>
 
-        {/* White Middle Section - Company Details */}
-        <div className="p-6 bg-white">
-          <div className="space-y-2 mb-4">
-            <div className="flex items-center justify-between text-sm">
+        {/* White Body */}
+        <div className="p-4">
+          {/* Company Details */}
+          <div className="space-y-1.5 mb-4">
+            <div className="flex justify-between text-xs">
               <span className="text-gray-600">Location:</span>
-              <div className="flex items-center text-gray-900 font-medium">
-                <MapPin className="h-3 w-3 mr-1 text-[#0066FF]" />
-                <span>{company.location}</span>
-              </div>
+              <span className="text-gray-900 font-medium text-right">{company.location}</span>
             </div>
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex justify-between text-xs">
               <span className="text-gray-600">Founded:</span>
-              <div className="flex items-center text-gray-900 font-medium">
-                <Calendar className="h-3 w-3 mr-1 text-[#0066FF]" />
-                <span>{company.founded}</span>
-              </div>
+              <span className="text-gray-900 font-medium">{company.founded}</span>
             </div>
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex justify-between text-xs">
               <span className="text-gray-600">Funding From:</span>
-              <div className="flex items-center text-[#0066FF] font-medium">
-                <Users className="h-3 w-3 mr-1" />
-                <span className="truncate max-w-[150px]">{company.fundingFrom}</span>
-              </div>
+              <span className="text-blue-600 font-medium text-right truncate max-w-[60%]">{company.fundingFrom}</span>
             </div>
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex justify-between text-xs">
               <span className="text-gray-600">Total Funding:</span>
-              <span className="font-bold text-gray-900">${formatCurrency(company.totalFunding)}</span>
+              <span className="text-gray-900 font-bold">${formatCurrency(company.totalFunding)}</span>
             </div>
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex justify-between text-xs">
               <span className="text-gray-600">Last Round:</span>
-              <span className="font-semibold text-gray-900">
-                {company.lastRound} - ${formatCurrency(company.lastRoundAmount)}
-              </span>
+              <span className="text-gray-900 font-semibold">{company.lastRound} - ${formatCurrency(company.lastRoundAmount)}</span>
             </div>
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex justify-between text-xs">
               <span className="text-gray-600">Latest Funding:</span>
               <span className="text-gray-900 font-medium">{company.latestDateOfFunding}</span>
             </div>
           </div>
 
-          {/* Website & LinkedIn Links */}
+          {/* Company Links */}
           {(company.website || company.linkedin) && (
-            <div className="border-t border-gray-200 pt-4 mb-4">
-              <h4 className="text-sm font-bold text-[#1A3766] mb-3 flex items-center">
-                <Globe className="h-4 w-4 text-[#0066FF] mr-2" />
+            <div className="border-t border-gray-200 pt-3 mb-3">
+              <h4 className="text-xs font-semibold text-blue-900 mb-2 flex items-center">
+                <Globe className="h-3.5 w-3.5 mr-1.5 text-blue-600" />
                 Company Links
               </h4>
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {company.website && (
                   <a
                     href={company.website.startsWith('http') ? company.website : `https://${company.website}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between text-sm bg-blue-50 border border-blue-200 p-2 rounded hover:bg-blue-100 transition-colors group"
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex items-center justify-between text-xs bg-blue-50 border border-blue-200 px-2.5 py-2 rounded hover:bg-blue-100 transition-colors"
                   >
-                    <span className="text-gray-600 font-medium flex items-center">
-                      <ExternalLink className="h-3 w-3 mr-1.5 text-[#0066FF]" />
+                    <span className="text-gray-700 font-medium flex items-center gap-1.5">
+                      <ExternalLink className="h-3 w-3 text-blue-600" />
                       Website:
                     </span>
-                    <span className="text-[#0066FF] font-semibold group-hover:underline truncate max-w-[180px]">
-                      {company.website.replace(/^https?:\/\/(www\.)?/, '')}
+                    <span className="text-blue-600 font-semibold hover:underline truncate max-w-[55%]">
+                      {company.website.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}
                     </span>
                   </a>
                 )}
@@ -167,13 +145,14 @@ export default function CompanyIntelligenceCard({ company, onShowDetails }: Comp
                     href={company.linkedin.startsWith('http') ? company.linkedin : `https://${company.linkedin}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between text-sm bg-blue-50 border border-blue-200 p-2 rounded hover:bg-blue-100 transition-colors group"
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex items-center justify-between text-xs bg-blue-50 border border-blue-200 px-2.5 py-2 rounded hover:bg-blue-100 transition-colors"
                   >
-                    <span className="text-gray-600 font-medium flex items-center">
-                      <Linkedin className="h-3 w-3 mr-1.5 text-[#0066FF]" />
+                    <span className="text-gray-700 font-medium flex items-center gap-1.5">
+                      <Linkedin className="h-3 w-3 text-blue-600" />
                       LinkedIn:
                     </span>
-                    <span className="text-[#0066FF] font-semibold group-hover:underline truncate max-w-[180px]">
+                    <span className="text-blue-600 font-semibold hover:underline truncate max-w-[55%]">
                       {company.linkedin.replace(/^https?:\/\/(www\.)?/, '').replace('linkedin.com/company/', '')}
                     </span>
                   </a>
@@ -182,91 +161,35 @@ export default function CompanyIntelligenceCard({ company, onShowDetails }: Comp
             </div>
           )}
 
-          {/* Leadership Team Section */}
+          {/* Leadership Team */}
           {company.team && (company.team.ceo || company.team.cto || company.team.head) && (
-            <div className="border-t border-gray-200 pt-4 mb-4">
-              <h4 className="text-sm font-bold text-[#1A3766] mb-3 flex items-center">
-                <Users className="h-4 w-4 text-[#0066FF] mr-2" />
+            <div className="border-t border-gray-200 pt-3">
+              <h4 className="text-xs font-semibold text-blue-900 mb-2 flex items-center">
+                <Building2 className="h-3.5 w-3.5 mr-1.5 text-blue-600" />
                 Leadership Team
               </h4>
-              <div className="space-y-2">
+              <div className="space-y-1.5">
                 {company.team.ceo && (
-                  <div className="flex items-center justify-between text-sm bg-blue-50 border border-blue-200 p-2 rounded">
-                    <span className="text-gray-600 font-medium">CEO:</span>
-                    <span className="text-gray-900 font-semibold">{company.team.ceo}</span>
+                  <div className="flex items-center justify-between text-xs bg-gray-50 border border-gray-200 px-2.5 py-2 rounded">
+                    <span className="text-gray-700 font-medium">CEO:</span>
+                    <span className="text-gray-900 font-semibold text-right truncate max-w-[65%]">{company.team.ceo}</span>
                   </div>
                 )}
                 {company.team.cto && (
-                  <div className="flex items-center justify-between text-sm bg-blue-50 border border-blue-200 p-2 rounded">
-                    <span className="text-gray-600 font-medium">CTO:</span>
-                    <span className="text-gray-900 font-semibold">{company.team.cto}</span>
+                  <div className="flex items-center justify-between text-xs bg-gray-50 border border-gray-200 px-2.5 py-2 rounded">
+                    <span className="text-gray-700 font-medium">CTO:</span>
+                    <span className="text-gray-900 font-semibold text-right truncate max-w-[65%]">{company.team.cto}</span>
                   </div>
                 )}
                 {company.team.head && (
-                  <div className="flex items-center justify-between text-sm bg-blue-50 border border-blue-200 p-2 rounded">
-                    <span className="text-gray-600 font-medium">Head:</span>
-                    <span className="text-gray-900 font-semibold">{company.team.head}</span>
+                  <div className="flex items-center justify-between text-xs bg-gray-50 border border-gray-200 px-2.5 py-2 rounded">
+                    <span className="text-gray-700 font-medium">Head:</span>
+                    <span className="text-gray-900 font-semibold text-right truncate max-w-[65%]">{company.team.head}</span>
                   </div>
                 )}
               </div>
             </div>
           )}
-
-          {/* BrightData Intelligence Section */}
-          {company.brightData && (
-            <div className="border-t border-gray-200 pt-4">
-              <h4 className="text-sm font-bold text-[#1A3766] mb-3 flex items-center">
-                <Globe className="h-4 w-4 text-[#0066FF] mr-2" />
-                Intelligence Insights
-              </h4>
-              
-              <div className="grid grid-cols-3 gap-2 mb-3">
-                {company.brightData.recentMentions !== undefined && (
-                  <div className="bg-blue-50 border border-blue-200 p-2 rounded text-center">
-                    <div className="text-xs text-gray-600">Mentions</div>
-                    <div className="font-bold text-sm text-[#0066FF]">{company.brightData.recentMentions}</div>
-                  </div>
-                )}
-                
-                {company.brightData.patents !== undefined && (
-                  <div className="bg-blue-50 border border-blue-200 p-2 rounded text-center">
-                    <div className="text-xs text-gray-600">Patents</div>
-                    <div className="font-bold text-sm text-[#0066FF]">{company.brightData.patents}</div>
-                  </div>
-                )}
-                
-                {company.brightData.growthIndicators?.funding !== undefined && (
-                  <div className="bg-blue-50 border border-blue-200 p-2 rounded text-center">
-                    <div className="text-xs text-gray-600">Growth</div>
-                    <div className="font-bold text-sm text-[#0066FF]">
-                      +{company.brightData.growthIndicators.funding}%
-                    </div>
-                  </div>
-                )}
-              </div>
-              
-              {company.brightData.competitors && company.brightData.competitors.length > 0 && (
-                <div className="bg-gray-50 border border-gray-200 p-2 rounded">
-                  <div className="text-xs text-gray-600 mb-1">Competitors</div>
-                  <div className="text-xs text-gray-800">
-                    {company.brightData.competitors.slice(0, 2).join(', ')}
-                    {company.brightData.competitors.length > 2 && ` +${company.brightData.competitors.length - 2} more`}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* View Details Button */}
-        <div className="p-4 bg-gray-50">
-          <Button
-            onClick={() => onShowDetails(company)}
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white border-blue-700 font-semibold py-2.5 rounded-lg transition-all shadow-lg hover:shadow-xl hover:scale-[1.02]"
-          >
-            <BarChart3 className="h-4 w-4 mr-2" />
-            View Full Details
-          </Button>
         </div>
       </CardContent>
     </Card>
