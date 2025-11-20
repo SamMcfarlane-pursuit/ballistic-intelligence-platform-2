@@ -150,7 +150,8 @@ export default function ExecutiveDashboard() {
   const [selectedSector, setSelectedSector] = useState('All Sectors')
   const [selectedRegion, setSelectedRegion] = useState('All Regions')
   const [selectedStage, setSelectedStage] = useState('All Stages')
-  const [selectedInvestor, setSelectedInvestor] = useState('All Investors')
+  const [selectedInvestors, setSelectedInvestors] = useState<string[]>([]) // Multi-select array
+  const [investorSearchQuery, setInvestorSearchQuery] = useState('') // Autocomplete search
   const [selectedPeriod, setSelectedPeriod] = useState('90 Days')
   // Data source selection (BrightData, Crunchbase, or Combined)
   const [dataSource, setDataSource] = useState<'brightdata' | 'crunchbase' | 'combined'>('combined')
@@ -1269,8 +1270,26 @@ export default function ExecutiveDashboard() {
     'Latin America'
   ]
   const stages = ['All Stages', 'Seed', 'Series A', 'Series B', 'Series C']
-  const investors = ['All Investors', 'Ballistic Ventures', 'CyberForge Capital', 'Guardian Capital', 'SecureVentures']
   const periods = ['30 Days', '60 Days', '90 Days', '180 Days']
+  
+  // Extract unique investors from companies with company counts
+  const allInvestors = useMemo(() => {
+    const investorMap = new Map<string, number>()
+    companies.forEach(company => {
+      const investor = company.fundingFrom || 'Unknown'
+      investorMap.set(investor, (investorMap.get(investor) || 0) + 1)
+    })
+    return Array.from(investorMap.entries())
+      .map(([name, count]) => ({ name, count }))
+      .sort((a, b) => b.count - a.count) // Sort by count descending
+  }, [companies])
+  
+  // Filter investors based on search query
+  const filteredInvestors = useMemo(() => {
+    if (!investorSearchQuery) return allInvestors
+    const query = investorSearchQuery.toLowerCase()
+    return allInvestors.filter(inv => inv.name.toLowerCase().includes(query))
+  }, [allInvestors, investorSearchQuery])
 
   // API Health Check
   const checkAPIHealth = async () => {
@@ -1306,7 +1325,7 @@ export default function ExecutiveDashboard() {
     }, 100) // Small delay to batch rapid changes
     
     return () => clearTimeout(timer)
-  }, [selectedTab, selectedSector, selectedRegion, selectedStage, selectedInvestor, selectedPeriod])
+  }, [selectedTab, selectedSector, selectedRegion, selectedStage, selectedInvestors, selectedPeriod])
 
   // BrightData real-time enrichment
   const enrichCompanyWithBrightData = async (company: Company) => {
@@ -1381,7 +1400,7 @@ export default function ExecutiveDashboard() {
   // Reset page when filters change
   useEffect(() => {
     setCurrentPage(1)
-  }, [selectedSector, selectedRegion, selectedStage, selectedInvestor, selectedPeriod, searchQuery])
+  }, [selectedSector, selectedRegion, selectedStage, selectedInvestors, selectedPeriod, searchQuery])
 
   const loadData = async () => {
     setLoading(true)
@@ -3733,10 +3752,12 @@ export default function ExecutiveDashboard() {
         if (!regionMatch) return false
       }
 
-      // Investor filter - more flexible matching
-      if (selectedInvestor !== 'All Investors') {
-        const investorMatch = company.fundingFrom.toLowerCase().includes(selectedInvestor.toLowerCase()) ||
-                             selectedInvestor.toLowerCase().includes(company.fundingFrom.toLowerCase())
+      // Investor filter - multi-select support (PRD [P0] requirement)
+      if (selectedInvestors.length > 0) {
+        const investorMatch = selectedInvestors.some(selectedInv =>
+          company.fundingFrom.toLowerCase().includes(selectedInv.toLowerCase()) ||
+          selectedInv.toLowerCase().includes(company.fundingFrom.toLowerCase())
+        )
         if (!investorMatch) return false
       }
 
@@ -3745,7 +3766,7 @@ export default function ExecutiveDashboard() {
 
       return true
     })
-  }, [companies, searchQuery, selectedSector, selectedInvestor, selectedStage])
+  }, [companies, searchQuery, selectedSector, selectedInvestors, selectedStage])
 
   // Patent filtering with search
   const filteredPatents = useMemo(() => {

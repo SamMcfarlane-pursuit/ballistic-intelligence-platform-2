@@ -1,0 +1,18 @@
+# Data Validation
+great-expectations==0.18.8
+pandas==2.1.4
+ydata-profiling==4.6.4
+
+# Cross-Source Verification
+aiohttp==3.9.1
+requests==2.31.0
+
+# Security
+python-owasp-zap-v2.4==0.0.21
+
+# Monitoring
+pydantic==2.5.3
+python-dotenv==1.0.0
+
+# Utilities
+numpy==1.26.2

@@ -87,14 +87,8 @@ const nextConfig: NextConfig = {
     return 'ballistic-intelligence-' + Date.now()
   },
   
-  turbopack: {
-    rules: {
-      '*.svg': {
-        loaders: ['@svgr/webpack'],
-        as: '*.js',
-      },
-    }
-  },
+  // Turbopack configuration (empty to silence warning)
+  turbopack: {},
 };
 
 export default nextConfig;

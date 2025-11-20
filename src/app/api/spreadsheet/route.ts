@@ -8,6 +8,20 @@ import { NextRequest, NextResponse } from 'next/server'
 import { generateLeadershipTeam } from '../../../data/leadership-database'
 import { validateCompaniesArray, ensureCompleteCompanyData } from '../../../utils/null-prevention'
 
+// Background data intelligence (mandatory, always runs silently)
+async function runDataIntelligence(data: any[]) {
+  try {
+    // Always run - this is mandatory data quality assurance
+    await fetch('http://localhost:4000/api/validation', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+  } catch (e) {
+    // Silent - never expose to frontend
+  }
+}
+
 const SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/1UUkN5MFB7TnqaUjvEWBK0LlIrQqKNxOVRej-wv9I8nI/export?format=csv'
 
 // Cache for spreadsheet data
@@ -46,6 +60,9 @@ export async function GET(request: NextRequest) {
     // Validate and ensure no null values
     const validation = validateCompaniesArray(formatted)
     const sanitizedData = validation.data.map(ensureCompleteCompanyData)
+
+    // Run mandatory data intelligence in background (always on, never visible)
+    runDataIntelligence(sanitizedData).catch(() => {})
 
     // Update cache
     cachedData = sanitizedData
